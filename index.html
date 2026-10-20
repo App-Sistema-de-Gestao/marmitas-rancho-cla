@@ -49,77 +49,82 @@
 </head>
 <body class="font-sans pb-28 text-slate-100">
 
-    <div id="app" class="max-w-md mx-auto p-3">
-        
-        <!-- Barra de Sessão / Login -->
-        <div class="bg-slate-900/80 backdrop-blur-md p-2.5 rounded-xl border border-slate-800 mb-3 flex items-center justify-between text-xs">
-            <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span class="font-semibold text-slate-300" id="info-usuario-logado">1S MELO</span>
-                <span id="badge-perfil" class="bg-blue-900 text-blue-200 text-[10px] px-1.5 py-0.5 rounded font-bold">FISCAL</span>
-            </div>
-            <button type="button" onclick="abrirModalLogin()" class="text-blue-400 hover:text-blue-300 font-bold underline cursor-pointer">Trocar Usuário</button>
-        </div>
-
-        <!-- Cabeçalho Institucional Oficial da Tela com as Imagens -->
-        <header class="bg-white/95 backdrop-blur-md text-gray-900 px-3 py-3 rounded-2xl shadow-xl border-b-4 border-blue-900 mb-4 relative flex items-center justify-between overflow-hidden">
-            <div class="w-12 h-14 flex-shrink-0 flex items-center justify-center bg-white rounded-lg p-0.5 shadow-sm border border-gray-100">
-                <img src="brasao-cla.png" alt="Brasão CLA" class="w-full h-full object-contain">
-            </div>
-            <div class="flex-1 text-center px-1">
-                <h1 class="text-xs sm:text-sm font-black uppercase tracking-tight text-gray-900 leading-tight">
-                    SISTEMA DE GESTÃO DE MARMITAS
-                </h1>
-                <h2 class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-800 mt-0.5">
-                    RANCHO DO CLA
-                </h2>
-                <div class="mt-1 inline-block bg-gray-200/90 px-2 py-0.5 rounded text-[8px] sm:text-[9px] font-bold text-gray-700 whitespace-nowrap">
-                    Setor de Subsistência • Centro de Lançamento de Alcântara
+    <!-- ÁREA FIXA SUPERIOR (STICKY) COM CABEÇALHO ACIMA E BOTÕES ABAIXO -->
+    <div class="sticky top-0 z-40 bg-[#070d18]/95 backdrop-blur-md pb-2 pt-2 px-3 border-b border-slate-800 shadow-xl">
+        <div class="max-w-md mx-auto space-y-2">
+            
+            <!-- Cabeçalho Institucional Oficial com Fundo Unificado Branco -->
+            <header class="bg-white text-gray-900 px-3 py-3 rounded-2xl shadow-xl border-b-4 border-blue-900 relative flex items-center justify-between overflow-hidden">
+                <div class="w-12 h-14 flex-shrink-0 flex items-center justify-center bg-white rounded-lg p-0.5 shadow-sm border border-gray-100">
+                    <img src="brasao-cla.png" alt="Brasão CLA" class="w-full h-full object-contain">
                 </div>
-            </div>
-            <div class="w-10 h-12 flex-shrink-0 flex items-center justify-center bg-white rounded-lg p-0.5 shadow-sm border border-gray-100">
-                <img src="image.png" alt="Folha de Acanto" class="w-full h-full object-contain">
-            </div>
-        </header>
+                <div class="flex-1 text-center px-1">
+                    <h1 class="text-xs sm:text-sm font-black uppercase tracking-tight text-gray-900 leading-tight">
+                        SISTEMA DE GESTÃO DE MARMITAS
+                    </h1>
+                    <h2 class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-800 mt-0.5">
+                        RANCHO DO CLA
+                    </h2>
+                    <div class="mt-1 inline-block bg-gray-200/90 px-2 py-0.5 rounded text-[8px] sm:text-[9px] font-bold text-gray-700 whitespace-nowrap">
+                        Setor de Subsistência • Centro de Lançamento de Alcântara
+                    </div>
+                </div>
+                <div class="w-10 h-12 flex-shrink-0 flex items-center justify-center bg-white rounded-lg p-0.5 shadow-sm border border-gray-100">
+                    <img src="image.png" alt="Folha de Acanto" class="w-full h-full object-contain">
+                </div>
+            </header>
 
-        <!-- Navegação Principal -->
-        <div class="flex bg-slate-900/90 rounded-xl p-1 mb-4 border border-slate-800 text-xs font-bold">
-            <button type="button" onclick="mudarAba('operacao')" id="nav-operacao" class="flex-1 py-2 rounded-lg bg-blue-700 text-white shadow cursor-pointer">OPERAÇÃO</button>
-            <button type="button" onclick="mudarAba('historico')" id="nav-historico" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white cursor-pointer">HISTÓRICO</button>
-            <button type="button" onclick="mudarAba('adm')" id="nav-adm" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white cursor-pointer">PAINEL ADM</button>
-        </div>
+            <!-- Barra de Navegação Principal com LOGIN explícito -->
+            <div class="flex bg-slate-900/95 rounded-xl p-1 border border-slate-800 text-[11px] font-bold shadow-md">
+                <button type="button" onclick="abrirModalLogin()" id="nav-login" class="flex-1 py-2 rounded-lg text-emerald-400 hover:text-emerald-300 transition-all cursor-pointer flex items-center justify-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> LOGIN
+                </button>
+                <button type="button" onclick="mudarAba('operacao')" id="nav-operacao" class="flex-1 py-2 rounded-lg bg-blue-700 text-white shadow cursor-pointer text-center">OPERAÇÃO</button>
+                <button type="button" onclick="mudarAba('historico')" id="nav-historico" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white cursor-pointer text-center">HISTÓRICO</button>
+                <button type="button" onclick="mudarAba('adm')" id="nav-adm" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white cursor-pointer text-center">PAINEL ADM</button>
+            </div>
 
-        <!-- ABA 1: OPERAÇÃO -->
-        <div id="aba-operacao">
-            <!-- Seleção de Refeição -->
-            <div class="flex gap-2 mb-4">
+            <!-- Seleção de Refeição (Visível apenas na aba Operação) -->
+            <div id="seletor-refeicao-container" class="flex gap-2">
                 <button type="button" onclick="mudarRefeicao('CAFÉ')" id="btn-cafe" class="flex-1 py-2.5 text-xs font-bold rounded-xl bg-blue-700 text-white shadow-lg shadow-blue-900/50 transition-all cursor-pointer">CAFÉ</button>
                 <button type="button" onclick="mudarRefeicao('ALMOÇO')" id="btn-almoco" class="flex-1 py-2.5 text-xs font-bold rounded-xl bg-white/90 text-gray-700 border border-gray-200 shadow-md transition-all cursor-pointer">ALMOÇO</button>
                 <button type="button" onclick="mudarRefeicao('JANTAR')" id="btn-jantar" class="flex-1 py-2.5 text-xs font-bold rounded-xl bg-white/90 text-gray-700 border border-gray-200 shadow-md transition-all cursor-pointer">JANTAR</button>
             </div>
 
-            <!-- Adicionar Posto -->
-            <div class="flex gap-2 mb-4">
-                <input type="text" id="novo-posto-input" placeholder="Novo posto ou setor..." class="flex-1 px-3 py-2 text-sm bg-white/95 text-slate-900 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm">
-                <select id="categoria-novo-posto" class="px-2 py-2 text-xs bg-white/95 text-slate-900 border border-gray-300 rounded-xl focus:outline-none">
-                    <option value="coletivo">Coletivo</option>
-                    <option value="individual">Individual</option>
-                </select>
-                <button type="button" onclick="adicionarPosto()" class="bg-emerald-600 text-white px-3.5 py-2 text-sm font-semibold rounded-xl shadow hover:bg-emerald-700 cursor-pointer">+ Posto</button>
-            </div>
+        </div>
+    </div>
 
+    <!-- CONTEÚDO PRINCIPAL DA APLICAÇÃO -->
+    <div id="app" class="max-w-md mx-auto p-3 pt-4">
+
+        <!-- ABA 1: OPERAÇÃO -->
+        <div id="aba-operacao" class="space-y-4">
+            
             <!-- Conteúdo Dinâmico dos Postos -->
             <div id="conteudo-postos"></div>
 
+            <!-- Adicionar Novo Posto (Abaixo dos postos) -->
+            <div class="bg-slate-900/90 p-3.5 rounded-2xl border border-slate-800 shadow-lg space-y-2">
+                <label class="block text-xs font-bold text-amber-400">Adicionar Novo Posto ou Setor</label>
+                <div class="flex gap-2">
+                    <input type="text" id="novo-posto-input" placeholder="Nome do posto ou setor..." class="flex-1 px-3 py-2 text-xs bg-slate-950 text-white border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select id="categoria-novo-posto" class="px-2 py-2 text-xs bg-slate-950 text-white border border-slate-700 rounded-xl focus:outline-none">
+                        <option value="coletivo">Coletivo</option>
+                        <option value="individual">Individual</option>
+                    </select>
+                    <button type="button" onclick="adicionarPosto()" class="bg-emerald-600 text-white px-3.5 py-2 text-xs font-bold rounded-xl shadow hover:bg-emerald-700 cursor-pointer">+ Posto</button>
+                </div>
+            </div>
+
             <!-- Painel de Reservas e Totais -->
-            <div id="painel-totais" class="bg-blue-950/90 backdrop-blur-md text-white p-4 rounded-xl mb-4 text-sm font-semibold shadow-xl border border-blue-800/50 space-y-2"></div>
+            <div id="painel-totais" class="bg-blue-950/90 backdrop-blur-md text-white p-4 rounded-xl text-sm font-semibold shadow-xl border border-blue-800/50 space-y-2"></div>
 
             <!-- Assinatura e Motorista -->
-            <div class="bg-white/95 backdrop-blur-md p-4 rounded-xl shadow-lg border border-gray-200 text-slate-900 space-y-3 mb-4">
+            <div class="bg-white/95 backdrop-blur-md p-4 rounded-xl shadow-lg border border-gray-200 text-slate-900 space-y-3">
                 <div>
                     <label class="block text-xs font-medium text-gray-600 mb-1">Responsável pelo Preenchimento (Fiscal Logado)</label>
-                    <div id="campo-assinatura-logada" class="p-2 bg-gray-100 rounded-lg text-sm font-bold text-gray-800 border border-gray-200">
-                        1S MELO
+                    <div id="campo-assinatura-logada" class="p-2 bg-gray-100 rounded-lg text-sm font-bold text-red-600 border border-gray-200">
+                        Fiscal Não Logado
                     </div>
                 </div>
 
@@ -139,7 +144,10 @@
 
         <!-- ABA 2: HISTÓRICO -->
         <div id="aba-historico" class="hidden space-y-3">
-            <h3 class="text-sm font-bold text-slate-200">Histórico de Relações Geradas</h3>
+            <div class="flex justify-between items-center bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+                <h3 class="text-xs font-bold text-slate-200">Histórico Coletivo (Últimos 3 Dias)</h3>
+                <button type="button" onclick="limparHistoricoExpirado()" class="text-[10px] text-red-400 hover:text-red-300 underline cursor-pointer">Atualizar Lista</button>
+            </div>
             <div id="lista-historico" class="space-y-2"></div>
         </div>
 
@@ -179,10 +187,10 @@
 
     </div>
 
-    <!-- MODAL DE LOGIN / TROCA DE USUÁRIO -->
+    <!-- MODAL DE LOGIN (Acessado pelo Botão LOGIN do Menu) -->
     <div id="modal-login" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
         <div class="bg-white text-slate-900 max-w-xs w-full p-5 rounded-2xl shadow-2xl space-y-3">
-            <h3 class="text-base font-bold border-b pb-2">Autenticação de Usuário</h3>
+            <h3 class="text-base font-bold border-b pb-2">Autenticação de Fiscal</h3>
             
             <div>
                 <label class="block text-xs font-semibold text-gray-600 mb-1">Selecione o Usuário / Login</label>
@@ -197,16 +205,16 @@
 
             <div class="flex gap-2 pt-2">
                 <button type="button" onclick="fecharModalLogin()" class="flex-1 py-2 bg-gray-200 text-gray-700 font-semibold rounded-xl text-xs cursor-pointer">Cancelar</button>
-                <button type="button" onclick="autenticarEEntrar()" class="flex-1 py-2 bg-blue-700 text-white font-bold rounded-xl text-xs shadow hover:bg-blue-800 cursor-pointer">Entrar</button>
+                <button type="button" onclick="autenticarEEntrar()" class="flex-1 py-2 bg-blue-700 text-white font-bold rounded-xl text-xs shadow hover:bg-blue-800 cursor-pointer">Confirmar Login</button>
             </div>
         </div>
     </div>
 
-    <!-- ESTRUTURA VISÍVEL PARA O GERADOR DE PDF (Centralizada com as Imagens) -->
+    <!-- ESTRUTURA VISÍVEL PARA O GERADOR DE PDF (Centralizada) -->
     <div id="wrapper-pdf" style="position: fixed; top: 0; left: 0; z-index: -999; opacity: 0; pointer-events: none; width: 100%;">
         <div id="area-impressao-pdf" class="ficha-a4">
             
-            <!-- Cabeçalho Oficial do PDF A4 com as Imagens -->
+            <!-- Cabeçalho Oficial do PDF A4 com Centralização Estrita -->
             <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 8px;">
                 <div style="width: 45px; text-align: center;">
                     <img src="brasao-cla.png" alt="CLA" style="max-height: 45px; margin: 0 auto; object-fit: contain;">
@@ -214,7 +222,7 @@
                 <div style="text-align: center; flex: 1;">
                     <h2 style="font-size: 12px; font-weight: 900; margin: 0; text-transform: uppercase;">CENTRO DE LANÇAMENTO DE ALCÂNTARA</h2>
                     <h3 style="font-size: 10px; font-weight: 700; margin: 2px 0; text-transform: uppercase;">SETOR DE SUBSISTÊNCIA - RANCHO DO CLA</h3>
-                    <p id="pdf-titulo-refeicao" style="font-size: 11px; font-weight: 800; margin: 2px 0 0 0; background-color: #f3f4f6; display: inline-block; padding: 2px 8px; border-radius: 3px; border: 1px solid #d1d5db;"></p>
+                    <p id="pdf-titulo-refeicao" style="font-size: 11px; font-weight: 800; margin: 2px 0 0 0; background-color: #f3f4f6; display: inline-block; padding: 2px 8px; border-radius: 3px; border: 1px solid #d1d5db; text-align: center;"></p>
                 </div>
                 <div style="width: 45px; text-align: center;">
                     <img src="image.png" alt="Acanto" style="max-height: 40px; margin: 0 auto; object-fit: contain;">
@@ -227,13 +235,13 @@
                 <span><strong>SISTEMA DE SUBSISTÊNCIA CLA</strong></span>
             </div>
 
-            <!-- Tabela Atualizada com Coluna Qtd Estreita, Ramal e Observação Separadas -->
+            <!-- Tabela Ajustada para PDF -->
             <table class="tabela-pdf">
                 <thead>
                     <tr>
-                        <th style="width: 42%;">POSTO / SETOR</th>
-                        <th style="width: 9%; text-align: center;">QTD</th>
-                        <th id="th-pdf-ceia" style="width: 9%; text-align: center;">CEIA</th>
+                        <th style="width: 40%;">POSTO / SETOR</th>
+                        <th id="th-pdf-qtd-coluna" style="width: 10%; text-align: center;">QTD</th>
+                        <th id="th-pdf-ceia" style="width: 10%; text-align: center; display: none;">CEIA</th>
                         <th style="width: 15%; text-align: center;">RAMAL</th>
                         <th style="width: 25%;">OBSERVAÇÃO</th>
                     </tr>
@@ -243,8 +251,8 @@
 
             <!-- Rodapé com Totais -->
             <div style="margin-top: 8px; border-top: 2px solid #000; padding-top: 5px; display: flex; justify-content: space-between; font-size: 11px; font-weight: bold;">
-                <span>TOTAL GERAL: <span id="pdf-total-marmitas" style="font-size: 13px;">0</span></span>
-                <span id="pdf-container-total-ceia">TOTAL DE CEIAS: <span id="pdf-total-ceias" style="font-size: 13px;">0</span></span>
+                <span id="pdf-texto-total-geral">TOTAL GERAL: <span id="pdf-total-marmitas" style="font-size: 13px;">0</span></span>
+                <span id="pdf-container-total-ceia" style="display: none;">TOTAL DE CEIAS: <span id="pdf-total-ceias" style="font-size: 13px;">0</span></span>
             </div>
 
             <!-- Campo de Assinaturas Lado a Lado -->
@@ -291,7 +299,7 @@
         ];
 
         let usuariosCadastrados = usuariosPadrao;
-        let usuarioLogado = usuariosCadastrados[1]; // Padrão: 1S MELO
+        let usuarioLogado = null;
         let tipoAtual = 'CAFÉ';
         let marmitasReserva = { 'CAFÉ': 0, 'ALMOÇO': 0, 'JANTAR': 0 };
 
@@ -371,11 +379,34 @@
             { id: 417, nome: 'FORÇA DE REAÇÃO', marmita: 0, ceia: 4, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '' }
         ];
 
-        let historicoRelacoes = [];
+        function carregarHistoricoGlobal() {
+            try {
+                let hist = JSON.parse(localStorage.getItem('historico_marmitas_cla') || '[]');
+                const agora = new Date().getTime();
+                const tresDiasMs = 3 * 24 * 60 * 60 * 1000;
+                hist = hist.filter(item => (agora - item.timestamp) < tresDiasMs);
+                localStorage.setItem('historico_marmitas_cla', JSON.stringify(hist));
+                return hist;
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function salvarHistoricoGlobal(novoItem) {
+            let hist = carregarHistoricoGlobal();
+            hist.unshift(novoItem);
+            localStorage.setItem('historico_marmitas_cla', JSON.stringify(hist));
+        }
+
+        function limparHistoricoExpirado() {
+            carregarHistoricoGlobal();
+            renderizarHistorico();
+            alert('Histórico atualizado! Registros com mais de 3 dias foram removidos automaticamente.');
+        }
 
         function mudarAba(aba) {
-            if (aba === 'adm' && usuarioLogado.perfil !== 'ADM') {
-                alert('Acesso restrito ao Administrador. Faça login com a conta Administrador para continuar.');
+            if (aba === 'adm' && (!usuarioLogado || usuarioLogado.perfil !== 'ADM')) {
+                alert('Acesso restrito. Faça login como Administrador para acessar o Painel ADM.');
                 abrirModalLogin();
                 return;
             }
@@ -385,13 +416,19 @@
                 const el = document.getElementById(`aba-${a}`);
                 const nav = document.getElementById(`nav-${a}`);
                 if (el) el.classList.add('hidden');
-                if (nav) nav.className = "flex-1 py-2 rounded-lg text-slate-400 hover:text-white cursor-pointer";
+                if (nav) nav.className = "flex-1 py-2 rounded-lg text-slate-400 hover:text-white cursor-pointer text-center";
             });
 
             const abaAtiva = document.getElementById(`aba-${aba}`);
             const navAtivo = document.getElementById(`nav-${aba}`);
             if (abaAtiva) abaAtiva.classList.remove('hidden');
-            if (navAtivo) navAtivo.className = "flex-1 py-2 rounded-lg bg-blue-700 text-white shadow cursor-pointer";
+            if (navAtivo) navAtivo.className = "flex-1 py-2 rounded-lg bg-blue-700 text-white shadow cursor-pointer text-center";
+
+            const seletorRef = document.getElementById('seletor-refeicao-container');
+            if (seletorRef) {
+                if (aba === 'operacao') seletorRef.classList.remove('hidden');
+                else seletorRef.classList.add('hidden');
+            }
 
             if (aba === 'historico') renderizarHistorico();
         }
@@ -409,15 +446,6 @@
             if (btnAlmoco) btnAlmoco.className = tipo === 'ALMOÇO' ? estiloAtivo : estiloInativo;
             if (btnJantar) btnJantar.className = tipo === 'JANTAR' ? estiloAtivo : estiloInativo;
             
-            const selCat = document.getElementById('categoria-novo-posto');
-            if (selCat) {
-                if (tipo === 'CAFÉ') {
-                    selCat.classList.remove('hidden');
-                } else {
-                    selCat.classList.add('hidden');
-                }
-            }
-
             renderizar();
         }
 
@@ -434,6 +462,20 @@
             renderizar();
         }
 
+        function definirQtdDireta(tipoLista, id, campo, valorInput) {
+            const novoValor = Math.max(0, parseInt(valorInput) || 0);
+            if (tipoLista === 'cafe_coletivo') {
+                dadosCafe.coletivo = dadosCafe.coletivo.map(item => item.id === id ? { ...item, qtd: novoValor } : item);
+            } else if (tipoLista === 'cafe_individual') {
+                dadosCafe.individual = dadosCafe.individual.map(item => item.id === id ? { ...item, qtd: novoValor } : item);
+            } else if (tipoLista === 'almoco') {
+                dadosAlmoco = dadosAlmoco.map(item => item.id === id ? { ...item, marmita: novoValor } : item);
+            } else if (tipoLista === 'jantar') {
+                dadosJantar = dadosJantar.map(item => item.id === id ? { ...item, [campo]: novoValor } : item);
+            }
+            renderizar();
+        }
+
         function atualizarReserva(val) {
             marmitasReserva[tipoAtual] = Math.max(0, parseInt(val) || 0);
             renderizar();
@@ -444,8 +486,8 @@
             const nome = input.value.trim();
             if (!nome) return;
 
+            const cat = document.getElementById('categoria-novo-posto').value;
             if (tipoAtual === 'CAFÉ') {
-                const cat = document.getElementById('categoria-novo-posto').value;
                 dadosCafe[cat].push({ id: Date.now(), nome: nome.toUpperCase(), obs: '', ramal: '', qtd: 0 });
             } else if (tipoAtual === 'ALMOÇO') {
                 dadosAlmoco.push({ id: Date.now(), nome: nome.toUpperCase(), marmita: 0, ramal: '', obs: '' });
@@ -490,10 +532,10 @@
                                     </div>
                                     ${p.obs ? `<span class="text-[11px] text-amber-700 font-medium">${p.obs}</span>` : ''}
                                     <div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-100">
-                                        <span class="text-xs text-gray-500">Qtd Café:</span>
+                                        <span class="text-xs text-gray-500 font-semibold">QTD Pães:</span>
                                         <div class="flex items-center gap-2">
                                             <button type="button" onclick="alterarQtd('cafe_coletivo', ${p.id}, 'qtd', -1)" class="w-8 h-8 bg-gray-100 font-bold text-gray-700 rounded-lg active:bg-gray-200 cursor-pointer">-</button>
-                                            <span class="w-8 text-center font-bold text-gray-800">${p.qtd}</span>
+                                            <input type="number" min="0" value="${p.qtd}" onchange="definirQtdDireta('cafe_coletivo', ${p.id}, 'qtd', this.value)" class="w-14 text-center font-bold text-gray-800 bg-gray-50 border border-gray-300 rounded-lg py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                                             <button type="button" onclick="alterarQtd('cafe_coletivo', ${p.id}, 'qtd', 1)" class="w-8 h-8 bg-gray-100 font-bold text-gray-700 rounded-lg active:bg-gray-200 cursor-pointer">+</button>
                                         </div>
                                     </div>
@@ -513,10 +555,10 @@
                                     </div>
                                     ${p.obs ? `<span class="text-[11px] text-amber-700 font-medium">${p.obs}</span>` : ''}
                                     <div class="flex items-center justify-between mt-2 pt-2 border-t border-gray-100">
-                                        <span class="text-xs text-gray-500">Qtd Café:</span>
+                                        <span class="text-xs text-gray-500 font-semibold">QTD Pães:</span>
                                         <div class="flex items-center gap-2">
                                             <button type="button" onclick="alterarQtd('cafe_individual', ${p.id}, 'qtd', -1)" class="w-8 h-8 bg-gray-100 font-bold text-gray-700 rounded-lg active:bg-gray-200 cursor-pointer">-</button>
-                                            <span class="w-8 text-center font-bold text-gray-800">${p.qtd}</span>
+                                            <input type="number" min="0" value="${p.qtd}" onchange="definirQtdDireta('cafe_individual', ${p.id}, 'qtd', this.value)" class="w-14 text-center font-bold text-gray-800 bg-gray-50 border border-gray-300 rounded-lg py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                                             <button type="button" onclick="alterarQtd('cafe_individual', ${p.id}, 'qtd', 1)" class="w-8 h-8 bg-gray-100 font-bold text-gray-700 rounded-lg active:bg-gray-200 cursor-pointer">+</button>
                                         </div>
                                     </div>
@@ -531,7 +573,7 @@
                         <span>Coletivo: ${totalCol}</span><span>Individual: ${totalInd}</span>
                     </div>
                     <div class="flex justify-between items-center pt-2 border-t border-blue-800 font-bold text-base">
-                        <span>TOTAL GERAL DO CAFÉ</span><span class="text-xl text-amber-400">${totalCol + totalInd}</span>
+                        <span>TOTAL GERAL DE PÃES</span><span class="text-xl text-amber-400">${totalCol + totalInd}</span>
                     </div>
                 `;
 
@@ -548,10 +590,10 @@
                                 </div>
                                 ${p.obs ? `<span class="text-[11px] text-amber-700 font-medium">${p.obs}</span>` : ''}
                                 <div class="flex items-center justify-between mt-1">
-                                    <span class="text-xs text-gray-500">Marmitas:</span>
+                                    <span class="text-xs text-gray-500 font-semibold">QTD Marmitas:</span>
                                     <div class="flex items-center gap-2">
                                         <button type="button" onclick="alterarQtd('almoco', ${p.id}, 'marmita', -1)" class="w-8 h-8 bg-gray-100 font-bold text-gray-700 rounded-lg active:bg-gray-200 cursor-pointer">-</button>
-                                        <span class="w-8 text-center font-bold text-gray-800">${p.marmita}</span>
+                                        <input type="number" min="0" value="${p.marmita}" onchange="definirQtdDireta('almoco', ${p.id}, 'marmita', this.value)" class="w-14 text-center font-bold text-gray-800 bg-gray-50 border border-gray-300 rounded-lg py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                                         <button type="button" onclick="alterarQtd('almoco', ${p.id}, 'marmita', 1)" class="w-8 h-8 bg-gray-100 font-bold text-gray-700 rounded-lg active:bg-gray-200 cursor-pointer">+</button>
                                     </div>
                                 </div>
@@ -587,18 +629,18 @@
                                 </div>
                                 ${p.obs ? `<span class="text-[11px] text-amber-700 font-medium">${p.obs}</span>` : ''}
                                 <div class="flex items-center justify-between">
-                                    <span class="text-xs text-gray-500">Marmitas:</span>
+                                    <span class="text-xs text-gray-500 font-semibold">QTD Marmitas:</span>
                                     <div class="flex items-center gap-2">
                                         <button type="button" onclick="alterarQtd('jantar', ${p.id}, 'marmita', -1)" class="w-8 h-8 bg-gray-100 font-bold text-gray-700 rounded-lg active:bg-gray-200 cursor-pointer">-</button>
-                                        <span class="w-8 text-center font-bold text-gray-800">${p.marmita}</span>
+                                        <input type="number" min="0" value="${p.marmita}" onchange="definirQtdDireta('jantar', ${p.id}, 'marmita', this.value)" class="w-14 text-center font-bold text-gray-800 bg-gray-50 border border-gray-300 rounded-lg py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                                         <button type="button" onclick="alterarQtd('jantar', ${p.id}, 'marmita', 1)" class="w-8 h-8 bg-gray-100 font-bold text-gray-700 rounded-lg active:bg-gray-200 cursor-pointer">+</button>
                                     </div>
                                 </div>
                                 <div class="flex items-center justify-between pt-2 border-t border-gray-100">
-                                    <span class="text-xs text-amber-600 font-medium">Ceia:</span>
+                                    <span class="text-xs text-amber-600 font-semibold">QTD Ceia:</span>
                                     <div class="flex items-center gap-2">
                                         <button type="button" onclick="alterarQtd('jantar', ${p.id}, 'ceia', -1)" class="w-8 h-8 bg-amber-50 font-bold text-amber-700 rounded-lg active:bg-amber-100 cursor-pointer">-</button>
-                                        <span class="w-8 text-center font-bold text-amber-800">${p.ceia}</span>
+                                        <input type="number" min="0" value="${p.ceia}" onchange="definirQtdDireta('jantar', ${p.id}, 'ceia', this.value)" class="w-14 text-center font-bold text-amber-800 bg-amber-50 border border-amber-300 rounded-lg py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
                                         <button type="button" onclick="alterarQtd('jantar', ${p.id}, 'ceia', 1)" class="w-8 h-8 bg-amber-50 font-bold text-amber-700 rounded-lg active:bg-amber-100 cursor-pointer">+</button>
                                     </div>
                                 </div>
@@ -624,6 +666,12 @@
         }
 
         function gerarRelacaoEPDF() {
+            if (!usuarioLogado) {
+                alert('Atenção: É necessário fazer o Login antes de gerar a relação oficial.');
+                abrirModalLogin();
+                return;
+            }
+
             const comissario = document.getElementById('select-comissario').value;
             if (!comissario) {
                 alert('Atenção: Selecione o Comissário / Motorista Responsável antes de continuar.');
@@ -665,6 +713,7 @@
 
             const novaRelacao = {
                 id: Date.now(),
+                timestamp: new Date().getTime(),
                 data: dataAtual,
                 tipo: tipoAtual,
                 operador: usuarioLogado.login,
@@ -672,10 +721,9 @@
                 totalMarmitas: totalM,
                 totalCeias: totalC
             };
-            historicoRelacoes.unshift(novaRelacao);
+            salvarHistoricoGlobal(novaRelacao);
 
-            // Preenchimento dos dados do PDF
-            document.getElementById('pdf-titulo-refeicao').innerText = `RELAÇÃO DE MARMITEX - ${tipoAtual}`;
+            document.getElementById('pdf-titulo-refeicao').innerText = `RELAÇÃO DE ${tipoAtual}`;
             document.getElementById('pdf-data-hora').innerText = dataAtual;
             document.getElementById('pdf-total-marmitas').innerText = totalM;
             document.getElementById('pdf-assinatura-operador').innerText = usuarioLogado.login;
@@ -683,6 +731,14 @@
 
             const thCeia = document.getElementById('th-pdf-ceia');
             const containerCeia = document.getElementById('pdf-container-total-ceia');
+            const textoTotalGeral = document.getElementById('pdf-texto-total-geral');
+
+            if (tipoAtual === 'CAFÉ') {
+                textoTotalGeral.innerHTML = `TOTAL GERAL DE PÃES: <span id="pdf-total-marmitas" style="font-size: 13px;">${totalM}</span>`;
+            } else {
+                textoTotalGeral.innerHTML = `TOTAL GERAL DE MARMITAS: <span id="pdf-total-marmitas" style="font-size: 13px;">${totalM}</span>`;
+            }
+
             if (tipoAtual === 'JANTAR') {
                 if (thCeia) thCeia.style.display = '';
                 if (containerCeia) containerCeia.style.display = '';
@@ -711,7 +767,6 @@
                 });
             }
 
-            // Torna o wrapper visível temporariamente para renderização correta
             const wrapper = document.getElementById('wrapper-pdf');
             wrapper.style.position = 'relative';
             wrapper.style.opacity = '1';
@@ -730,7 +785,7 @@
                 wrapper.style.position = 'fixed';
                 wrapper.style.opacity = '0';
                 wrapper.style.zIndex = '-999';
-                alert(`Ficha de Relação do ${tipoAtual} gerada e baixada com sucesso!`);
+                alert(`Ficha de Relação do ${tipoAtual} gerada e baixada com sucesso! Salva no histórico global.`);
             }).catch(err => {
                 wrapper.style.position = 'fixed';
                 wrapper.style.opacity = '0';
@@ -743,20 +798,23 @@
         function renderizarHistorico() {
             const container = document.getElementById('lista-historico');
             if (!container) return;
-            if (historicoRelacoes.length === 0) {
-                container.innerHTML = `<p class="text-xs text-slate-400">Nenhuma relação gerada até o momento.</p>`;
+            
+            const hist = carregarHistoricoGlobal();
+            if (hist.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">Nenhuma relação gerada nos últimos 3 dias.</p>`;
                 return;
             }
 
-            container.innerHTML = historicoRelacoes.map(h => `
-                <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 text-xs space-y-1">
+            container.innerHTML = hist.map(h => `
+                <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 text-xs space-y-1 shadow-sm">
                     <div class="flex justify-between font-bold text-amber-400">
                         <span>${h.tipo} - ${h.data}</span>
-                        <span>${h.totalMarmitas} Marmitas</span>
+                        <span>${h.totalMarmitas} Qtd</span>
                     </div>
-                    <div class="text-slate-300">
-                        <p><strong>Responsável:</strong> ${h.operador}</p>
+                    <div class="text-slate-300 space-y-0.5">
+                        <p><strong>Gerado por:</strong> <span class="text-emerald-400 font-semibold">${h.operador}</span></p>
                         <p><strong>Comissário:</strong> ${h.comissario}</p>
+                        ${h.tipo === 'JANTAR' ? `<p><strong>Total Ceias:</strong> ${h.totalCeias}</p>` : ''}
                     </div>
                 </div>
             `).join('');
@@ -862,25 +920,27 @@
 
             if (senhaDigitada === user.saram) {
                 usuarioLogado = user;
-                document.getElementById('info-usuario-logado').innerText = user.login;
-                document.getElementById('badge-perfil').innerText = user.perfil;
-                document.getElementById('campo-assinatura-logada').innerText = user.login;
+                document.getElementById('campo-assinatura-logada').innerText = `${user.login} (${user.perfil})`;
+                document.getElementById('campo-assinatura-logada').classList.remove('text-red-600');
+                document.getElementById('campo-assinatura-logada').classList.add('text-gray-800');
                 fecharModalLogin();
 
-                if (user.perfil !== 'ADM' && !document.getElementById('aba-adm').classList.contains('hidden')) {
-                    mudarAba('operacao');
+                const btnLogin = document.getElementById('nav-login');
+                if (btnLogin) {
+                    btnLogin.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> ${user.login}`;
                 }
 
+                mudarAba('operacao');
                 alert(`Login realizado com sucesso como ${user.login}!`);
             } else {
                 alert('Senha incorreta! Tente novamente.');
             }
         }
 
-        // Execução ao carregar a página
         window.addEventListener('DOMContentLoaded', () => {
             renderizarComissarios();
             renderizar();
+            carregarHistoricoGlobal();
         });
     </script>
 </body>
