@@ -69,17 +69,57 @@
         }
     </style>
 </head>
-<body class="font-sans pb-28 text-slate-100">
+<body class="font-sans pb-28 text-slate-100 relative">
 
-    <!-- ÁREA FIXA SUPERIOR (STICKY) COM CABEÇALHO ACIMA E MENU LATERAL / NAVEGAÇÃO -->
+    <!-- OVERLAY ESCURO AO ABRIR O MENU LATERAL ESQUERDO -->
+    <div id="menu-overlay" onclick="fecharMenuLateral()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden transition-opacity"></div>
+
+    <!-- PAINEL DO MENU LATERAL RETRÁTIL (ESQUERDA) -->
+    <aside id="menu-lateral-esquerda" class="fixed top-0 left-0 h-full w-72 bg-slate-900 border-r border-blue-500/40 shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between p-4">
+        <div class="space-y-4">
+            <!-- Cabeçalho do Menu Lateral com o Ícone Solicitado para Fechar -->
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <img src="icon.png" alt="Menu" class="w-7 h-7 object-contain">
+                    <span class="text-sm font-black uppercase tracking-wider text-slate-100" style="text-shadow: 0 0 10px rgba(59,130,246,0.8);">MENU</span>
+                </div>
+                <!-- Botão com o ícone de painel/sidebar para recolher o menu -->
+                <button type="button" onclick="fecharMenuLateral()" class="w-8 h-8 flex items-center justify-center rounded-lg p-1 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/50 cursor-pointer transition-all" title="Recolher Menu">
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="3" y="3" width="18" height="18" rx="3" stroke-width="2"/>
+                        <path d="M9 3v18" stroke-width="2"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Submenus / Botões do Menu Lateral Esquerdo -->
+            <nav class="space-y-2">
+                <button type="button" onclick="abrirModalLogin()" id="nav-login" class="w-full py-2.5 px-3 rounded-xl bg-slate-950/80 text-emerald-400 hover:text-emerald-300 border border-slate-800 transition-all cursor-pointer flex items-center justify-between text-xs font-bold">
+                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> LOGIN</span>
+                    <span id="status-login-texto" class="text-[10px] text-gray-400 font-normal">Fiscal Não Logado</span>
+                </button>
+                <button type="button" onclick="mudarAba('operacao')" id="nav-operacao" class="w-full py-2.5 px-3 rounded-xl bg-blue-700 text-white shadow cursor-pointer text-left text-xs font-bold">OPERAÇÃO</button>
+                <button type="button" onclick="mudarAba('historico')" id="nav-historico" class="w-full py-2.5 px-3 rounded-xl bg-slate-950/80 text-slate-300 hover:text-white border border-slate-800 cursor-pointer text-left text-xs font-bold">HISTÓRICO</button>
+                <button type="button" onclick="mudarAba('adm')" id="nav-adm" class="w-full py-2.5 px-3 rounded-xl bg-slate-950/80 text-slate-300 hover:text-white border border-slate-800 cursor-pointer text-left text-xs font-bold">PAINEL ADM</button>
+            </nav>
+        </div>
+
+        <div class="text-center text-[10px] text-slate-500 border-t border-slate-800 pt-3">
+            Rancho do CLA • Subsistência
+        </div>
+    </aside>
+
+    <!-- ÁREA FIXA SUPERIOR (STICKY) COM CABEÇALHO ACIMA -->
     <div class="sticky top-0 z-40 bg-[#070d18]/95 backdrop-blur-md pb-2 pt-2 px-3 border-b border-slate-800 shadow-xl">
         <div class="max-w-md mx-auto space-y-2">
             
             <!-- Cabeçalho Institucional Oficial com Fundo Unificado Branco -->
             <header class="bg-white text-gray-900 px-3 py-3 rounded-2xl shadow-xl border-b-4 border-blue-900 relative flex items-center justify-between overflow-hidden">
-                <div class="w-12 h-14 flex-shrink-0 flex items-center justify-center bg-white rounded-lg p-0.5 shadow-sm border border-gray-100">
-                    <img src="brasao-cla.png" alt="Brasão CLA" class="w-full h-full object-contain">
-                </div>
+                <!-- Botão de Abertura do Menu Lateral na Esquerda -->
+                <button type="button" onclick="abrirMenuLateral()" class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg p-1 border border-gray-300 cursor-pointer shadow-sm transition-all" title="Abrir Menu">
+                    <img src="icon.png" alt="Menu" class="w-full h-full object-contain">
+                </button>
+
                 <div class="flex-1 text-center px-1">
                     <h1 class="text-xs sm:text-sm font-black uppercase tracking-tight text-gray-900 leading-tight">
                         SISTEMA DE GESTÃO DE MARMITAS
@@ -91,34 +131,11 @@
                         Setor de Subsistência • Centro de Lançamento de Alcântara
                     </div>
                 </div>
+
                 <div class="w-10 h-12 flex-shrink-0 flex items-center justify-center bg-white rounded-lg p-0.5 shadow-sm border border-gray-100">
                     <img src="image.png" alt="Folha de Acanto" class="w-full h-full object-contain">
                 </div>
             </header>
-
-            <!-- MENU LATERAL RECOLÁVEL (ESTILO HAMBÚRGUER / ÍCONE DE LOGIN) -->
-            <div class="bg-slate-900/95 rounded-xl border border-blue-500/50 shadow-md overflow-hidden">
-                <!-- Cabeçalho do Menu Retrátil -->
-                <button type="button" onclick="toggleMenuLateral()" class="w-full px-3 py-2.5 flex items-center justify-between text-left cursor-pointer hover:bg-slate-800/50 transition-all">
-                    <div class="flex items-center gap-2">
-                        <!-- Ícone idêntico ao da tela de autenticação (icon.png) -->
-                        <img src="icon.png" alt="Menu" class="w-6 h-6 object-contain">
-                        <span class="text-xs font-black uppercase tracking-wider text-slate-200" style="text-shadow: 0 0 8px rgba(59,130,246,0.6);">MENU</span>
-                    </div>
-                    <span id="icone-seta-menu" class="text-xs text-blue-400 font-bold transition-transform duration-300">▼</span>
-                </button>
-
-                <!-- Submenus / Botões Destacados -->
-                <div id="container-submenus" class="hidden px-2 pb-2 pt-1 border-t border-slate-800 space-y-1.5">
-                    <button type="button" onclick="abrirModalLogin()" id="nav-login" class="w-full py-2 px-3 rounded-lg bg-slate-950/80 text-emerald-400 hover:text-emerald-300 border border-slate-800 transition-all cursor-pointer flex items-center justify-between text-xs font-bold">
-                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> LOGIN</span>
-                        <span id="status-login-texto" class="text-[10px] text-gray-400 font-normal">Fiscal Não Logado</span>
-                    </button>
-                    <button type="button" onclick="mudarAba('operacao')" id="nav-operacao" class="w-full py-2 px-3 rounded-lg bg-blue-700 text-white shadow cursor-pointer text-left text-xs font-bold">OPERAÇÃO</button>
-                    <button type="button" onclick="mudarAba('historico')" id="nav-historico" class="w-full py-2 px-3 rounded-lg bg-slate-950/80 text-slate-300 hover:text-white border border-slate-800 cursor-pointer text-left text-xs font-bold">HISTÓRICO</button>
-                    <button type="button" onclick="mudarAba('adm')" id="nav-adm" class="w-full py-2 px-3 rounded-lg bg-slate-950/80 text-slate-300 hover:text-white border border-slate-800 cursor-pointer text-left text-xs font-bold">PAINEL ADM</button>
-                </div>
-            </div>
 
             <!-- Seleção de Refeição (Visível apenas na aba Operação) -->
             <div id="seletor-refeicao-container" class="flex gap-2">
@@ -428,16 +445,15 @@
             localStorage.setItem('dados_jantar_cla', JSON.stringify(dadosJantar));
         }
 
-        function toggleMenuLateral() {
-            const container = document.getElementById('container-submenus');
-            const seta = document.getElementById('icone-seta-menu');
-            if (container.classList.contains('hidden')) {
-                container.classList.remove('hidden');
-                seta.style.transform = 'rotate(180deg)';
-            } else {
-                container.classList.add('hidden');
-                seta.style.transform = 'rotate(0deg)';
-            }
+        // Funções para Controle do Menu Lateral Esquerdo
+        function abrirMenuLateral() {
+            document.getElementById('menu-lateral-esquerda').classList.remove('-translate-x-full');
+            document.getElementById('menu-overlay').classList.remove('hidden');
+        }
+
+        function fecharMenuLateral() {
+            document.getElementById('menu-lateral-esquerda').classList.add('-translate-x-full');
+            document.getElementById('menu-overlay').classList.add('hidden');
         }
 
         function carregarHistoricoGlobal() {
@@ -445,7 +461,6 @@
                 let hist = JSON.parse(localStorage.getItem('historico_marmitas_cla') || '[]');
                 const agora = new Date().getTime();
                 const tresDiasMs = 3 * 24 * 60 * 60 * 1000;
-                // Filtragem automática por tempo (expira após 3 dias sem necessidade de ação manual)
                 hist = hist.filter(item => (agora - item.timestamp) < tresDiasMs);
                 localStorage.setItem('historico_marmitas_cla', JSON.stringify(hist));
                 return hist;
@@ -472,13 +487,13 @@
                 const el = document.getElementById(`aba-${a}`);
                 const nav = document.getElementById(`nav-${a}`);
                 if (el) el.classList.add('hidden');
-                if (nav) nav.className = "w-full py-2 px-3 rounded-lg bg-slate-950/80 text-slate-300 hover:text-white border border-slate-800 cursor-pointer text-left text-xs font-bold";
+                if (nav) nav.className = "w-full py-2.5 px-3 rounded-xl bg-slate-950/80 text-slate-300 hover:text-white border border-slate-800 cursor-pointer text-left text-xs font-bold";
             });
 
             const abaAtiva = document.getElementById(`aba-${aba}`);
             const navAtivo = document.getElementById(`nav-${aba}`);
             if (abaAtiva) abaAtiva.classList.remove('hidden');
-            if (navAtivo) navAtivo.className = "w-full py-2 px-3 rounded-lg bg-blue-700 text-white shadow cursor-pointer text-left text-xs font-bold";
+            if (navAtivo) navAtivo.className = "w-full py-2.5 px-3 rounded-xl bg-blue-700 text-white shadow cursor-pointer text-left text-xs font-bold";
 
             const seletorRef = document.getElementById('seletor-refeicao-container');
             if (seletorRef) {
@@ -487,7 +502,7 @@
             }
 
             if (aba === 'historico') renderizarHistorico();
-            toggleMenuLateral(); // Recolhe o menu automaticamente ao navegar
+            fecharMenuLateral();
         }
 
         function mudarRefeicao(tipo) {
@@ -699,6 +714,7 @@
         }
 
         function abrirModalLogin() {
+            fecharMenuLateral();
             document.getElementById('modal-login').classList.remove('hidden');
             document.getElementById('modal-login').classList.add('flex');
             carregarUsuariosSelect();
@@ -860,11 +876,9 @@
             const h = hist[index];
             if (!h) return;
 
-            // Restaura o tipo e os dados salvos do snapshot do histórico
             tipoAtual = h.tipo;
             mudarRefeicao(tipoAtual);
             
-            // Renderiza na área de impressão invisível e dispara o PDF ou visualização
             document.getElementById('pdf-data-hora').innerText = h.dataHora;
             document.getElementById('pdf-titulo-refeicao').innerText = `RELAÇÃO DE FORNECIMENTO DE ${h.tipo} (HISTÓRICO)`;
             document.getElementById('pdf-assinatura-operador').innerText = h.fiscal;
@@ -1002,7 +1016,6 @@
 
             corpoTabela.innerHTML = htmlTabela;
 
-            // Salva no histórico incluindo o HTML detalhado dos itens para a reexibição fiel
             salvarHistoricoGlobal({
                 tipo: tipoAtual,
                 dataHora: dataHoraFormatada,
