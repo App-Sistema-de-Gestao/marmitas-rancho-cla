@@ -98,10 +98,6 @@
 
             <!-- Submenus / Navegação do Menu Lateral -->
             <nav class="space-y-2">
-                <button type="button" onclick="abrirModalLogin()" id="nav-login-menu" class="w-full py-2.5 px-3 rounded-xl bg-slate-900/90 text-emerald-400 hover:text-emerald-300 border border-slate-800 transition-all cursor-pointer flex items-center justify-between text-xs font-bold">
-                    <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> LOGIN</span>
-                    <span id="status-login-texto-menu" class="text-[10px] text-gray-400 font-normal">Fiscal Não Logado</span>
-                </button>
                 <button type="button" onclick="mudarAba('operacao')" id="nav-operacao" class="w-full py-2.5 px-3 rounded-xl bg-blue-600 text-white font-bold shadow cursor-pointer text-left text-xs">OPERAÇÃO</button>
                 <button type="button" onclick="mudarAba('historico')" id="nav-historico" class="w-full py-2.5 px-3 rounded-xl bg-slate-900/90 text-slate-300 hover:text-white border border-slate-800 cursor-pointer text-left text-xs font-bold">HISTÓRICO</button>
                 <button type="button" onclick="mudarAba('adm')" id="nav-adm" class="w-full py-2.5 px-3 rounded-xl bg-slate-900/90 text-slate-300 hover:text-white border border-slate-800 cursor-pointer text-left text-xs font-bold">PAINEL ADM</button>
@@ -117,7 +113,7 @@
     <div class="sticky top-0 z-40 bg-[#070d18]/95 backdrop-blur-md pb-2 pt-2 px-3 border-b border-slate-800 shadow-xl">
         <div class="max-w-md mx-auto space-y-2">
             
-            <!-- Cabeçalho Institucional Oficial com o Brasão do CLA Restaurado -->
+            <!-- Item 1: Cabeçalho Institucional Oficial com o BRASÃO DO CLA mantido na esquerda -->
             <header class="bg-white text-gray-900 px-3 py-3 rounded-2xl shadow-xl border-b-4 border-blue-900 relative flex items-center justify-between overflow-hidden">
                 <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-white rounded-lg p-0.5 shadow-sm border border-gray-100">
                     <img src="brasao-cla.png" alt="Brasão CLA" class="w-full h-full object-contain">
@@ -140,9 +136,9 @@
                 </div>
             </header>
 
-            <!-- DOIS BOTÕES ABAIXO DO CABEÇALHO (MENU E LOGIN) OUPANDO A LARGURA LIMITE -->
+            <!-- DOIS BOTÕES LOGO ABAIXO DO CABEÇALHO (ITEM 2: MENU E ITEM 3: LOGIN) -->
             <div class="grid grid-cols-2 gap-2">
-                <!-- Botão Menu (Esquerda) -->
+                <!-- Item 2: Botão MENU (Esquerda) -->
                 <button type="button" onclick="alternarMenuLateral()" class="py-2.5 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 shadow-md text-slate-100 transition-all cursor-pointer flex items-center justify-center gap-2 font-bold text-xs">
                     <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <rect x="3" y="3" width="18" height="18" rx="3" stroke-width="2"/>
@@ -151,7 +147,7 @@
                     <span>MENU</span>
                 </button>
 
-                <!-- Botão Login (Direita) -->
+                <!-- Item 3: Botão LOGIN (Direita) -->
                 <button type="button" onclick="abrirModalLogin()" class="py-2.5 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 shadow-md text-emerald-400 transition-all cursor-pointer flex items-center justify-between text-xs font-bold">
                     <span class="flex items-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -462,7 +458,7 @@
             localStorage.setItem('dados_jantar_cla', JSON.stringify(dadosJantar));
         }
 
-        // Funções para Controle do Menu Lateral Esquerdo (Abrir, Fechar e Alternar)
+        // Funções para Controle do Menu Lateral Esquerdo
         function abrirMenuLateral() {
             document.getElementById('menu-lateral-esquerda').classList.remove('-translate-x-full');
             document.getElementById('menu-overlay').classList.remove('hidden');
@@ -817,11 +813,6 @@
             const statusLoginTexto = document.getElementById('status-login-texto');
             if (statusLoginTexto) {
                 statusLoginTexto.innerText = user.login;
-            }
-
-            const statusLoginTextoMenu = document.getElementById('status-login-texto-menu');
-            if (statusLoginTextoMenu) {
-                statusLoginTextoMenu.innerText = user.login;
             }
 
             document.getElementById('input-senha-login').value = '';
