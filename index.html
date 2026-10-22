@@ -74,7 +74,7 @@
             box-shadow: 0 0 15px rgba(52, 211, 153, 0.6) !important;
         }
 
-        /* Classe específica para botões ativos na Sidebar */
+        /* Classe específica para botões ativos na Sidebar com destaque neon fixo */
         .btn-sidebar-ativo {
             background-color: #1e293b !important;
             border-color: #34d399 !important;
@@ -112,7 +112,7 @@
 
             <!-- Submenus / Navegação do Menu Lateral com Efeito Neon -->
             <nav class="space-y-2">
-                <button type="button" onclick="mudarAba('operacao')" id="nav-operacao" class="btn-sidebar w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">OPERAÇÃO</button>
+                <button type="button" onclick="mudarAba('operacao')" id="nav-operacao" class="btn-sidebar btn-sidebar-ativo w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">OPERAÇÃO</button>
                 <button type="button" onclick="mudarAba('historico')" id="nav-historico" class="btn-sidebar w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">HISTÓRICO</button>
                 <button type="button" onclick="mudarAba('adm')" id="nav-adm" class="btn-sidebar w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">PAINEL ADM</button>
             </nav>
