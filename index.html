@@ -2,25 +2,30 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SISTEMA DE GESTÃO DE MARMITAS - RANCHO DO CLA</title>
     
-    <!-- Ícone do Navegador (Favicon) -->
+    <!-- Ícone do Navegador (Favicon) e iOS -->
     <link rel="icon" type="image/png" href="icon.png">
-    <!-- Ícone para Atalho no iPhone / iPad (iOS) -->
     <link rel="apple-touch-icon" href="icon.png">
 
-    <!-- Configurações para Tela Cheia no Celular (Web App) -->
+    <!-- Configurações PWA Embutidas para Permitir Instalação na Tela Inicial -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Marmitas CLA">
+    <link rel="manifest" href='data:application/manifest+json,{"name":"Marmitas CLA","short_name":"MarmitasCLA","start_url":".","display":"standalone","background_color":"#070d18","theme_color":"#070d18","icons":[{"src":"icon.png","sizes":"192x192","type":"image/png"}]}'>
 
     <!-- Tailwind CSS v3 Estável -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- html2pdf.js para Geração do PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
-        body {
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
             background: linear-gradient(135deg, #0b172a 0%, #070d18 100%);
             min-height: 100vh;
         }
@@ -57,7 +62,7 @@
             vertical-align: middle;
         }
 
-        /* Efeito Verde Neon Universal para Cards, Cabeçalho, Botões e Sidebar */
+        /* Efeito Verde Neon Universal */
         .card-metalico, header, .card-botao-neon, .btn-sidebar {
             background-color: #1e293b;
             border: 1px solid #334155;
@@ -74,7 +79,6 @@
             box-shadow: 0 0 15px rgba(52, 211, 153, 0.6) !important;
         }
 
-        /* Classe específica para botões ativos na Sidebar com destaque neon fixo */
         .btn-sidebar-ativo {
             background-color: #1e293b !important;
             border-color: #34d399 !important;
@@ -82,7 +86,7 @@
             box-shadow: 0 0 15px rgba(52, 211, 153, 0.6) !important;
         }
 
-        /* Estrutura para impressão e renderização */
+        /* Estrutura Oculta para PDF */
         #wrapper-pdf {
             position: absolute;
             top: 0;
@@ -111,7 +115,7 @@
         }
     </style>
 </head>
-<body class="font-sans pb-28 text-slate-100 relative">
+<body class="font-sans pb-28 text-slate-100 relative w-full overflow-x-hidden">
 
     <!-- OVERLAY ESCURO AO ABRIR O MENU LATERAL ESQUERDO -->
     <div id="menu-overlay" onclick="fecharMenuLateral()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden transition-opacity"></div>
@@ -119,7 +123,6 @@
     <!-- PAINEL DO MENU LATERAL RETRÁTIL (ESQUERDA) -->
     <aside id="menu-lateral-esquerda" class="fixed top-0 left-0 h-full w-72 bg-[#0b1322] border-r border-slate-800 shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between p-4">
         <div class="space-y-5">
-            <!-- Cabeçalho do Menu Lateral -->
             <div class="card-metalico flex items-center justify-between p-2.5 rounded-xl">
                 <div class="flex items-center gap-2.5">
                     <img src="icon.png" alt="Logo" class="w-8 h-8 object-contain">
@@ -129,7 +132,6 @@
                     </div>
                 </div>
                 
-                <!-- Botão de Recolher Sidebar -->
                 <button type="button" onclick="fecharMenuLateral()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-800/80 border border-slate-700 hover:border-[#34d399] text-slate-300 hover:text-white cursor-pointer transition-all shadow-sm" title="Recolher Menu">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <rect x="3" y="3" width="18" height="18" rx="3" stroke-width="2"/>
@@ -138,7 +140,6 @@
                 </button>
             </div>
 
-            <!-- Submenus / Navegação do Menu Lateral com Efeito Neon -->
             <nav class="space-y-2">
                 <button type="button" onclick="mudarAba('operacao')" id="nav-operacao" class="btn-sidebar btn-sidebar-ativo w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">OPERAÇÃO</button>
                 <button type="button" onclick="mudarAba('historico')" id="nav-historico" class="btn-sidebar w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">HISTÓRICO</button>
@@ -151,11 +152,10 @@
         </div>
     </aside>
 
-    <!-- ÁREA FIXA SUPERIOR (STICKY) COM CABEÇALHO -->
-    <div class="sticky top-0 z-40 bg-[#070d18]/95 backdrop-blur-md pb-2 pt-2 px-3 border-b border-slate-800 shadow-xl">
-        <div class="max-w-md mx-auto space-y-2">
+    <!-- ÁREA FIXA SUPERIOR COM CABEÇALHO RESPONSIVO -->
+    <div class="sticky top-0 z-40 bg-[#070d18]/95 backdrop-blur-md pb-2 pt-2 px-3 border-b border-slate-800 shadow-xl w-full">
+        <div class="max-w-md mx-auto space-y-2 w-full">
             
-            <!-- Cabeçalho Institucional com Efeito Hover Verde Neon -->
             <header class="bg-white text-gray-900 px-3 py-3 rounded-2xl shadow-xl border-b-4 border-blue-900 relative flex items-center justify-between overflow-hidden">
                 <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-white rounded-lg p-0.5 shadow-sm border border-gray-100">
                     <img src="brasao-cla.png" alt="Brasão CLA" class="w-full h-full object-contain">
@@ -178,9 +178,7 @@
                 </div>
             </header>
 
-            <!-- DOIS BOTÕES ABAIXO DO CABEÇALHO (MENU E LOGIN) COM EFEITO NEON -->
             <div class="grid grid-cols-2 gap-2">
-                <!-- Botão MENU -->
                 <button type="button" onclick="alternarMenuLateral()" class="card-botao-neon py-2.5 px-3 rounded-xl bg-slate-900/90 border border-slate-700 shadow-md text-slate-100 transition-all cursor-pointer flex items-center justify-center gap-2 font-bold text-xs">
                     <svg class="w-4 h-4 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <rect x="3" y="3" width="18" height="18" rx="3" stroke-width="2"/>
@@ -190,7 +188,6 @@
                     <span style="color: #e2e8f0; text-shadow: 0 0 8px rgba(226,232,240,0.6);">MENU</span>
                 </button>
 
-                <!-- Botão LOGIN -->
                 <button type="button" onclick="abrirModalLogin()" class="card-botao-neon py-2.5 px-3 rounded-xl bg-slate-900/90 border border-slate-700 shadow-md transition-all cursor-pointer flex items-center justify-between text-xs font-bold">
                     <span class="flex items-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -200,7 +197,6 @@
                 </button>
             </div>
 
-            <!-- Seleção de Refeição -->
             <div id="seletor-refeicao-container" class="flex gap-2">
                 <button type="button" onclick="mudarRefeicao('CAFÉ')" id="btn-cafe" class="flex-1 py-2.5 text-xs font-bold rounded-xl bg-blue-700 text-white shadow-lg shadow-blue-900/50 transition-all cursor-pointer">CAFÉ</button>
                 <button type="button" onclick="mudarRefeicao('ALMOÇO')" id="btn-almoco" class="flex-1 py-2.5 text-xs font-bold rounded-xl bg-white/90 text-gray-700 border border-gray-200 shadow-md transition-all cursor-pointer">ALMOÇO</button>
@@ -211,15 +207,12 @@
     </div>
 
     <!-- CONTEÚDO PRINCIPAL DA APLICAÇÃO -->
-    <div id="app" class="max-w-md mx-auto p-3 pt-4">
+    <div id="app" class="max-w-md mx-auto p-3 pt-4 w-full">
 
         <!-- ABA 1: OPERAÇÃO -->
         <div id="aba-operacao" class="space-y-4">
-            
-            <!-- Conteúdo Dinâmico dos Postos -->
             <div id="conteudo-postos"></div>
 
-            <!-- Adicionar Novo Posto -->
             <div class="card-metalico p-3.5 rounded-2xl shadow-lg space-y-2">
                 <label class="block text-xs font-bold text-amber-400">Adicionar Novo Posto ou Setor</label>
                 <div class="flex gap-2">
@@ -232,10 +225,8 @@
                 </div>
             </div>
 
-            <!-- Painel de Reservas e Totais -->
             <div id="painel-totais" class="card-metalico text-white p-4 rounded-xl text-sm font-semibold shadow-xl space-y-2"></div>
 
-            <!-- Assinatura e Motorista -->
             <div class="card-metalico p-4 rounded-xl shadow-lg text-slate-100 space-y-3">
                 <div>
                     <label class="block text-xs font-medium text-slate-300 mb-1">Responsável pelo Preenchimento (Fiscal Logado)</label>
@@ -252,21 +243,18 @@
                 </div>
             </div>
 
-            <!-- OS 3 NOVOS BOTÕES DIVIDIDOS POR FUNÇÃO -->
+            <!-- BOTOES DIVIDIDOS -->
             <div class="space-y-2 pt-2">
-                <!-- Botão 1: Gerar Relação (Salva no histórico e prepara o documento) -->
                 <button type="button" onclick="gerarRelacao()" class="w-full bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/50 py-3 rounded-xl font-bold shadow-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
                     <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                     Gerar Relação de Fornecimento
                 </button>
 
-                <!-- Botão 2: Baixar PDF -->
                 <button type="button" onclick="baixarPDF()" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-900/50 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
                     <svg class="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                     Baixar Relação em PDF
                 </button>
 
-                <!-- Botão 3: Imprimir -->
                 <button type="button" onclick="imprimirRelacao()" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/50 py-3 rounded-xl font-bold shadow-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
                     <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                     Imprimir Relação Oficial
@@ -316,9 +304,9 @@
 
     </div>
 
-    <!-- MODAL DE LOGIN -->
+    <!-- MODAL DE LOGIN (PERFEITAMENTE CENTRALIZADO NA TELA) -->
     <div id="modal-login" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-        <div class="bg-white text-slate-900 max-w-xs w-full p-5 rounded-2xl shadow-2xl space-y-3">
+        <div class="bg-white text-slate-900 max-w-xs w-full p-5 rounded-2xl shadow-2xl space-y-3 my-auto">
             <div class="flex justify-center mb-1">
                 <img src="icon.png" alt="Logo CLA" class="w-16 h-16 object-contain">
             </div>
@@ -332,8 +320,9 @@
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-gray-600 mb-1" id="label-senha-saram">Senha / SARAM (somente números)</label>
-                <input type="password" id="input-senha-login" inputmode="numeric" oninput="validarApenasNumerosSenha(this)" placeholder="Digite a senha..." class="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg text-xs font-bold text-slate-900 focus:ring-2 focus:ring-blue-500">
+                <label class="block text-xs font-semibold text-gray-600 mb-1" id="label-senha-saram">Senha / SARAM</label>
+                <!-- Teclado Alfanumérico Universal Habilitado (inputmode="text") -->
+                <input type="password" id="input-senha-login" inputmode="text" placeholder="Digite sua senha ou SARAM..." class="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg text-xs font-bold text-slate-900 focus:ring-2 focus:ring-blue-500">
             </div>
 
             <div class="flex gap-2 pt-2">
@@ -686,13 +675,13 @@
                     subTotalColetivo += item.qtd;
                     const qtdFormatada = String(item.qtd).padStart(3, '0');
                     html += `<div class="card-metalico p-3 rounded-xl mb-2 flex items-center justify-between gap-2">
-                        <div class="flex-1">
-                            <span class="text-xs font-bold text-white block">${item.nome}</span>
-                            <span class="text-[10px] text-gray-400">${item.obs || 'Sem obs'} ${item.ramal ? '• Ramal: ' + item.ramal : ''}</span>
+                        <div class="flex-1 min-w-0">
+                            <span class="text-xs font-bold text-white block truncate">${item.nome}</span>
+                            <span class="text-[10px] text-gray-400 block truncate">${item.obs || 'Sem obs'} ${item.ramal ? '• Ramal: ' + item.ramal : ''}</span>
                         </div>
-                        <div class="flex items-center gap-1.5">
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
                             <button type="button" onclick="alterarQtd('cafe_coletivo', ${item.id}, 'qtd', -1)" class="w-7 h-7 bg-red-600/80 text-white rounded-lg font-bold text-xs flex items-center justify-center cursor-pointer">-</button>
-                            <input type="text" inputmode="numeric" value="${qtdFormatada}" onchange="definirQtdDireta('cafe_coletivo', ${item.id}, 'qtd', this.value)" class="w-14 text-center bg-slate-950 border border-slate-700 text-white text-xs py-1 rounded-lg">
+                            <input type="text" inputmode="numeric" value="${qtdFormatada}" onchange="definirQtdDireta('cafe_coletivo', ${item.id}, 'qtd', this.value)" class="w-12 text-center bg-slate-950 border border-slate-700 text-white text-xs py-1 rounded-lg">
                             <button type="button" onclick="alterarQtd('cafe_coletivo', ${item.id}, 'qtd', 1)" class="w-7 h-7 bg-emerald-600/80 text-white rounded-lg font-bold text-xs flex items-center justify-center cursor-pointer">+</button>
                         </div>
                     </div>`;
@@ -705,13 +694,13 @@
                     subTotalIndividual += item.qtd;
                     const qtdFormatada = String(item.qtd).padStart(3, '0');
                     html += `<div class="card-metalico p-3 rounded-xl mb-2 flex items-center justify-between gap-2">
-                        <div class="flex-1">
-                            <span class="text-xs font-bold text-white block">${item.nome}</span>
-                            <span class="text-[10px] text-gray-400">${item.obs || 'Sem obs'} ${item.ramal ? '• Ramal: ' + item.ramal : ''}</span>
+                        <div class="flex-1 min-w-0">
+                            <span class="text-xs font-bold text-white block truncate">${item.nome}</span>
+                            <span class="text-[10px] text-gray-400 block truncate">${item.obs || 'Sem obs'} ${item.ramal ? '• Ramal: ' + item.ramal : ''}</span>
                         </div>
-                        <div class="flex items-center gap-1.5">
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
                             <button type="button" onclick="alterarQtd('cafe_individual', ${item.id}, 'qtd', -1)" class="w-7 h-7 bg-red-600/80 text-white rounded-lg font-bold text-xs flex items-center justify-center cursor-pointer">-</button>
-                            <input type="text" inputmode="numeric" value="${qtdFormatada}" onchange="definirQtdDireta('cafe_individual', ${item.id}, 'qtd', this.value)" class="w-14 text-center bg-slate-950 border border-slate-700 text-white text-xs py-1 rounded-lg">
+                            <input type="text" inputmode="numeric" value="${qtdFormatada}" onchange="definirQtdDireta('cafe_individual', ${item.id}, 'qtd', this.value)" class="w-12 text-center bg-slate-950 border border-slate-700 text-white text-xs py-1 rounded-lg">
                             <button type="button" onclick="alterarQtd('cafe_individual', ${item.id}, 'qtd', 1)" class="w-7 h-7 bg-emerald-600/80 text-white rounded-lg font-bold text-xs flex items-center justify-center cursor-pointer">+</button>
                         </div>
                     </div>`;
@@ -728,13 +717,13 @@
                     totalGeral += item.marmita;
                     const qtdFormatada = String(item.marmita).padStart(3, '0');
                     html += `<div class="card-metalico p-3 rounded-xl mb-2 flex items-center justify-between gap-2">
-                        <div class="flex-1">
-                            <span class="text-xs font-bold text-white block">${item.nome}</span>
-                            <span class="text-[10px] text-gray-400">${item.obs || 'Sem obs'} ${item.ramal ? '• Ramal: ' + item.ramal : ''}</span>
+                        <div class="flex-1 min-w-0">
+                            <span class="text-xs font-bold text-white block truncate">${item.nome}</span>
+                            <span class="text-[10px] text-gray-400 block truncate">${item.obs || 'Sem obs'} ${item.ramal ? '• Ramal: ' + item.ramal : ''}</span>
                         </div>
-                        <div class="flex items-center gap-1.5">
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
                             <button type="button" onclick="alterarQtd('almoco', ${item.id}, 'marmita', -1)" class="w-7 h-7 bg-red-600/80 text-white rounded-lg font-bold text-xs flex items-center justify-center cursor-pointer">-</button>
-                            <input type="text" inputmode="numeric" value="${qtdFormatada}" onchange="definirQtdDireta('almoco', ${item.id}, 'marmita', this.value)" class="w-14 text-center bg-slate-950 border border-slate-700 text-white text-xs py-1 rounded-lg">
+                            <input type="text" inputmode="numeric" value="${qtdFormatada}" onchange="definirQtdDireta('almoco', ${item.id}, 'marmita', this.value)" class="w-12 text-center bg-slate-950 border border-slate-700 text-white text-xs py-1 rounded-lg">
                             <button type="button" onclick="alterarQtd('almoco', ${item.id}, 'marmita', 1)" class="w-7 h-7 bg-emerald-600/80 text-white rounded-lg font-bold text-xs flex items-center justify-center cursor-pointer">+</button>
                         </div>
                     </div>`;
@@ -754,9 +743,9 @@
                     const ceiaFmt = String(item.ceia).padStart(3, '0');
                     html += `<div class="card-metalico p-3 rounded-xl mb-2 space-y-2">
                         <div class="flex justify-between items-center">
-                            <div class="flex-1">
-                                <span class="text-xs font-bold text-white block">${item.nome}</span>
-                                <span class="text-[10px] text-gray-400">${item.obs || 'Sem obs'} ${item.ramal ? '• Ramal: ' + item.ramal : ''}</span>
+                            <div class="flex-1 min-w-0">
+                                <span class="text-xs font-bold text-white block truncate">${item.nome}</span>
+                                <span class="text-[10px] text-gray-400 block truncate">${item.obs || 'Sem obs'} ${item.ramal ? '• Ramal: ' + item.ramal : ''}</span>
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800">
@@ -764,7 +753,7 @@
                                 <span class="text-[10px] font-bold text-gray-300">Marmita:</span>
                                 <div class="flex items-center gap-1">
                                     <button type="button" onclick="alterarQtd('jantar', ${item.id}, 'marmita', -1)" class="w-6 h-6 bg-red-600 text-white rounded font-bold text-xs">-</button>
-                                    <input type="text" inputmode="numeric" value="${marmitaFmt}" onchange="definirQtdDireta('jantar', ${item.id}, 'marmita', this.value)" class="w-12 text-center bg-slate-900 border border-slate-700 text-white text-xs py-0.5 rounded">
+                                    <input type="text" inputmode="numeric" value="${marmitaFmt}" onchange="definirQtdDireta('jantar', ${item.id}, 'marmita', this.value)" class="w-10 text-center bg-slate-900 border border-slate-700 text-white text-xs py-0.5 rounded">
                                     <button type="button" onclick="alterarQtd('jantar', ${item.id}, 'marmita', 1)" class="w-6 h-6 bg-emerald-600 text-white rounded font-bold text-xs">+</button>
                                 </div>
                             </div>
@@ -772,7 +761,7 @@
                                 <span class="text-[10px] font-bold text-gray-300">Ceia:</span>
                                 <div class="flex items-center gap-1">
                                     <button type="button" onclick="alterarQtd('jantar', ${item.id}, 'ceia', -1)" class="w-6 h-6 bg-red-600 text-white rounded font-bold text-xs">-</button>
-                                    <input type="text" inputmode="numeric" value="${ceiaFmt}" onchange="definirQtdDireta('jantar', ${item.id}, 'ceia', this.value)" class="w-12 text-center bg-slate-900 border border-slate-700 text-white text-xs py-0.5 rounded">
+                                    <input type="text" inputmode="numeric" value="${ceiaFmt}" onchange="definirQtdDireta('jantar', ${item.id}, 'ceia', this.value)" class="w-10 text-center bg-slate-900 border border-slate-700 text-white text-xs py-0.5 rounded">
                                     <button type="button" onclick="alterarQtd('jantar', ${item.id}, 'ceia', 1)" class="w-6 h-6 bg-emerald-600 text-white rounded font-bold text-xs">+</button>
                                 </div>
                             </div>
@@ -797,14 +786,16 @@
 
         function abrirModalLogin() {
             fecharMenuLateral();
-            document.getElementById('modal-login').classList.remove('hidden');
-            document.getElementById('modal-login').classList.add('flex');
+            const modal = document.getElementById('modal-login');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
             carregarUsuariosSelect();
         }
 
         function fecharModalLogin() {
-            document.getElementById('modal-login').classList.remove('flex');
-            document.getElementById('modal-login').classList.add('hidden');
+            const modal = document.getElementById('modal-login');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
         }
 
         function carregarUsuariosSelect() {
@@ -819,22 +810,14 @@
         function aoMudarLoginSelect(idStr) {
             const labelSenha = document.getElementById('label-senha-saram');
             if (!idStr) {
-                if (labelSenha) labelSenha.innerText = "Senha / SARAM (somente números)";
+                if (labelSenha) labelSenha.innerText = "Senha / SARAM";
                 return;
             }
             const user = usuariosCadastrados.find(u => u.id == idStr);
             if (user && user.perfil === 'ADM') {
                 if (labelSenha) labelSenha.innerText = "Senha de Administrador";
             } else {
-                if (labelSenha) labelSenha.innerText = "SARAM (somente números)";
-            }
-        }
-
-        function validarApenasNumerosSenha(input) {
-            const userSelId = document.getElementById('select-login-usuario').value;
-            const user = usuariosCadastrados.find(u => u.id == userSelId);
-            if (!user || user.perfil !== 'ADM') {
-                input.value = input.value.replace(/[^0-9]/g, '');
+                if (labelSenha) labelSenha.innerText = "SARAM";
             }
         }
 
@@ -995,7 +978,6 @@
             mudarAba('operacao');
         }
 
-        // FUNÇÃO 1: GERAR RELAÇÃO (Monta os dados na ficha oculta e salva no histórico)
         function gerarRelacao() {
             if (!usuarioLogado) {
                 alert('Você precisa fazer LOGIN antes de gerar a relação.');
@@ -1105,7 +1087,6 @@
             alert('Relação gerada e salva com sucesso! Agora você pode clicar em Baixar PDF ou Imprimir.');
         }
 
-        // FUNÇÃO 2: BAIXAR PDF (Converte o documento já gerado)
         function baixarPDF() {
             const corpoTabela = document.getElementById('pdf-corpo-tabela');
             if (!corpoTabela || corpoTabela.innerHTML.trim() === '') {
@@ -1129,7 +1110,6 @@
             }, 200);
         }
 
-        // FUNÇÃO 3: IMPRIMIR (Direciona o arquivo gerado para a área de impressão nativa)
         function imprimirRelacao() {
             const corpoTabela = document.getElementById('pdf-corpo-tabela');
             if (!corpoTabela || corpoTabela.innerHTML.trim() === '') {
