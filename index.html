@@ -82,7 +82,7 @@
             box-shadow: 0 0 15px rgba(52, 211, 153, 0.6) !important;
         }
 
-        /* Estrutura invisível mas perfeitamente renderizável pelo Chrome/html2pdf */
+        /* Estrutura para impressão e renderização */
         #wrapper-pdf {
             position: absolute;
             top: 0;
@@ -91,6 +91,23 @@
             opacity: 0.01;
             pointer-events: none;
             z-index: -9999;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #wrapper-pdf, #wrapper-pdf * {
+                visibility: visible;
+            }
+            #wrapper-pdf {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                opacity: 1;
+                z-index: 99999;
+            }
         }
     </style>
 </head>
@@ -235,10 +252,26 @@
                 </div>
             </div>
 
-            <!-- Botão Gerar Relação & PDF -->
-            <button type="button" onclick="gerarRelacaoEPDF()" class="w-full bg-blue-700 text-white py-3.5 rounded-xl font-bold shadow-xl shadow-blue-900/50 hover:bg-blue-800 transition-all text-base cursor-pointer">
-                Gerar Relação & PDF Oficial
-            </button>
+            <!-- OS 3 NOVOS BOTÕES DIVIDIDOS POR FUNÇÃO -->
+            <div class="space-y-2 pt-2">
+                <!-- Botão 1: Gerar Relação (Salva no histórico e prepara o documento) -->
+                <button type="button" onclick="gerarRelacao()" class="w-full bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/50 py-3 rounded-xl font-bold shadow-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Gerar Relação de Fornecimento
+                </button>
+
+                <!-- Botão 2: Baixar PDF -->
+                <button type="button" onclick="baixarPDF()" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-900/50 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
+                    <svg class="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    Baixar Relação em PDF
+                </button>
+
+                <!-- Botão 3: Imprimir -->
+                <button type="button" onclick="imprimirRelacao()" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/50 py-3 rounded-xl font-bold shadow-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
+                    <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    Imprimir Relação Oficial
+                </button>
+            </div>
         </div>
 
         <!-- ABA 2: HISTÓRICO -->
@@ -913,7 +946,7 @@
                     <div class="text-slate-300"><strong>Fiscal:</strong> ${h.fiscal} | <strong>Comissário:</strong> ${h.comissario}</div>
                     <div class="text-slate-300"><strong>Total Geral:</strong> ${h.totalGeral} ${h.tipo === 'JANTAR' ? '| Ceias: ' + h.totalCeias : ''}</div>
                     <button type="button" onclick="reexibirRelatorioHistorico(${index})" class="w-full mt-1 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded-lg font-bold text-xs shadow cursor-pointer">
-                        Reexibir Relação Salva
+                        Carregar Relação Salva
                     </button>
                 </div>`;
             });
@@ -958,26 +991,14 @@
             spanTotalMarmitas.innerText = h.totalGeral;
             spanTotalCeias.innerText = h.totalCeias || 0;
 
-            const elementoPDF = document.getElementById('area-impressao-pdf');
-            // Forçar computação do layout
-            void elementoPDF.offsetHeight;
-
-            setTimeout(() => {
-                const opt = {
-                    margin:       5,
-                    filename:     `Relacao_${h.tipo}_CLA_Reexibida.pdf`,
-                    image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { scale: 2, useCORS: true, scrollX: 0, scrollY: 0, windowWidth: 1000 },
-                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                };
-
-                html2pdf().from(elementoPDF).set(opt).save();
-            }, 300);
+            alert('Relação do histórico carregada com sucesso! Agora você pode clicar em Baixar PDF ou Imprimir.');
+            mudarAba('operacao');
         }
 
-        function gerarRelacaoEPDF() {
+        // FUNÇÃO 1: GERAR RELAÇÃO (Monta os dados na ficha oculta e salva no histórico)
+        function gerarRelacao() {
             if (!usuarioLogado) {
-                alert('Você precisa fazer LOGIN antes de gerar a relação e o PDF oficial.');
+                alert('Você precisa fazer LOGIN antes de gerar a relação.');
                 abrirModalLogin();
                 return;
             }
@@ -1081,21 +1102,41 @@
                 timestamp: agora.getTime()
             });
 
+            alert('Relação gerada e salva com sucesso! Agora você pode clicar em Baixar PDF ou Imprimir.');
+        }
+
+        // FUNÇÃO 2: BAIXAR PDF (Converte o documento já gerado)
+        function baixarPDF() {
+            const corpoTabela = document.getElementById('pdf-corpo-tabela');
+            if (!corpoTabela || corpoTabela.innerHTML.trim() === '') {
+                alert('Primeiro clique no botão "Gerar Relação de Fornecimento" antes de baixar o PDF.');
+                return;
+            }
+
             const elementoPDF = document.getElementById('area-impressao-pdf');
-            // Forçar redesenho síncrono do elemento
             void elementoPDF.offsetHeight;
 
             setTimeout(() => {
                 const opt = {
                     margin:       5,
-                    filename:     `Relacao_${tipoAtual}_CLA_${agora.toISOString().slice(0,10)}.pdf`,
+                    filename:     `Relacao_${tipoAtual}_CLA.pdf`,
                     image:        { type: 'jpeg', quality: 0.98 },
                     html2canvas:  { scale: 2, useCORS: true, scrollX: 0, scrollY: 0, windowWidth: 1000 },
                     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
 
                 html2pdf().from(elementoPDF).set(opt).save();
-            }, 300);
+            }, 200);
+        }
+
+        // FUNÇÃO 3: IMPRIMIR (Direciona o arquivo gerado para a área de impressão nativa)
+        function imprimirRelacao() {
+            const corpoTabela = document.getElementById('pdf-corpo-tabela');
+            if (!corpoTabela || corpoTabela.innerHTML.trim() === '') {
+                alert('Primeiro clique no botão "Gerar Relação de Fornecimento" antes de imprimir.');
+                return;
+            }
+            window.print();
         }
 
         window.onload = function() {
