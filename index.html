@@ -947,16 +947,18 @@
             spanTotalMarmitas.innerText = h.totalGeral;
             spanTotalCeias.innerText = h.totalCeias || 0;
 
-            const elementoPDF = document.getElementById('area-impressao-pdf');
-            const opt = {
-                margin:       5,
-                filename:     `Relacao_${h.tipo}_CLA_Reexibida.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
+            setTimeout(() => {
+                const elementoPDF = document.getElementById('area-impressao-pdf');
+                const opt = {
+                    margin:       5,
+                    filename:     `Relacao_${h.tipo}_CLA_Reexibida.pdf`,
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2, useCORS: true },
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
 
-            html2pdf().from(elementoPDF).set(opt).save();
+                html2pdf().from(elementoPDF).set(opt).save();
+            }, 200);
         }
 
         function gerarRelacaoEPDF() {
@@ -1065,16 +1067,19 @@
                 timestamp: agora.getTime()
             });
 
-            const elementoPDF = document.getElementById('area-impressao-pdf');
-            const opt = {
-                margin:       5,
-                filename:     `Relacao_${tipoAtual}_CLA_${agora.toISOString().slice(0,10)}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
+            // Aguarda a renderização do DOM (250ms) antes de capturar a imagem do PDF
+            setTimeout(() => {
+                const elementoPDF = document.getElementById('area-impressao-pdf');
+                const opt = {
+                    margin:       5,
+                    filename:     `Relacao_${tipoAtual}_CLA_${agora.toISOString().slice(0,10)}.pdf`,
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2, useCORS: true },
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
 
-            html2pdf().from(elementoPDF).set(opt).save();
+                html2pdf().from(elementoPDF).set(opt).save();
+            }, 250);
         }
 
         window.onload = function() {
