@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SISTEMA DE GESTÃO DE MARMITAS - RANCHO DO CLA</title>
     
-    <!-- Favicon e Ícone para Atalho no Celular (Android e iPhone) -->
-    <link rel="icon" type="image/png" sizes="192x192" href="icon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
+    <!-- Favicon e Ícone para Atalho no Celular -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icon.png?v=2026">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon.png?v=2026">
 
     <!-- Configurações para Permitir Instalação / PWA -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -16,7 +16,7 @@
     <meta name="apple-mobile-web-app-title" content="Marmitas CLA">
     
     <!-- Link para o arquivo de Manifest Oficial -->
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest.json?v=2026">
 
     <!-- Tailwind CSS v3 Estável -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -143,15 +143,20 @@
             </div>
 
             <nav class="space-y-2">
-                <!-- MENU LATERAL COM O NOME REFEIÇÕES -->
                 <button type="button" onclick="mudarAba('operacao')" id="nav-operacao" class="btn-sidebar btn-sidebar-ativo w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">REFEIÇÕES</button>
                 <button type="button" onclick="mudarAba('historico')" id="nav-historico" class="btn-sidebar w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">HISTÓRICO</button>
                 <button type="button" onclick="mudarAba('adm')" id="nav-adm" class="btn-sidebar w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">PAINEL ADM</button>
             </nav>
         </div>
 
-        <div class="text-center text-[10px] text-slate-500 border-t border-slate-800/80 pt-3">
-            Setor de Subsistência • CLA
+        <!-- RODAPÉ DE DIREITOS RESERVADOS NO MENU LATERAL -->
+        <div class="text-center border-t border-slate-800/80 pt-3 flex flex-col items-center justify-center gap-1.5">
+            <img src="logo-nvc.png" alt="Logo NVC" class="w-8 h-8 object-contain">
+            <div class="text-[10px] text-slate-400 font-medium leading-tight">
+                <p>Setor de Subsistência • CLA</p>
+                <p class="text-[9px] text-slate-500 mt-1">© 2026 <strong>NVC Systems</strong>. Todos os direitos reservados.</p>
+                <p class="text-[8px] text-emerald-400/90 font-semibold">Desenvolvido para o Rancho do CLA</p>
+            </div>
         </div>
     </aside>
 
@@ -262,6 +267,11 @@
                     <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                     Imprimir Relação Oficial
                 </button>
+
+                <!-- BOTÃO DE RESET EM CASO DE MEMÓRIA CACHED -->
+                <button type="button" onclick="restaurarListaOficial25Postos()" class="w-full bg-red-950/80 hover:bg-red-900 text-red-300 border border-red-700/60 py-2 rounded-xl font-bold shadow transition-all text-[11px] flex items-center justify-center gap-1 cursor-pointer mt-4">
+                    ⚠️ Clique Aqui para Carregar a Lista Completa (25 Postos)
+                </button>
             </div>
         </div>
 
@@ -304,6 +314,14 @@
                 </div>
             </div>
         </div>
+
+        <!-- RODAPÉ PRINCIPAL DO APP COM LOGO NVC E DIREITOS RESERVADOS -->
+        <footer class="mt-8 pt-4 border-t border-slate-800 text-center flex flex-col items-center justify-center space-y-1.5 pb-6">
+            <img src="logo-nvc.png" alt="Logo NVC" class="w-9 h-9 object-contain drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]">
+            <p class="text-[10px] text-slate-400 font-medium">Rancho do CLA • Setor de Subsistência</p>
+            <p class="text-[9px] text-slate-500">© 2026 <strong>NVC Systems</strong>. Todos os direitos reservados.</p>
+            <p class="text-[8px] text-emerald-400/80 font-mono tracking-wider">Desenvolvido por NVC Systems</p>
+        </footer>
 
     </div>
 
@@ -384,6 +402,10 @@
                     <p style="font-weight: bold; font-size: 10px; margin: 0;" id="pdf-assinatura-comissario"></p>
                     <p style="color: #4b5563; margin: 1px 0 0 0;">Comissário / Motorista Responsável</p>
                 </div>
+            </div>
+
+            <div style="margin-top: 20px; text-align: center; font-size: 8px; color: #6b7280; border-top: 1px stroke #e5e7eb; padding-top: 4px;">
+                © 2026 NVC Systems • Todos os direitos reservados
             </div>
 
         </div>
@@ -478,8 +500,7 @@
             { id: 322, nome: 'PROFESP', marmita: 0, ramal: '', obs: '+ 50 toda terça e quinta até dezembro!' }
         ];
 
-        // LISTA OFICIAL DO JANTAR E CEIA COM TODOS OS 25 POSTOS DA PLANILHA
-        let dadosJantarPadrao = [
+        const dadosJantarOficial25 = [
             { id: 401, nome: 'GUARDA DO SPL', marmita: 4, ceia: 4, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '9470' },
             { id: 402, nome: 'GUARDA DA AACL', marmita: 8, ceia: 8, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '9889' },
             { id: 403, nome: 'PCI', marmita: 11, ceia: 11, obs: '', ramal: '' },
@@ -507,12 +528,20 @@
             { id: 425, nome: 'VILA DELTA', marmita: 0, ceia: 0, obs: '', ramal: '' }
         ];
 
-        let dadosJantar = JSON.parse(localStorage.getItem('dados_jantar_cla_v2026')) || dadosJantarPadrao;
+        let dadosJantar = dadosJantarOficial25;
+
+        function restaurarListaOficial25Postos() {
+            localStorage.clear();
+            dadosJantar = JSON.parse(JSON.stringify(dadosJantarOficial25));
+            salvarEstadoLocal();
+            renderizar();
+            alert('Sucesso! A lista oficial com TODOS os 25 postos foi restaurada com sucesso no seu aplicativo!');
+        }
 
         function salvarEstadoLocal() {
             localStorage.setItem('dados_cafe_cla', JSON.stringify(dadosCafe));
             localStorage.setItem('dados_almoco_cla', JSON.stringify(dadosAlmoco));
-            localStorage.setItem('dados_jantar_cla_v2026', JSON.stringify(dadosJantar));
+            localStorage.setItem('dados_jantar_v2026_final', JSON.stringify(dadosJantar));
         }
 
         function abrirMenuLateral() {
@@ -1141,16 +1170,23 @@
         }
 
         window.onload = function() {
-            // LIMPEZA FORÇADA DE MEMÓRIA LOCAL ANTIGA
-            localStorage.removeItem('dados_jantar_cla');
-            localStorage.removeItem('dados_jantar_cla_v2');
-            localStorage.removeItem('dados_jantar_cla_v3');
-            localStorage.removeItem('historico_marmitas_cla');
-            
-            // GARANTE QUE A LISTA COMPLETA DOS 25 POSTOS SEJA CARREGADA
-            dadosJantar = dadosJantarPadrao;
-            salvarEstadoLocal();
+            const salvo = localStorage.getItem('dados_jantar_v2026_final');
+            if (salvo) {
+                try {
+                    const parsed = JSON.parse(salvo);
+                    if (Array.isArray(parsed) && parsed.length >= 25) {
+                        dadosJantar = parsed;
+                    } else {
+                        dadosJantar = JSON.parse(JSON.stringify(dadosJantarOficial25));
+                    }
+                } catch(e) {
+                    dadosJantar = JSON.parse(JSON.stringify(dadosJantarOficial25));
+                }
+            } else {
+                dadosJantar = JSON.parse(JSON.stringify(dadosJantarOficial25));
+            }
 
+            salvarEstadoLocal();
             renderizarComissarios();
             renderizar();
             renderizarHistorico();
