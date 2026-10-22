@@ -57,8 +57,8 @@
             vertical-align: middle;
         }
 
-        /* Efeito Hover Neon Verde nos Cards, Cabeçalho e Botões */
-        .card-metalico, header, .card-botao-neon {
+        /* Efeito Verde Neon Universal para Cards, Cabeçalho, Botões e Sidebar */
+        .card-metalico, header, .card-botao-neon, .btn-sidebar {
             background-color: #1e293b;
             border: 1px solid #334155;
             transition: all 0.2s ease-in-out;
@@ -66,9 +66,20 @@
         header {
             background-color: #ffffff !important;
         }
-        .card-metalico:hover, .card-metalico:focus-within, header:hover, .card-botao-neon:hover {
-            border-color: #34d399;
-            box-shadow: 0 0 15px rgba(52, 211, 153, 0.5);
+        .card-metalico:hover, .card-metalico:focus-within, 
+        header:hover, 
+        .card-botao-neon:hover, .card-botao-neon:focus, 
+        .btn-sidebar:hover, .btn-sidebar:focus {
+            border-color: #34d399 !important;
+            box-shadow: 0 0 15px rgba(52, 211, 153, 0.6) !important;
+        }
+
+        /* Classe específica para botões ativos na Sidebar */
+        .btn-sidebar-ativo {
+            background-color: #1e293b !important;
+            border-color: #34d399 !important;
+            color: #34d399 !important;
+            box-shadow: 0 0 15px rgba(52, 211, 153, 0.6) !important;
         }
     </style>
 </head>
@@ -81,7 +92,7 @@
     <aside id="menu-lateral-esquerda" class="fixed top-0 left-0 h-full w-72 bg-[#0b1322] border-r border-slate-800 shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between p-4">
         <div class="space-y-5">
             <!-- Cabeçalho do Menu Lateral -->
-            <div class="flex items-center justify-between pb-3 border-b border-slate-800/80">
+            <div class="card-metalico flex items-center justify-between p-2.5 rounded-xl">
                 <div class="flex items-center gap-2.5">
                     <img src="icon.png" alt="Logo" class="w-8 h-8 object-contain">
                     <div>
@@ -91,7 +102,7 @@
                 </div>
                 
                 <!-- Botão de Recolher Sidebar -->
-                <button type="button" onclick="fecharMenuLateral()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-800/80 border border-slate-700 hover:bg-slate-700 text-slate-300 hover:text-white cursor-pointer transition-all shadow-sm" title="Recolher Menu">
+                <button type="button" onclick="fecharMenuLateral()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-800/80 border border-slate-700 hover:border-[#34d399] text-slate-300 hover:text-white cursor-pointer transition-all shadow-sm" title="Recolher Menu">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <rect x="3" y="3" width="18" height="18" rx="3" stroke-width="2"/>
                         <path d="M9 3v18" stroke-width="2"/>
@@ -99,11 +110,11 @@
                 </button>
             </div>
 
-            <!-- Submenus / Navegação do Menu Lateral -->
+            <!-- Submenus / Navegação do Menu Lateral com Efeito Neon -->
             <nav class="space-y-2">
-                <button type="button" onclick="mudarAba('operacao')" id="nav-operacao" class="w-full py-2.5 px-3 rounded-xl bg-blue-600 text-white font-bold shadow cursor-pointer text-left text-xs">OPERAÇÃO</button>
-                <button type="button" onclick="mudarAba('historico')" id="nav-historico" class="w-full py-2.5 px-3 rounded-xl bg-slate-900/90 text-slate-300 hover:text-white border border-slate-800 cursor-pointer text-left text-xs font-bold">HISTÓRICO</button>
-                <button type="button" onclick="mudarAba('adm')" id="nav-adm" class="w-full py-2.5 px-3 rounded-xl bg-slate-900/90 text-slate-300 hover:text-white border border-slate-800 cursor-pointer text-left text-xs font-bold">PAINEL ADM</button>
+                <button type="button" onclick="mudarAba('operacao')" id="nav-operacao" class="btn-sidebar w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">OPERAÇÃO</button>
+                <button type="button" onclick="mudarAba('historico')" id="nav-historico" class="btn-sidebar w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">HISTÓRICO</button>
+                <button type="button" onclick="mudarAba('adm')" id="nav-adm" class="btn-sidebar w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">PAINEL ADM</button>
             </nav>
         </div>
 
@@ -139,9 +150,9 @@
                 </div>
             </header>
 
-            <!-- DOIS BOTÕES ABAIXO DO CABEÇALHO (MENU E LOGIN) -->
+            <!-- DOIS BOTÕES ABAIXO DO CABEÇALHO (MENU E LOGIN) COM EFEITO NEON -->
             <div class="grid grid-cols-2 gap-2">
-                <!-- Botão MENU (Com Ícone Sidebar, Ícone do App e Nome com Prata Neon) -->
+                <!-- Botão MENU -->
                 <button type="button" onclick="alternarMenuLateral()" class="card-botao-neon py-2.5 px-3 rounded-xl bg-slate-900/90 border border-slate-700 shadow-md text-slate-100 transition-all cursor-pointer flex items-center justify-center gap-2 font-bold text-xs">
                     <svg class="w-4 h-4 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <rect x="3" y="3" width="18" height="18" rx="3" stroke-width="2"/>
@@ -151,7 +162,7 @@
                     <span style="color: #e2e8f0; text-shadow: 0 0 8px rgba(226,232,240,0.6);">MENU</span>
                 </button>
 
-                <!-- Botão LOGIN (Com Nome com Verde Neon) -->
+                <!-- Botão LOGIN -->
                 <button type="button" onclick="abrirModalLogin()" class="card-botao-neon py-2.5 px-3 rounded-xl bg-slate-900/90 border border-slate-700 shadow-md transition-all cursor-pointer flex items-center justify-between text-xs font-bold">
                     <span class="flex items-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -289,7 +300,7 @@
     </div>
 
     <!-- ESTRUTURA VISÍVEL PARA O GERADOR DE PDF -->
-    <div id="wrapper-pdf" style="position: fixed; top: 0; left: 0; z-index: -999; opacity: 0; pointer-events: none; width: 100%;">
+    <div id="wrapper-pdf" style="position: fixed; top: 0; left: -9999px; z-index: -999; width: 190mm;">
         <div id="area-impressao-pdf" class="ficha-a4">
             
             <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 8px;">
@@ -494,6 +505,7 @@
             let hist = carregarHistoricoGlobal();
             hist.unshift(novoItem);
             localStorage.setItem('historico_marmitas_cla', JSON.stringify(hist));
+            renderizarHistorico();
         }
 
         function mudarAba(aba) {
@@ -508,13 +520,18 @@
                 const el = document.getElementById(`aba-${a}`);
                 const nav = document.getElementById(`nav-${a}`);
                 if (el) el.classList.add('hidden');
-                if (nav) nav.className = "w-full py-2.5 px-3 rounded-xl bg-slate-900/90 text-slate-300 hover:text-white border border-slate-800 cursor-pointer text-left text-xs font-bold";
+                if (nav) {
+                    nav.classList.remove('btn-sidebar-ativo');
+                    nav.className = "btn-sidebar w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold";
+                }
             });
 
             const abaAtiva = document.getElementById(`aba-${aba}`);
             const navAtivo = document.getElementById(`nav-${aba}`);
             if (abaAtiva) abaAtiva.classList.remove('hidden');
-            if (navAtivo) navAtivo.className = "w-full py-2.5 px-3 rounded-xl bg-blue-600 text-white font-bold shadow cursor-pointer text-left text-xs";
+            if (navAtivo) {
+                navAtivo.className = "btn-sidebar btn-sidebar-ativo w-full py-2.5 px-3 rounded-xl cursor-pointer text-left text-xs font-bold";
+            }
 
             const seletorRef = document.getElementById('seletor-refeicao-container');
             if (seletorRef) {
@@ -1061,8 +1078,11 @@
         }
 
         window.onload = function() {
+            localStorage.removeItem('historico_marmitas_cla');
             renderizarComissarios();
             renderizar();
+            renderizarHistorico();
+            mudarAba('operacao');
         };
     </script>
 </body>
