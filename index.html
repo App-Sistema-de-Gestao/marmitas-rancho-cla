@@ -143,7 +143,8 @@
             </div>
 
             <nav class="space-y-2">
-                <button type="button" onclick="mudarAba('operacao')" id="nav-operacao" class="btn-sidebar btn-sidebar-ativo w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">OPERAÇÃO</button>
+                <!-- NOME ALTERADO DE 'OPERAÇÃO' PARA 'REFEIÇÕES' -->
+                <button type="button" onclick="mudarAba('operacao')" id="nav-operacao" class="btn-sidebar btn-sidebar-ativo w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">REFEIÇÕES</button>
                 <button type="button" onclick="mudarAba('historico')" id="nav-historico" class="btn-sidebar w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">HISTÓRICO</button>
                 <button type="button" onclick="mudarAba('adm')" id="nav-adm" class="btn-sidebar w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">PAINEL ADM</button>
             </nav>
@@ -211,7 +212,7 @@
     <!-- CONTEÚDO PRINCIPAL DA APLICAÇÃO -->
     <div id="app" class="max-w-md mx-auto p-3 pt-4 w-full">
 
-        <!-- ABA 1: OPERAÇÃO -->
+        <!-- ABA 1: REFEIÇÕES (OPERAÇÃO) -->
         <div id="aba-operacao" class="space-y-4">
             <div id="conteudo-postos"></div>
 
@@ -245,7 +246,7 @@
                 </div>
             </div>
 
-            <!-- BOTOES DIVIDIDOS -->
+            <!-- BOTÕES DIVIDIDOS -->
             <div class="space-y-2 pt-2">
                 <button type="button" onclick="gerarRelacao()" class="w-full bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/50 py-3 rounded-xl font-bold shadow-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
                     <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -477,30 +478,39 @@
             { id: 322, nome: 'PROFESP', marmita: 0, ramal: '', obs: '+ 50 toda terça e quinta até dezembro!' }
         ];
 
-        let dadosJantar = JSON.parse(localStorage.getItem('dados_jantar_cla')) || [
+        // LISTA DO JANTAR COMPLETA COM TODOS OS 25 POSTOS DA PLANILHA
+        let dadosJantar = JSON.parse(localStorage.getItem('dados_jantar_cla_v2')) || [
             { id: 401, nome: 'GUARDA DO SPL', marmita: 4, ceia: 4, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '9470' },
             { id: 402, nome: 'GUARDA DA AACL', marmita: 8, ceia: 8, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '9889' },
             { id: 403, nome: 'PCI', marmita: 11, ceia: 11, obs: '', ramal: '' },
             { id: 404, nome: 'PAIOL', marmita: 4, ceia: 4, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '' },
-            { id: 405, nome: 'PERMANENCIA DA FORMAÇÃO', marmita: 4, ceia: 1, obs: '', ramal: '9928' },
-            { id: 406, nome: 'TRIPULAÇÃO 1º/8º', marmita: 0, ceia: 0, obs: 'Retirar no Rancho', ramal: '9901' },
+            { id: 405, nome: 'PERMANENCIA DA FORMAÇÃO', marmita: 5, ceia: 1, obs: '', ramal: '9928' },
+            { id: 406, nome: 'TRIPULAÇÃO 1º/8º', marmita: 0, ceia: 0, obs: '', ramal: '9901' },
             { id: 407, nome: 'HANGAR', marmita: 1, ceia: 1, obs: '', ramal: '9901' },
-            { id: 408, nome: 'MAT. BÉLICO', marmita: 1, ceia: 1, obs: '', ramal: '9903' },
+            { id: 408, nome: 'Mat. Bélico', marmita: 1, ceia: 1, obs: '', ramal: '9903' },
             { id: 409, nome: 'POSTO MÉDICO', marmita: 4, ceia: 4, obs: '', ramal: '9902 / 9024' },
             { id: 410, nome: 'ECE', marmita: 1, ceia: 1, obs: '', ramal: '' },
             { id: 411, nome: 'BANDA', marmita: 1, ceia: 1, obs: '', ramal: '' },
-            { id: 412, nome: 'CSA (CLUBE)', marmita: 1, ceia: 1, obs: '', ramal: '9214' },
+            { id: 412, nome: 'CSA(CLUBE)', marmita: 1, ceia: 1, obs: '', ramal: '9214' },
             { id: 413, nome: 'HOTEL – MÉDIO', marmita: 1, ceia: 1, obs: '', ramal: '' },
             { id: 414, nome: 'HOTEL - SUPERIOR', marmita: 1, ceia: 1, obs: '', ramal: '' },
-            { id: 415, nome: 'RECRUTAS', marmita: 34, ceia: 34, obs: '', ramal: '' },
-            { id: 416, nome: 'PA', marmita: 8, ceia: 0, obs: '', ramal: '9153' },
-            { id: 417, nome: 'FORÇA DE REAÇÃO', marmita: 0, ceia: 4, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '' }
+            { id: 415, nome: 'RECRUTAS', marmita: 30, ceia: 30, obs: '', ramal: '' },
+            { id: 416, nome: 'PA', marmita: 0, ceia: 0, obs: '', ramal: '9153' },
+            { id: 417, nome: 'FORÇA DE REAÇÃO', marmita: 0, ceia: 4, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '' },
+            { id: 418, nome: 'Aux. DO ELETRICISTA', marmita: 0, ceia: 1, obs: '', ramal: '' },
+            { id: 419, nome: 'METEORO', marmita: 0, ceia: 1, obs: '', ramal: '9423' },
+            { id: 420, nome: 'Permanência-PRÉDIO DO CT', marmita: 0, ceia: 1, obs: '', ramal: '9372' },
+            { id: 421, nome: 'MONITORAMENTO', marmita: 0, ceia: 3, obs: '', ramal: '' },
+            { id: 422, nome: 'GUARDA SCC', marmita: 0, ceia: 9, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '' },
+            { id: 423, nome: 'GSD', marmita: 0, ceia: 0, obs: '', ramal: '' },
+            { id: 424, nome: 'TRIPULAÇÃO', marmita: 0, ceia: 0, obs: '', ramal: '' },
+            { id: 425, nome: 'VILA DELTA', marmita: 0, ceia: 0, obs: '', ramal: '' }
         ];
 
         function salvarEstadoLocal() {
             localStorage.setItem('dados_cafe_cla', JSON.stringify(dadosCafe));
             localStorage.setItem('dados_almoco_cla', JSON.stringify(dadosAlmoco));
-            localStorage.setItem('dados_jantar_cla', JSON.stringify(dadosJantar));
+            localStorage.setItem('dados_jantar_cla_v2', JSON.stringify(dadosJantar));
         }
 
         function abrirMenuLateral() {
@@ -674,7 +684,7 @@
                 html += `<h3 class="text-xs font-bold text-amber-400 uppercase mb-2">Postos Coletivos</h3>`;
                 dadosCafe.coletivo.forEach(item => {
                     subTotalColetivo += item.qtd;
-                    const qtdFormatada = String(item.qtd).padStart(3, '0');
+                    const qtdFormatada = String(item.qtd).padStart(2, '0');
                     html += `<div class="card-metalico p-3 rounded-xl mb-2 flex items-center justify-between gap-2">
                         <div class="flex-1 min-w-0">
                             <span class="text-xs font-bold text-white block truncate">${item.nome}</span>
@@ -693,7 +703,7 @@
                 html += `<h3 class="text-xs font-bold text-amber-400 uppercase mt-4 mb-2">Postos Individuais</h3>`;
                 dadosCafe.individual.forEach(item => {
                     subTotalIndividual += item.qtd;
-                    const qtdFormatada = String(item.qtd).padStart(3, '0');
+                    const qtdFormatada = String(item.qtd).padStart(2, '0');
                     html += `<div class="card-metalico p-3 rounded-xl mb-2 flex items-center justify-between gap-2">
                         <div class="flex-1 min-w-0">
                             <span class="text-xs font-bold text-white block truncate">${item.nome}</span>
@@ -716,7 +726,7 @@
 
                 dadosAlmoco.forEach(item => {
                     totalGeral += item.marmita;
-                    const qtdFormatada = String(item.marmita).padStart(3, '0');
+                    const qtdFormatada = String(item.marmita).padStart(2, '0');
                     html += `<div class="card-metalico p-3 rounded-xl mb-2 flex items-center justify-between gap-2">
                         <div class="flex-1 min-w-0">
                             <span class="text-xs font-bold text-white block truncate">${item.nome}</span>
@@ -740,8 +750,8 @@
                 dadosJantar.forEach(item => {
                     totalGeral += item.marmita;
                     totalCeias += item.ceia;
-                    const marmitaFmt = String(item.marmita).padStart(3, '0');
-                    const ceiaFmt = String(item.ceia).padStart(3, '0');
+                    const marmitaFmt = String(item.marmita).padStart(2, '0');
+                    const ceiaFmt = String(item.ceia).padStart(2, '0');
                     html += `<div class="card-metalico p-3 rounded-xl mb-2 space-y-2">
                         <div class="flex justify-between items-center">
                             <div class="flex-1 min-w-0">
@@ -1019,21 +1029,24 @@
                 let totalCafeColetivo = 0;
                 dadosCafe.coletivo.forEach(i => {
                     totalCafeColetivo += i.qtd;
-                    htmlTabela += `<tr><td>${i.nome}</td><td style="text-align:center;">${i.qtd}</td><td>${i.ramal || '-'}</td><td>${i.obs || '-'}</td></tr>`;
+                    const fmtQtd = String(i.qtd).padStart(2, '0');
+                    htmlTabela += `<tr><td>${i.nome}</td><td style="text-align:center;">${fmtQtd}</td><td>${i.ramal || '-'}</td><td>${i.obs || '-'}</td></tr>`;
                 });
 
                 let totalCafeIndividual = 0;
                 dadosCafe.individual.forEach(i => {
                     totalCafeIndividual += i.qtd;
-                    htmlTabela += `<tr><td>${i.nome}</td><td style="text-align:center;">${i.qtd}</td><td>${i.ramal || '-'}</td><td>${i.obs || '-'}</td></tr>`;
+                    const fmtQtd = String(i.qtd).padStart(2, '0');
+                    htmlTabela += `<tr><td>${i.nome}</td><td style="text-align:center;">${fmtQtd}</td><td>${i.ramal || '-'}</td><td>${i.obs || '-'}</td></tr>`;
                 });
 
                 if (marmitasReserva['CAFÉ'] > 0) {
-                    htmlTabela += `<tr><td><strong>RESERVA (PÃES EXTRAS)</strong></td><td style="text-align:center;"><strong>${marmitasReserva['CAFÉ']}</strong></td><td>-</td><td>Reserva técnica</td></tr>`;
+                    const fmtRes = String(marmitasReserva['CAFÉ']).padStart(2, '0');
+                    htmlTabela += `<tr><td><strong>RESERVA (PÃES EXTRAS)</strong></td><td style="text-align:center;"><strong>${fmtRes}</strong></td><td>-</td><td>Reserva técnica</td></tr>`;
                 }
 
                 somaMarmitas = totalCafeColetivo + totalCafeIndividual + marmitasReserva['CAFÉ'];
-                spanTotalMarmitas.innerText = somaMarmitas;
+                spanTotalMarmitas.innerText = String(somaMarmitas).padStart(2, '0');
 
             } else if (tipoAtual === 'ALMOÇO') {
                 thQtd.innerText = 'QTD';
@@ -1042,15 +1055,17 @@
 
                 dadosAlmoco.forEach(i => {
                     somaMarmitas += i.marmita;
-                    htmlTabela += `<tr><td>${i.nome}</td><td style="text-align:center;">${i.marmita}</td><td>${i.ramal || '-'}</td><td>${i.obs || '-'}</td></tr>`;
+                    const fmtMtx = String(i.marmita).padStart(2, '0');
+                    htmlTabela += `<tr><td>${i.nome}</td><td style="text-align:center;">${fmtMtx}</td><td>${i.ramal || '-'}</td><td>${i.obs || '-'}</td></tr>`;
                 });
 
                 if (marmitasReserva['ALMOÇO'] > 0) {
-                    htmlTabela += `<tr><td><strong>RESERVA (MARMITAS EXTRAS)</strong></td><td style="text-align:center;"><strong>${marmitasReserva['ALMOÇO']}</strong></td><td>-</td><td>Reserva técnica</td></tr>`;
+                    const fmtRes = String(marmitasReserva['ALMOÇO']).padStart(2, '0');
+                    htmlTabela += `<tr><td><strong>RESERVA (MARMITAS EXTRAS)</strong></td><td style="text-align:center;"><strong>${fmtRes}</strong></td><td>-</td><td>Reserva técnica</td></tr>`;
                     somaMarmitas += marmitasReserva['ALMOÇO'];
                 }
 
-                spanTotalMarmitas.innerText = somaMarmitas;
+                spanTotalMarmitas.innerText = String(somaMarmitas).padStart(2, '0');
 
             } else if (tipoAtual === 'JANTAR') {
                 thQtd.innerText = 'MARMITA';
@@ -1060,16 +1075,19 @@
                 dadosJantar.forEach(i => {
                     somaMarmitas += i.marmita;
                     somaCeias += i.ceia;
-                    htmlTabela += `<tr><td>${i.nome}</td><td style="text-align:center;">${i.marmita}</td><td style="text-align:center;">${i.ceia}</td><td>${i.ramal || '-'}</td><td>${i.obs || '-'}</td></tr>`;
+                    const fmtMtx = String(i.marmita).padStart(2, '0');
+                    const fmtCeia = String(i.ceia).padStart(2, '0');
+                    htmlTabela += `<tr><td>${i.nome}</td><td style="text-align:center;">${fmtMtx}</td><td style="text-align:center;">${fmtCeia}</td><td>${i.ramal || '-'}</td><td>${i.obs || '-'}</td></tr>`;
                 });
 
                 if (marmitasReserva['JANTAR'] > 0) {
-                    htmlTabela += `<tr><td><strong>RESERVA (EXTRAS)</strong></td><td style="text-align:center;"><strong>${marmitasReserva['JANTAR']}</strong></td><td style="text-align:center;"><strong>0</strong></td><td>-</td><td>Reserva técnica</td></tr>`;
+                    const fmtRes = String(marmitasReserva['JANTAR']).padStart(2, '0');
+                    htmlTabela += `<tr><td><strong>RESERVA (EXTRAS)</strong></td><td style="text-align:center;"><strong>${fmtRes}</strong></td><td style="text-align:center;"><strong>00</strong></td><td>-</td><td>Reserva técnica</td></tr>`;
                     somaMarmitas += marmitasReserva['JANTAR'];
                 }
 
-                spanTotalMarmitas.innerText = somaMarmitas;
-                spanTotalCeias.innerText = somaCeias;
+                spanTotalMarmitas.innerText = String(somaMarmitas).padStart(2, '0');
+                spanTotalCeias.innerText = String(somaCeias).padStart(2, '0');
             }
 
             corpoTabela.innerHTML = htmlTabela;
