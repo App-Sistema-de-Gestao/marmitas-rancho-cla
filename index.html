@@ -1,534 +1,1026 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA DE GESTÃO DE MARMITAS - RANCHO DO CLA</title>
-    
-    <!-- ÍCONE DO NAVEGADOR (FAVICON) -->
-    <link rel="icon" type="image/png" href="icon.png">
 
-    <!-- ÍCONE PARA DISPOSITIVOS MÓVEIS (ANDROID E IOS) -->
-    <link rel="apple-touch-icon" href="icon.png">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Marmitas CLA">
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SISTEMA DE GESTÃO DE MARMITAS - RANCHO DO CLA</title>
 
     <!-- Tailwind CSS v3 Estável -->
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <!-- html2pdf.js para Geração do PDF -->
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
+
         body {
+
             background: linear-gradient(135deg, #0b172a 0%, #070d18 100%);
+
             min-height: 100vh;
+
         }
+
+
 
         /* Estilização da Ficha A4 Perfeitamente Centralizada */
+
         .ficha-a4 {
+
             width: 190mm;
+
             min-height: 277mm;
+
             background-color: #ffffff;
+
             color: #000000;
+
             font-family: Arial, Helvetica, sans-serif;
+
             padding: 10mm 12mm;
+
             box-sizing: border-box;
+
             margin: 0 auto;
+
         }
+
+
 
         .tabela-pdf {
+
             width: 100%;
+
             border-collapse: collapse;
+
             font-size: 10px;
+
             margin-top: 6px;
+
         }
+
         .tabela-pdf th {
+
             background-color: #e5e7eb;
+
             border: 1px solid #000000;
+
             padding: 4px 5px;
+
             text-align: left;
+
             font-weight: bold;
+
             text-transform: uppercase;
+
         }
+
         .tabela-pdf td {
+
             border: 1px solid #000000;
+
             padding: 3px 5px;
+
             vertical-align: middle;
+
         }
+
     </style>
+
 </head>
+
 <body class="font-sans pb-28 text-slate-100">
 
+
+
     <!-- ÁREA FIXA SUPERIOR (STICKY) COM CABEÇALHO ACIMA E BOTÕES ABAIXO -->
+
     <div class="sticky top-0 z-40 bg-[#070d18]/95 backdrop-blur-md pb-2 pt-2 px-3 border-b border-slate-800 shadow-xl">
+
         <div class="max-w-md mx-auto space-y-2">
+
             
+
             <!-- Cabeçalho Institucional Oficial com Fundo Unificado Branco -->
+
             <header class="bg-white text-gray-900 px-3 py-3 rounded-2xl shadow-xl border-b-4 border-blue-900 relative flex items-center justify-between overflow-hidden">
+
                 <div class="w-12 h-14 flex-shrink-0 flex items-center justify-center bg-white rounded-lg p-0.5 shadow-sm border border-gray-100">
+
                     <img src="brasao-cla.png" alt="Brasão CLA" class="w-full h-full object-contain">
+
                 </div>
+
                 <div class="flex-1 text-center px-1">
+
                     <h1 class="text-xs sm:text-sm font-black uppercase tracking-tight text-gray-900 leading-tight">
+
                         SISTEMA DE GESTÃO DE MARMITAS
+
                     </h1>
+
                     <h2 class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-gray-800 mt-0.5">
+
                         RANCHO DO CLA
+
                     </h2>
+
                     <div class="mt-1 inline-block bg-gray-200/90 px-2 py-0.5 rounded text-[8px] sm:text-[9px] font-bold text-gray-700 whitespace-nowrap">
+
                         Setor de Subsistência • Centro de Lançamento de Alcântara
+
                     </div>
+
                 </div>
+
                 <div class="w-10 h-12 flex-shrink-0 flex items-center justify-center bg-white rounded-lg p-0.5 shadow-sm border border-gray-100">
+
                     <img src="image.png" alt="Folha de Acanto" class="w-full h-full object-contain">
+
                 </div>
+
             </header>
 
+
+
             <!-- Barra de Navegação Principal com LOGIN explícito -->
+
             <div class="flex bg-slate-900/95 rounded-xl p-1 border border-slate-800 text-[11px] font-bold shadow-md">
+
                 <button type="button" onclick="abrirModalLogin()" id="nav-login" class="flex-1 py-2 rounded-lg text-emerald-400 hover:text-emerald-300 transition-all cursor-pointer flex items-center justify-center gap-1">
+
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> LOGIN
+
                 </button>
+
                 <button type="button" onclick="mudarAba('operacao')" id="nav-operacao" class="flex-1 py-2 rounded-lg bg-blue-700 text-white shadow cursor-pointer text-center">OPERAÇÃO</button>
+
                 <button type="button" onclick="mudarAba('historico')" id="nav-historico" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white cursor-pointer text-center">HISTÓRICO</button>
+
                 <button type="button" onclick="mudarAba('adm')" id="nav-adm" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white cursor-pointer text-center">PAINEL ADM</button>
+
             </div>
+
+
 
             <!-- Seleção de Refeição (Visível apenas na aba Operação) -->
+
             <div id="seletor-refeicao-container" class="flex gap-2">
+
                 <button type="button" onclick="mudarRefeicao('CAFÉ')" id="btn-cafe" class="flex-1 py-2.5 text-xs font-bold rounded-xl bg-blue-700 text-white shadow-lg shadow-blue-900/50 transition-all cursor-pointer">CAFÉ</button>
+
                 <button type="button" onclick="mudarRefeicao('ALMOÇO')" id="btn-almoco" class="flex-1 py-2.5 text-xs font-bold rounded-xl bg-white/90 text-gray-700 border border-gray-200 shadow-md transition-all cursor-pointer">ALMOÇO</button>
+
                 <button type="button" onclick="mudarRefeicao('JANTAR')" id="btn-jantar" class="flex-1 py-2.5 text-xs font-bold rounded-xl bg-white/90 text-gray-700 border border-gray-200 shadow-md transition-all cursor-pointer">JANTAR</button>
+
             </div>
 
+
+
         </div>
+
     </div>
+
+
 
     <!-- CONTEÚDO PRINCIPAL DA APLICAÇÃO -->
+
     <div id="app" class="max-w-md mx-auto p-3 pt-4">
 
+
+
         <!-- ABA 1: OPERAÇÃO -->
+
         <div id="aba-operacao" class="space-y-4">
+
             
+
             <!-- Conteúdo Dinâmico dos Postos -->
+
             <div id="conteudo-postos"></div>
 
+
+
             <!-- Adicionar Novo Posto (Abaixo dos postos) -->
+
             <div class="bg-slate-900/90 p-3.5 rounded-2xl border border-slate-800 shadow-lg space-y-2">
+
                 <label class="block text-xs font-bold text-amber-400">Adicionar Novo Posto ou Setor</label>
+
                 <div class="flex gap-2">
+
                     <input type="text" id="novo-posto-input" placeholder="Nome do posto ou setor..." class="flex-1 px-3 py-2 text-xs bg-slate-950 text-white border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+
                     <select id="categoria-novo-posto" class="px-2 py-2 text-xs bg-slate-950 text-white border border-slate-700 rounded-xl focus:outline-none">
+
                         <option value="coletivo">Coletivo</option>
+
                         <option value="individual">Individual</option>
+
                     </select>
+
                     <button type="button" onclick="adicionarPosto()" class="bg-emerald-600 text-white px-3.5 py-2 text-xs font-bold rounded-xl shadow hover:bg-emerald-700 cursor-pointer">+ Posto</button>
+
                 </div>
+
             </div>
+
+
 
             <!-- Painel de Reservas e Totais -->
+
             <div id="painel-totais" class="bg-blue-950/90 backdrop-blur-md text-white p-4 rounded-xl text-sm font-semibold shadow-xl border border-blue-800/50 space-y-2"></div>
 
+
+
             <!-- Assinatura e Motorista -->
+
             <div class="bg-white/95 backdrop-blur-md p-4 rounded-xl shadow-lg border border-gray-200 text-slate-900 space-y-3">
-                <div>
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Responsável pelo Preenchimento (Fiscal Logado)</label>
-                    <div id="campo-assinatura-logada" class="p-2 bg-gray-100 rounded-lg text-sm font-bold text-red-600 border border-gray-200">
-                        Fiscal Não Logado
-                    </div>
-                </div>
 
                 <div>
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Comissário / Motorista Responsável *</label>
-                    <select id="select-comissario" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900">
-                        <option value="">Selecione o comissário...</option>
-                    </select>
+
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Responsável pelo Preenchimento (Fiscal Logado)</label>
+
+                    <div id="campo-assinatura-logada" class="p-2 bg-gray-100 rounded-lg text-sm font-bold text-red-600 border border-gray-200">
+
+                        Fiscal Não Logado
+
+                    </div>
+
                 </div>
+
+
+
+                <div>
+
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Comissário / Motorista Responsável *</label>
+
+                    <select id="select-comissario" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900">
+
+                        <option value="">Selecione o comissário...</option>
+
+                    </select>
+
+                </div>
+
             </div>
+
+
 
             <!-- Botão Gerar Relação & PDF -->
+
             <button type="button" onclick="gerarRelacaoEPDF()" class="w-full bg-blue-700 text-white py-3.5 rounded-xl font-bold shadow-xl shadow-blue-900/50 hover:bg-blue-800 transition-all text-base cursor-pointer">
+
                 Gerar Relação & PDF Oficial
+
             </button>
+
         </div>
+
+
 
         <!-- ABA 2: HISTÓRICO -->
+
         <div id="aba-historico" class="hidden space-y-3">
+
             <div class="flex justify-between items-center bg-slate-900/90 p-3 rounded-xl border border-slate-800">
+
                 <h3 class="text-xs font-bold text-slate-200">Histórico Coletivo (Últimos 3 Dias)</h3>
+
                 <button type="button" onclick="limparHistoricoExpirado()" class="text-[10px] text-red-400 hover:text-red-300 underline cursor-pointer">Atualizar Lista</button>
+
             </div>
+
             <div id="lista-historico" class="space-y-2"></div>
+
         </div>
+
+
 
         <!-- ABA 3: PAINEL ADM -->
+
         <div id="aba-adm" class="hidden space-y-4">
+
             <!-- Card de Cadastro de Fiscal -->
+
             <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-3">
+
                 <h3 class="text-sm font-bold text-amber-400">Cadastrar Novo Fiscal</h3>
+
                 <div class="space-y-2">
+
                     <input type="text" id="adm-nome-fiscal" placeholder="Nome do Fiscal (Ex.: 1S MELO)" class="w-full p-2 bg-slate-950 border border-slate-700 text-xs rounded-lg text-white">
+
                     <div class="flex gap-2">
+
                         <input type="text" id="adm-saram-fiscal" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="SARAM (somente números)" class="flex-1 p-2 bg-slate-950 border border-slate-700 text-xs rounded-lg text-white">
+
                         <button type="button" onclick="cadastrarFiscalADM()" class="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 text-xs font-bold rounded-lg text-white cursor-pointer">+ Salvar Fiscal</button>
+
                     </div>
+
                 </div>
+
             </div>
+
+
 
             <!-- Card de Cadastro de Posto -->
+
             <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-3">
+
                 <h3 class="text-sm font-bold text-amber-400">Cadastrar Novo Posto Padrão</h3>
+
                 <div class="flex gap-2">
+
                     <input type="text" id="adm-nome-posto" placeholder="Nome do Posto" class="flex-1 p-2 bg-slate-950 border border-slate-700 text-xs rounded-lg text-white">
+
                     <input type="text" id="adm-ramal-posto" placeholder="Ramal" class="w-20 p-2 bg-slate-950 border border-slate-700 text-xs rounded-lg text-white">
+
                     <button type="button" onclick="cadastrarPostoADM()" class="bg-blue-600 px-3 py-2 text-xs font-bold rounded-lg text-white cursor-pointer">+ Salvar</button>
+
                 </div>
+
             </div>
+
+
 
             <!-- Card de Cadastro de Comissário -->
+
             <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-3">
+
                 <h3 class="text-sm font-bold text-amber-400">Cadastrar Novo Comissário / Motorista</h3>
+
                 <div class="flex gap-2">
+
                     <input type="text" id="adm-nome-comissario" placeholder="Ex: CB SILVA" class="flex-1 p-2 bg-slate-950 border border-slate-700 text-xs rounded-lg text-white">
+
                     <button type="button" onclick="cadastrarComissarioADM()" class="bg-blue-600 px-3 py-2 text-xs font-bold rounded-lg text-white cursor-pointer">+ Salvar</button>
+
                 </div>
+
             </div>
+
         </div>
 
+
+
     </div>
+
+
 
     <!-- MODAL DE LOGIN (Acessado pelo Botão LOGIN do Menu) -->
+
     <div id="modal-login" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+
         <div class="bg-white text-slate-900 max-w-xs w-full p-5 rounded-2xl shadow-2xl space-y-3">
-            
-            <!-- ÍCONE NO TOPO DO MODAL DE LOGIN -->
-            <div class="flex justify-center mb-1">
-                <img src="icon.png" alt="Ícone Sistema" class="w-16 h-16 object-contain">
-            </div>
 
-            <h3 class="text-base font-bold text-center border-b pb-2">Autenticação de Fiscal</h3>
+            <h3 class="text-base font-bold border-b pb-2">Autenticação de Fiscal</h3>
+
             
+
             <div>
+
                 <label class="block text-xs font-semibold text-gray-600 mb-1">Selecione o Usuário / Login</label>
+
                 <select id="select-login-usuario" onchange="aoMudarLoginSelect(this.value)" class="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg text-xs font-bold text-slate-900 focus:ring-2 focus:ring-blue-500">
+
                 </select>
+
             </div>
 
+
+
             <div>
+
                 <label class="block text-xs font-semibold text-gray-600 mb-1" id="label-senha-saram">Senha / SARAM (somente números)</label>
+
                 <input type="password" id="input-senha-login" inputmode="numeric" oninput="validarApenasNumerosSenha(this)" placeholder="Digite a senha..." class="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg text-xs font-bold text-slate-900 focus:ring-2 focus:ring-blue-500">
+
             </div>
+
+
 
             <div class="flex gap-2 pt-2">
+
                 <button type="button" onclick="fecharModalLogin()" class="flex-1 py-2 bg-gray-200 text-gray-700 font-semibold rounded-xl text-xs cursor-pointer">Cancelar</button>
+
                 <button type="button" onclick="autenticarEEntrar()" class="flex-1 py-2 bg-blue-700 text-white font-bold rounded-xl text-xs shadow hover:bg-blue-800 cursor-pointer">Confirmar Login</button>
+
             </div>
+
         </div>
+
     </div>
+
+
 
     <!-- ESTRUTURA VISÍVEL PARA O GERADOR DE PDF (Centralizada) -->
+
     <div id="wrapper-pdf" style="position: fixed; top: 0; left: 0; z-index: -999; opacity: 0; pointer-events: none; width: 100%;">
+
         <div id="area-impressao-pdf" class="ficha-a4">
+
             
+
             <!-- Cabeçalho Oficial do PDF A4 com Centralização Estrita -->
+
             <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 8px;">
+
                 <div style="width: 45px; text-align: center;">
+
                     <img src="brasao-cla.png" alt="CLA" style="max-height: 45px; margin: 0 auto; object-fit: contain;">
+
                 </div>
+
                 <div style="text-align: center; flex: 1;">
+
                     <h2 style="font-size: 12px; font-weight: 900; margin: 0; text-transform: uppercase;">CENTRO DE LANÇAMENTO DE ALCÂNTARA</h2>
+
                     <h3 style="font-size: 10px; font-weight: 700; margin: 2px 0; text-transform: uppercase;">SETOR DE SUBSISTÊNCIA - RANCHO DO CLA</h3>
+
                     <p id="pdf-titulo-refeicao" style="font-size: 11px; font-weight: 800; margin: 2px 0 0 0; background-color: #f3f4f6; display: inline-block; padding: 2px 8px; border-radius: 3px; border: 1px solid #d1d5db; text-align: center;"></p>
+
                 </div>
+
                 <div style="width: 45px; text-align: center;">
+
                     <img src="image.png" alt="Acanto" style="max-height: 40px; margin: 0 auto; object-fit: contain;">
+
                 </div>
+
             </div>
+
+
 
             <!-- Data e Hora de Emissão -->
+
             <div style="display: flex; justify-content: space-between; font-size: 9px; color: #374151; margin-bottom: 6px; border-bottom: 1px solid #e5e7eb; padding-bottom: 3px;">
+
                 <span><strong>EMISSÃO:</strong> <span id="pdf-data-hora"></span></span>
+
                 <span><strong>SISTEMA DE SUBSISTÊNCIA CLA</strong></span>
+
             </div>
+
+
 
             <!-- Tabela Ajustada para PDF -->
+
             <table class="tabela-pdf">
+
                 <thead>
+
                     <tr>
+
                         <th style="width: 40%;">POSTO / SETOR</th>
+
                         <th id="th-pdf-qtd-coluna" style="width: 10%; text-align: center;">QTD</th>
+
                         <th id="th-pdf-ceia" style="width: 10%; text-align: center; display: none;">CEIA</th>
+
                         <th style="width: 15%; text-align: center;">RAMAL</th>
+
                         <th style="width: 25%;">OBSERVAÇÃO</th>
+
                     </tr>
+
                 </thead>
+
                 <tbody id="pdf-corpo-tabela"></tbody>
+
             </table>
 
+
+
             <!-- Rodapé com Totais -->
+
             <div style="margin-top: 8px; border-top: 2px solid #000; padding-top: 5px; display: flex; justify-content: space-between; font-size: 11px; font-weight: bold;">
+
                 <span id="pdf-texto-total-geral">TOTAL GERAL: <span id="pdf-total-marmitas" style="font-size: 13px;">0</span></span>
+
                 <span id="pdf-container-total-ceia" style="display: none;">TOTAL DE CEIAS: <span id="pdf-total-ceias" style="font-size: 13px;">0</span></span>
+
             </div>
+
+
 
             <!-- Campo de Assinaturas Lado a Lado -->
+
             <div style="margin-top: 35px; display: flex; justify-content: space-between; text-align: center; font-size: 9px;">
+
                 <div style="width: 45%; border-top: 1px solid #000; padding-top: 3px;">
+
                     <p style="font-weight: bold; font-size: 10px; margin: 0;" id="pdf-assinatura-operador"></p>
+
                     <p style="color: #4b5563; margin: 1px 0 0 0;">Responsável pelo Preenchimento (Fiscal)</p>
+
                 </div>
+
                 <div style="width: 45%; border-top: 1px solid #000; padding-top: 3px;">
+
                     <p style="font-weight: bold; font-size: 10px; margin: 0;" id="pdf-assinatura-comissario"></p>
+
                     <p style="color: #4b5563; margin: 1px 0 0 0;">Comissário / Motorista Responsável</p>
+
                 </div>
+
             </div>
 
+
+
         </div>
+
     </div>
 
+
+
     <!-- SCRIPT DE CONTROLE DO SISTEMA -->
+
     <script>
+
         const usuariosPadrao = [
+
             { id: 0, login: "Administrador", saram: "Marmitex", perfil: "ADM" },
+
             { id: 1, login: "1S MELO", saram: "4181930", perfil: "FISCAL" },
+
             { id: 2, login: "1S COLARES", saram: "3952584", perfil: "FISCAL" },
+
             { id: 3, login: "2S JOELSON", saram: "3700569", perfil: "FISCAL" },
+
             { id: 4, login: "2S CELSO", saram: "4387767", perfil: "FISCAL" },
+
             { id: 5, login: "2S MARQUES", saram: "6098207", perfil: "FISCAL" },
+
             { id: 6, login: "2S BECKMAN", saram: "6471420", perfil: "FISCAL" },
+
             { id: 7, login: "3S WOLFF", saram: "7422610", perfil: "FISCAL" },
+
             { id: 8, login: "3S BASTOS", saram: "3384713", perfil: "FISCAL" },
+
             { id: 9, login: "CB H. TEIXEIRA", saram: "7240490", perfil: "FISCAL" },
+
             { id: 10, login: "CB WASHINGTON", saram: "7262906", perfil: "FISCAL" },
+
             { id: 11, login: "CB HENRIQUE", saram: "7239866", perfil: "FISCAL" },
+
             { id: 12, login: "CB DE JESUS", saram: "7686706", perfil: "FISCAL" },
+
             { id: 13, login: "CB FERNANDO", saram: "6800262", perfil: "FISCAL" },
+
             { id: 14, login: "CB W CORREA", saram: "6799850", perfil: "FISCAL" },
+
             { id: 15, login: "CB M SANTOS", saram: "7686714", perfil: "FISCAL" },
+
             { id: 16, login: "CB MIQUEIAS", saram: "7329806", perfil: "FISCAL" },
+
             { id: 17, login: "CB BRUNO MATOS", saram: "7860510", perfil: "FISCAL" },
+
             { id: 18, login: "CB BRAGA", saram: "7425937", perfil: "FISCAL" },
+
             { id: 19, login: "CB GABRIELLE", saram: "7860544", perfil: "FISCAL" },
+
             { id: 20, login: "CB J RODRIGUES", saram: "7860420", perfil: "FISCAL" },
+
             { id: 21, login: "TF OLIMPIO", saram: "7257686", perfil: "FISCAL" },
+
             { id: 22, login: "TF JOSEPH", saram: "7592604", perfil: "FISCAL" }
+
         ];
+
+
 
         let usuariosCadastrados = usuariosPadrao;
+
         let usuarioLogado = null;
+
         let tipoAtual = 'CAFÉ';
+
         let marmitasReserva = { 'CAFÉ': 0, 'ALMOÇO': 0, 'JANTAR': 0 };
 
+
+
         let comissarios = [
+
             "CB HENRIQUE", "CB W CORREA", "CB M SANTOS", 
+
             "CB MIQUEIAS", "CB DUARTE", "CB V RIBEIRO", "CB B SANTOS",
+
             "CB THIAGO", "CB MOURA", "CB CARDOSO"
+
         ];
+
+
 
         let dadosCafe = {
+
             coletivo: [
+
                 { id: 101, nome: 'GUARDA SPL', obs: 'DEIXAR GARRAFA DE CAFÉ', ramal: '9470', qtd: 4 },
+
                 { id: 102, nome: 'GUARDA SCC', obs: 'DEIXAR GARRAFA DE CAFÉ', ramal: '9266', qtd: 0 },
+
                 { id: 103, nome: 'GUARDA AACL', obs: 'DEIXAR GARRAFA DE CAFÉ', ramal: '9889', qtd: 8 },
+
                 { id: 104, nome: 'PAIOL', obs: 'DEIXAR GARRAFA DE CAFÉ', ramal: '', qtd: 4 },
+
                 { id: 105, nome: 'PCI', obs: '', ramal: '9925', qtd: 11 },
+
                 { id: 106, nome: 'POSTO MÉDICO', obs: '', ramal: '9902', qtd: 4 },
+
                 { id: 107, nome: 'FORÇA REAÇÃO', obs: 'DEIXAR GARRAFA DE CAFÉ', ramal: '9880', qtd: 4 },
+
                 { id: 108, nome: 'RECRUTAS', obs: 'DEIXAR GARRAFA DE CAFÉ', ramal: '', qtd: 60 }
+
             ],
+
             individual: [
+
                 { id: 201, nome: 'TAFC', obs: 'DEIXAR GARRAFA DE CAFÉ', ramal: '', qtd: 0 },
+
                 { id: 202, nome: 'Permanencia da Formação', obs: '', ramal: '', qtd: 1 },
+
                 { id: 203, nome: 'HANGAR', obs: '', ramal: '9901', qtd: 1 },
+
                 { id: 204, nome: 'Mat. Bélico (armeiro)', obs: '', ramal: '9903', qtd: 1 },
+
                 { id: 205, nome: 'ECE', obs: '', ramal: '9214', qtd: 1 },
+
                 { id: 206, nome: 'CASA 8 VILA DELTA', obs: '', ramal: '', qtd: 0 },
+
                 { id: 207, nome: 'BANDA', obs: '', ramal: '9900', qtd: 1 },
+
                 { id: 208, nome: 'CSA (CLUBE)', obs: '', ramal: '9941', qtd: 1 },
+
                 { id: 209, nome: 'HOTEL – MÉDIO', obs: '', ramal: '', qtd: 1 },
+
                 { id: 210, nome: 'HOTEL – SUPERIOR', obs: '', ramal: '9745', qtd: 1 }
+
             ]
+
         };
 
+
+
         let dadosAlmoco = [
+
             { id: 301, nome: 'GUARDA DO SPL', marmita: 8, ramal: '9470 / 9623', obs: '' },
+
             { id: 302, nome: 'METEORO', marmita: 0, ramal: '9424', obs: '' },
+
             { id: 303, nome: 'GUARDA SCC', marmita: 9, ramal: '9266', obs: '' },
+
             { id: 304, nome: 'GUARDA DA AACL', marmita: 16, ramal: '9889', obs: '' },
+
             { id: 305, nome: 'PCI', marmita: 11, ramal: '9925', obs: '' },
+
             { id: 306, nome: 'PERMANENCIA DA FORMAÇÃO (GSD)', marmita: 3, ramal: '9928', obs: '' },
+
             { id: 307, nome: 'HANGAR', marmita: 5, ramal: '9901/9894', obs: '' },
+
             { id: 308, nome: 'MATERIAL BÉLICO', marmita: 1, ramal: '9903', obs: '' },
+
             { id: 309, nome: 'POSTO MÉDICO', marmita: 5, ramal: '9905/9024', obs: '' },
+
             { id: 310, nome: 'ECE', marmita: 35, ramal: '9156/9787', obs: '' },
+
             { id: 311, nome: 'BANDA', marmita: 1, ramal: '9692/9316', obs: '' },
+
             { id: 312, nome: 'CESGAL ( PERMANÊNCIA)', marmita: 6, ramal: '9941', obs: '' },
+
             { id: 313, nome: 'LAVANDERIA', marmita: 0, ramal: '', obs: '' },
+
             { id: 314, nome: 'PAIOL', marmita: 8, ramal: '(98) 99251-3710', obs: '' },
+
             { id: 315, nome: 'HOTEL – MÉDIO', marmita: 2, ramal: '9796', obs: '' },
+
             { id: 316, nome: 'HOTEL – SUPERIOR', marmita: 2, ramal: '9745', obs: '' },
+
             { id: 317, nome: 'RECRUTAS', marmita: 0, ramal: '', obs: '' },
+
             { id: 318, nome: 'PA', marmita: 8, ramal: '9153', obs: '' },
+
             { id: 319, nome: 'SMOB', marmita: 3, ramal: '(98) 991260931', obs: '' },
+
             { id: 320, nome: 'FORÇA DE REAÇÃO', marmita: 4, ramal: '9880', obs: '' },
+
             { id: 321, nome: 'VILA', marmita: 100, ramal: '', obs: 'casa 19' },
+
             { id: 322, nome: 'PROFESP', marmita: 0, ramal: '', obs: '+ 50 toda terça e quinta até dezembro!' }
+
         ];
+
+
 
         let dadosJantar = [
+
             { id: 401, nome: 'GUARDA DO SPL', marmita: 4, ceia: 4, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '9470' },
+
             { id: 402, nome: 'GUARDA DA AACL', marmita: 8, ceia: 8, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '9889' },
+
             { id: 403, nome: 'PCI', marmita: 11, ceia: 11, obs: '', ramal: '' },
+
             { id: 404, nome: 'PAIOL', marmita: 4, ceia: 4, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '' },
+
             { id: 405, nome: 'PERMANENCIA DA FORMAÇÃO', marmita: 4, ceia: 1, obs: '', ramal: '9928' },
+
             { id: 406, nome: 'TRIPULAÇÃO 1º/8º', marmita: 0, ceia: 0, obs: 'Retirar no Rancho', ramal: '9901' },
+
             { id: 407, nome: 'HANGAR', marmita: 1, ceia: 1, obs: '', ramal: '9901' },
+
             { id: 408, nome: 'MAT. BÉLICO', marmita: 1, ceia: 1, obs: '', ramal: '9903' },
+
             { id: 409, nome: 'POSTO MÉDICO', marmita: 4, ceia: 4, obs: '', ramal: '9902 / 9024' },
+
             { id: 410, nome: 'ECE', marmita: 1, ceia: 1, obs: '', ramal: '' },
+
             { id: 411, nome: 'BANDA', marmita: 1, ceia: 1, obs: '', ramal: '' },
+
             { id: 412, nome: 'CSA (CLUBE)', marmita: 1, ceia: 1, obs: '', ramal: '9214' },
+
             { id: 413, nome: 'HOTEL – MÉDIO', marmita: 1, ceia: 1, obs: '', ramal: '' },
+
             { id: 414, nome: 'HOTEL - SUPERIOR', marmita: 1, ceia: 1, obs: '', ramal: '' },
+
             { id: 415, nome: 'RECRUTAS', marmita: 34, ceia: 34, obs: '', ramal: '' },
+
             { id: 416, nome: 'PA', marmita: 8, ceia: 0, obs: '', ramal: '9153' },
+
             { id: 417, nome: 'FORÇA DE REAÇÃO', marmita: 0, ceia: 4, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '' }
+
         ];
 
+
+
         function carregarHistoricoGlobal() {
+
             try {
+
                 let hist = JSON.parse(localStorage.getItem('historico_marmitas_cla') || '[]');
+
                 const agora = new Date().getTime();
+
                 const tresDiasMs = 3 * 24 * 60 * 60 * 1000;
+
                 hist = hist.filter(item => (agora - item.timestamp) < tresDiasMs);
+
                 localStorage.setItem('historico_marmitas_cla', JSON.stringify(hist));
+
                 return hist;
+
             } catch (e) {
+
                 return [];
+
             }
+
         }
+
+
 
         function salvarHistoricoGlobal(novoItem) {
+
             let hist = carregarHistoricoGlobal();
+
             hist.unshift(novoItem);
+
             localStorage.setItem('historico_marmitas_cla', JSON.stringify(hist));
+
         }
+
+
 
         function limparHistoricoExpirado() {
+
             carregarHistoricoGlobal();
+
             renderizarHistorico();
+
             alert('Histórico atualizado! Registros com mais de 3 dias foram removidos automaticamente.');
+
         }
+
+
 
         function mudarAba(aba) {
+
             if (aba === 'adm' && (!usuarioLogado || usuarioLogado.perfil !== 'ADM')) {
+
                 alert('Acesso restrito. Faça login como Administrador para acessar o Painel ADM.');
+
                 abrirModalLogin();
+
                 return;
+
             }
+
+
 
             const abas = ['operacao', 'historico', 'adm'];
+
             abas.forEach(a => {
+
                 const el = document.getElementById(`aba-${a}`);
+
                 const nav = document.getElementById(`nav-${a}`);
+
                 if (el) el.classList.add('hidden');
+
                 if (nav) nav.className = "flex-1 py-2 rounded-lg text-slate-400 hover:text-white cursor-pointer text-center";
+
             });
+
+
 
             const abaAtiva = document.getElementById(`aba-${aba}`);
+
             const navAtivo = document.getElementById(`nav-${aba}`);
+
             if (abaAtiva) abaAtiva.classList.remove('hidden');
+
             if (navAtivo) navAtivo.className = "flex-1 py-2 rounded-lg bg-blue-700 text-white shadow cursor-pointer text-center";
 
+
+
             const seletorRef = document.getElementById('seletor-refeicao-container');
+
             if (seletorRef) {
+
                 if (aba === 'operacao') seletorRef.classList.remove('hidden');
+
                 else seletorRef.classList.add('hidden');
+
             }
+
+
 
             if (aba === 'historico') renderizarHistorico();
+
         }
+
+
 
         function mudarRefeicao(tipo) {
+
             tipoAtual = tipo;
+
             const btnCafe = document.getElementById('btn-cafe');
+
             const btnAlmoco = document.getElementById('btn-almoco');
+
             const btnJantar = document.getElementById('btn-jantar');
 
+
+
             const estiloAtivo = "flex-1 py-2.5 text-xs font-bold rounded-xl bg-blue-700 text-white shadow-lg shadow-blue-900/50 transition-all cursor-pointer";
+
             const estiloInativo = "flex-1 py-2.5 text-xs font-bold rounded-xl bg-white/90 text-gray-700 border border-gray-200 shadow-md transition-all cursor-pointer";
 
+
+
             if (btnCafe) btnCafe.className = tipo === 'CAFÉ' ? estiloAtivo : estiloInativo;
+
             if (btnAlmoco) btnAlmoco.className = tipo === 'ALMOÇO' ? estiloAtivo : estiloInativo;
+
             if (btnJantar) btnJantar.className = tipo === 'JANTAR' ? estiloAtivo : estiloInativo;
+
             
+
             renderizar();
+
         }
+
+
 
         function alterarQtd(tipoLista, id, campo, valor) {
+
             if (tipoLista === 'cafe_coletivo') {
+
                 dadosCafe.coletivo = dadosCafe.coletivo.map(item => item.id === id ? { ...item, qtd: Math.max(0, item.qtd + valor) } : item);
+
             } else if (tipoLista === 'cafe_individual') {
+
                 dadosCafe.individual = dadosCafe.individual.map(item => item.id === id ? { ...item, qtd: Math.max(0, item.qtd + valor) } : item);
+
             } else if (tipoLista === 'almoco') {
+
                 dadosAlmoco = dadosAlmoco.map(item => item.id === id ? { ...item, marmita: Math.max(0, item.marmita + valor) } : item);
+
             } else if (tipoLista === 'jantar') {
+
                 dadosJantar = dadosJantar.map(item => item.id === id ? { ...item, [campo]: Math.max(0, item[campo] + valor) } : item);
+
             }
+
             renderizar();
+
         }
+
+
 
         function definirQtdDireta(tipoLista, id, campo, valorInput) {
+
             const novoValor = Math.max(0, parseInt(valorInput) || 0);
+
             if (tipoLista === 'cafe_coletivo') {
+
                 dadosCafe.coletivo = dadosCafe.coletivo.map(item => item.id === id ? { ...item, qtd: novoValor } : item);
+
             } else if (tipoLista === 'cafe_individual') {
+
                 dadosCafe.individual = dadosCafe.individual.map(item => item.id === id ? { ...item, qtd: novoValor } : item);
+
             } else if (tipoLista === 'almoco') {
+
                 dadosAlmoco = dadosAlmoco.map(item => item.id === id ? { ...item, marmita: novoValor } : item);
+
             } else if (tipoLista === 'jantar') {
+
                 dadosJantar = dadosJantar.map(item => item.id === id ? { ...item, [campo]: novoValor } : item);
+
             }
+
             renderizar();
+
         }
+
+
 
         function atualizarReserva(val) {
+
             marmitasReserva[tipoAtual] = Math.max(0, parseInt(val) || 0);
+
             renderizar();
+
         }
+
+
 
         function adicionarPosto() {
+
             const input = document.getElementById('novo-posto-input');
+
             const nome = input.value.trim();
+
             if (!nome) return;
 
+
+
             const cat = document.getElementById('categoria-novo-posto').value;
+
             if (tipoAtual === 'CAFÉ') {
+
                 dadosCafe[cat].push({ id: Date.now(), nome: nome.toUpperCase(), obs: '', ramal: '', qtd: 0 });
+
             } else if (tipoAtual === 'ALMOÇO') {
+
                 dadosAlmoco.push({ id: Date.now(), nome: nome.toUpperCase(), marmita: 0, ramal: '', obs: '' });
+
             } else if (tipoAtual === 'JANTAR') {
+
                 dadosJantar.push({ id: Date.now(), nome: nome.toUpperCase(), marmita: 0, ceia: 0, obs: '', ramal: '' });
+
             }
 
+
+
             input.value = '';
+
             renderizar();
+
         }
+
+
 
         function renderizarComissarios() {
+
             const select = document.getElementById('select-comissario');
+
             if (!select) return;
+
             select.innerHTML = '<option value="">Selecione o comissário...</option>';
+
             comissarios.forEach(c => {
+
                 select.innerHTML += `<option value="${c}">${c}</option>`;
+
             });
+
         }
 
+
+
         function renderizar() {
+
             const container = document.getElementById('conteudo-postos');
+
             const painelTotais = document.getElementById('painel-totais');
-            // ... restante da lógica de renderização original
-        }
-    </script>
-</body>
-</html>
+
