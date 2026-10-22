@@ -81,6 +81,17 @@
             color: #34d399 !important;
             box-shadow: 0 0 15px rgba(52, 211, 153, 0.6) !important;
         }
+
+        /* Estrutura invisível mas perfeitamente renderizável pelo Chrome/html2pdf */
+        #wrapper-pdf {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 190mm;
+            opacity: 0.01;
+            pointer-events: none;
+            z-index: -9999;
+        }
     </style>
 </head>
 <body class="font-sans pb-28 text-slate-100 relative">
@@ -299,8 +310,8 @@
         </div>
     </div>
 
-    <!-- ESTRUTURA VISÍVEL PARA O GERADOR DE PDF -->
-    <div id="wrapper-pdf" style="position: fixed; top: 0; left: -9999px; z-index: -999; width: 190mm;">
+    <!-- ESTRUTURA PARA O GERADOR DE PDF -->
+    <div id="wrapper-pdf">
         <div id="area-impressao-pdf" class="ficha-a4">
             
             <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 8px;">
@@ -947,18 +958,21 @@
             spanTotalMarmitas.innerText = h.totalGeral;
             spanTotalCeias.innerText = h.totalCeias || 0;
 
+            const elementoPDF = document.getElementById('area-impressao-pdf');
+            // Forçar computação do layout
+            void elementoPDF.offsetHeight;
+
             setTimeout(() => {
-                const elementoPDF = document.getElementById('area-impressao-pdf');
                 const opt = {
                     margin:       5,
                     filename:     `Relacao_${h.tipo}_CLA_Reexibida.pdf`,
                     image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { scale: 2, useCORS: true },
+                    html2canvas:  { scale: 2, useCORS: true, scrollX: 0, scrollY: 0, windowWidth: 1000 },
                     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
 
                 html2pdf().from(elementoPDF).set(opt).save();
-            }, 200);
+            }, 300);
         }
 
         function gerarRelacaoEPDF() {
@@ -1067,19 +1081,21 @@
                 timestamp: agora.getTime()
             });
 
-            // Aguarda a renderização do DOM (250ms) antes de capturar a imagem do PDF
+            const elementoPDF = document.getElementById('area-impressao-pdf');
+            // Forçar redesenho síncrono do elemento
+            void elementoPDF.offsetHeight;
+
             setTimeout(() => {
-                const elementoPDF = document.getElementById('area-impressao-pdf');
                 const opt = {
                     margin:       5,
                     filename:     `Relacao_${tipoAtual}_CLA_${agora.toISOString().slice(0,10)}.pdf`,
                     image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { scale: 2, useCORS: true },
+                    html2canvas:  { scale: 2, useCORS: true, scrollX: 0, scrollY: 0, windowWidth: 1000 },
                     jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
                 };
 
                 html2pdf().from(elementoPDF).set(opt).save();
-            }, 250);
+            }, 300);
         }
 
         window.onload = function() {
