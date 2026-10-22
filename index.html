@@ -57,13 +57,16 @@
             vertical-align: middle;
         }
 
-        /* Efeito Hover Neon nos Cards e Itens */
-        .card-metalico {
+        /* Efeito Hover Neon Verde nos Cards, Cabeçalho e Botões */
+        .card-metalico, header, .card-botao-neon {
             background-color: #1e293b;
             border: 1px solid #334155;
             transition: all 0.2s ease-in-out;
         }
-        .card-metalico:hover, .card-metalico:focus-within {
+        header {
+            background-color: #ffffff !important;
+        }
+        .card-metalico:hover, .card-metalico:focus-within, header:hover, .card-botao-neon:hover {
             border-color: #34d399;
             box-shadow: 0 0 15px rgba(52, 211, 153, 0.5);
         }
@@ -113,7 +116,7 @@
     <div class="sticky top-0 z-40 bg-[#070d18]/95 backdrop-blur-md pb-2 pt-2 px-3 border-b border-slate-800 shadow-xl">
         <div class="max-w-md mx-auto space-y-2">
             
-            <!-- Item 1: Cabeçalho Institucional Oficial com o BRASÃO DO CLA mantido na esquerda -->
+            <!-- Cabeçalho Institucional com Efeito Hover Verde Neon -->
             <header class="bg-white text-gray-900 px-3 py-3 rounded-2xl shadow-xl border-b-4 border-blue-900 relative flex items-center justify-between overflow-hidden">
                 <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-white rounded-lg p-0.5 shadow-sm border border-gray-100">
                     <img src="brasao-cla.png" alt="Brasão CLA" class="w-full h-full object-contain">
@@ -136,28 +139,29 @@
                 </div>
             </header>
 
-            <!-- DOIS BOTÕES LOGO ABAIXO DO CABEÇALHO (ITEM 2: MENU E ITEM 3: LOGIN) -->
+            <!-- DOIS BOTÕES ABAIXO DO CABEÇALHO (MENU E LOGIN) -->
             <div class="grid grid-cols-2 gap-2">
-                <!-- Item 2: Botão MENU (Esquerda) -->
-                <button type="button" onclick="alternarMenuLateral()" class="py-2.5 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 shadow-md text-slate-100 transition-all cursor-pointer flex items-center justify-center gap-2 font-bold text-xs">
-                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <!-- Botão MENU (Com Ícone Sidebar, Ícone do App e Nome com Prata Neon) -->
+                <button type="button" onclick="alternarMenuLateral()" class="card-botao-neon py-2.5 px-3 rounded-xl bg-slate-900/90 border border-slate-700 shadow-md text-slate-100 transition-all cursor-pointer flex items-center justify-center gap-2 font-bold text-xs">
+                    <svg class="w-4 h-4 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <rect x="3" y="3" width="18" height="18" rx="3" stroke-width="2"/>
                         <path d="M9 3v18" stroke-width="2"/>
                     </svg>
-                    <span>MENU</span>
+                    <img src="icon.png" alt="App Icon" class="w-4 h-4 object-contain flex-shrink-0">
+                    <span style="color: #e2e8f0; text-shadow: 0 0 8px rgba(226,232,240,0.6);">MENU</span>
                 </button>
 
-                <!-- Item 3: Botão LOGIN (Direita) -->
-                <button type="button" onclick="abrirModalLogin()" class="py-2.5 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 shadow-md text-emerald-400 transition-all cursor-pointer flex items-center justify-between text-xs font-bold">
+                <!-- Botão LOGIN (Com Nome com Verde Neon) -->
+                <button type="button" onclick="abrirModalLogin()" class="card-botao-neon py-2.5 px-3 rounded-xl bg-slate-900/90 border border-slate-700 shadow-md transition-all cursor-pointer flex items-center justify-between text-xs font-bold">
                     <span class="flex items-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span>LOGIN</span>
+                        <span style="color: #34d399; text-shadow: 0 0 8px rgba(52,211,153,0.8);">LOGIN</span>
                     </span>
                     <span id="status-login-texto" class="text-[10px] text-gray-400 font-normal truncate max-w-[85px]">Não Logado</span>
                 </button>
             </div>
 
-            <!-- Seleção de Refeição (Visível apenas na aba Operação) -->
+            <!-- Seleção de Refeição -->
             <div id="seletor-refeicao-container" class="flex gap-2">
                 <button type="button" onclick="mudarRefeicao('CAFÉ')" id="btn-cafe" class="flex-1 py-2.5 text-xs font-bold rounded-xl bg-blue-700 text-white shadow-lg shadow-blue-900/50 transition-all cursor-pointer">CAFÉ</button>
                 <button type="button" onclick="mudarRefeicao('ALMOÇO')" id="btn-almoco" class="flex-1 py-2.5 text-xs font-bold rounded-xl bg-white/90 text-gray-700 border border-gray-200 shadow-md transition-all cursor-pointer">ALMOÇO</button>
@@ -176,7 +180,7 @@
             <!-- Conteúdo Dinâmico dos Postos -->
             <div id="conteudo-postos"></div>
 
-            <!-- Adicionar Novo Posto (Abaixo dos postos) -->
+            <!-- Adicionar Novo Posto -->
             <div class="card-metalico p-3.5 rounded-2xl shadow-lg space-y-2">
                 <label class="block text-xs font-bold text-amber-400">Adicionar Novo Posto ou Setor</label>
                 <div class="flex gap-2">
@@ -190,20 +194,20 @@
             </div>
 
             <!-- Painel de Reservas e Totais -->
-            <div id="painel-totais" class="bg-blue-950/90 backdrop-blur-md text-white p-4 rounded-xl text-sm font-semibold shadow-xl border border-blue-800/50 space-y-2"></div>
+            <div id="painel-totais" class="card-metalico text-white p-4 rounded-xl text-sm font-semibold shadow-xl space-y-2"></div>
 
             <!-- Assinatura e Motorista -->
-            <div class="bg-white/95 backdrop-blur-md p-4 rounded-xl shadow-lg border border-gray-200 text-slate-900 space-y-3">
+            <div class="card-metalico p-4 rounded-xl shadow-lg text-slate-100 space-y-3">
                 <div>
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Responsável pelo Preenchimento (Fiscal Logado)</label>
-                    <div id="campo-assinatura-logada" class="p-2 bg-gray-100 rounded-lg text-sm font-bold text-red-600 border border-gray-200">
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Responsável pelo Preenchimento (Fiscal Logado)</label>
+                    <div id="campo-assinatura-logada" class="p-2 bg-slate-950 rounded-lg text-sm font-bold text-red-400 border border-slate-700">
                         Fiscal Não Logado
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Comissário / Motorista Responsável *</label>
-                    <select id="select-comissario" class="w-full p-2 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900">
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Comissário / Motorista Responsável *</label>
+                    <select id="select-comissario" class="w-full p-2 bg-slate-950 border border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-100">
                         <option value="">Selecione o comissário...</option>
                     </select>
                 </div>
@@ -226,7 +230,6 @@
 
         <!-- ABA 3: PAINEL ADM -->
         <div id="aba-adm" class="hidden space-y-4">
-            <!-- Card de Cadastro de Fiscal -->
             <div class="card-metalico p-4 rounded-xl space-y-3">
                 <h3 class="text-sm font-bold text-amber-400">Cadastrar Novo Fiscal</h3>
                 <div class="space-y-2">
@@ -238,7 +241,6 @@
                 </div>
             </div>
 
-            <!-- Card de Cadastro de Posto -->
             <div class="card-metalico p-4 rounded-xl space-y-3">
                 <h3 class="text-sm font-bold text-amber-400">Cadastrar Novo Posto Padrão</h3>
                 <div class="flex gap-2">
@@ -248,7 +250,6 @@
                 </div>
             </div>
 
-            <!-- Card de Cadastro de Comissário -->
             <div class="card-metalico p-4 rounded-xl space-y-3">
                 <h3 class="text-sm font-bold text-amber-400">Cadastrar Novo Comissário / Motorista</h3>
                 <div class="flex gap-2">
@@ -263,7 +264,6 @@
     <!-- MODAL DE LOGIN -->
     <div id="modal-login" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
         <div class="bg-white text-slate-900 max-w-xs w-full p-5 rounded-2xl shadow-2xl space-y-3">
-            
             <div class="flex justify-center mb-1">
                 <img src="icon.png" alt="Logo CLA" class="w-16 h-16 object-contain">
             </div>
@@ -288,7 +288,7 @@
         </div>
     </div>
 
-    <!-- ESTRUTURA VISÍVEL PARA O GERADOR DE PDF (Centralizada) -->
+    <!-- ESTRUTURA VISÍVEL PARA O GERADOR DE PDF -->
     <div id="wrapper-pdf" style="position: fixed; top: 0; left: 0; z-index: -999; opacity: 0; pointer-events: none; width: 100%;">
         <div id="area-impressao-pdf" class="ficha-a4">
             
@@ -458,7 +458,6 @@
             localStorage.setItem('dados_jantar_cla', JSON.stringify(dadosJantar));
         }
 
-        // Funções para Controle do Menu Lateral Esquerdo
         function abrirMenuLateral() {
             document.getElementById('menu-lateral-esquerda').classList.remove('-translate-x-full');
             document.getElementById('menu-overlay').classList.remove('hidden');
@@ -807,7 +806,7 @@
 
             const campoAssinatura = document.getElementById('campo-assinatura-logada');
             if (campoAssinatura) {
-                campoAssinatura.innerHTML = `<span class="text-emerald-700 font-black">${user.login}</span>`;
+                campoAssinatura.innerHTML = `<span class="text-emerald-400 font-black">${user.login}</span>`;
             }
 
             const statusLoginTexto = document.getElementById('status-login-texto');
