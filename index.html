@@ -143,7 +143,7 @@
             </div>
 
             <nav class="space-y-2">
-                <!-- NOME ALTERADO DE 'OPERAÇÃO' PARA 'REFEIÇÕES' -->
+                <!-- MENU LATERAL: REFEIÇÕES -->
                 <button type="button" onclick="mudarAba('operacao')" id="nav-operacao" class="btn-sidebar btn-sidebar-ativo w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">REFEIÇÕES</button>
                 <button type="button" onclick="mudarAba('historico')" id="nav-historico" class="btn-sidebar w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">HISTÓRICO</button>
                 <button type="button" onclick="mudarAba('adm')" id="nav-adm" class="btn-sidebar w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold">PAINEL ADM</button>
@@ -212,7 +212,7 @@
     <!-- CONTEÚDO PRINCIPAL DA APLICAÇÃO -->
     <div id="app" class="max-w-md mx-auto p-3 pt-4 w-full">
 
-        <!-- ABA 1: REFEIÇÕES (OPERAÇÃO) -->
+        <!-- ABA 1: REFEIÇÕES -->
         <div id="aba-operacao" class="space-y-4">
             <div id="conteudo-postos"></div>
 
@@ -246,7 +246,7 @@
                 </div>
             </div>
 
-            <!-- BOTÕES DIVIDIDOS -->
+            <!-- BOTOES DIVIDIDOS -->
             <div class="space-y-2 pt-2">
                 <button type="button" onclick="gerarRelacao()" class="w-full bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/50 py-3 rounded-xl font-bold shadow-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
                     <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -428,7 +428,7 @@
             "CB THIAGO", "CB MOURA", "CB CARDOSO"
         ];
 
-        let dadosCafe = JSON.parse(localStorage.getItem('dados_cafe_cla')) || {
+        let dadosCafe = {
             coletivo: [
                 { id: 101, nome: 'GUARDA SPL', obs: 'DEIXAR GARRAFA DE CAFÉ', ramal: '9470', qtd: 4 },
                 { id: 102, nome: 'GUARDA SCC', obs: 'DEIXAR GARRAFA DE CAFÉ', ramal: '9266', qtd: 0 },
@@ -453,7 +453,7 @@
             ]
         };
 
-        let dadosAlmoco = JSON.parse(localStorage.getItem('dados_almoco_cla')) || [
+        let dadosAlmoco = [
             { id: 301, nome: 'GUARDA DO SPL', marmita: 8, ramal: '9470 / 9623', obs: '' },
             { id: 302, nome: 'METEORO', marmita: 0, ramal: '9424', obs: '' },
             { id: 303, nome: 'GUARDA SCC', marmita: 9, ramal: '9266', obs: '' },
@@ -478,8 +478,8 @@
             { id: 322, nome: 'PROFESP', marmita: 0, ramal: '', obs: '+ 50 toda terça e quinta até dezembro!' }
         ];
 
-        // LISTA DO JANTAR COMPLETA COM TODOS OS 25 POSTOS DA PLANILHA
-        let dadosJantar = JSON.parse(localStorage.getItem('dados_jantar_cla_v2')) || [
+        // LISTA DEFINITIVA DO JANTAR COM TODOS OS 25 POSTOS DA PLANILHA
+        let dadosJantar = [
             { id: 401, nome: 'GUARDA DO SPL', marmita: 4, ceia: 4, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '9470' },
             { id: 402, nome: 'GUARDA DA AACL', marmita: 8, ceia: 8, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '9889' },
             { id: 403, nome: 'PCI', marmita: 11, ceia: 11, obs: '', ramal: '' },
@@ -510,7 +510,7 @@
         function salvarEstadoLocal() {
             localStorage.setItem('dados_cafe_cla', JSON.stringify(dadosCafe));
             localStorage.setItem('dados_almoco_cla', JSON.stringify(dadosAlmoco));
-            localStorage.setItem('dados_jantar_cla_v2', JSON.stringify(dadosJantar));
+            localStorage.setItem('dados_jantar_cla_v3', JSON.stringify(dadosJantar));
         }
 
         function abrirMenuLateral() {
@@ -1139,7 +1139,11 @@
         }
 
         window.onload = function() {
+            // FORÇA A LIMPEZA DAS LISTAS ANTIGAS SALVAS NO DADO DE NAVEGAÇÃO DO CELULAR/COMPUTADOR
+            localStorage.removeItem('dados_jantar_cla');
+            localStorage.removeItem('dados_jantar_cla_v2');
             localStorage.removeItem('historico_marmitas_cla');
+            
             renderizarComissarios();
             renderizar();
             renderizarHistorico();
