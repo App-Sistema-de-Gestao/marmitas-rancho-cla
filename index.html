@@ -338,4 +338,824 @@
     <div id="wrapper-pdf">
         <div id="area-impressao-pdf" class="ficha-a4">
             
-            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom:
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 8px;">
+                <div style="width: 45px; text-align: center;">
+                    <img src="brasao-cla.png" alt="CLA" style="max-height: 45px; margin: 0 auto; object-fit: contain;">
+                </div>
+                <div style="text-align: center; flex: 1;">
+                    <h2 style="font-size: 12px; font-weight: 900; margin: 0; text-transform: uppercase;">CENTRO DE LANÇAMENTO DE ALCÂNTARA</h2>
+                    <h3 style="font-size: 10px; font-weight: 700; margin: 2px 0; text-transform: uppercase;">SETOR DE SUBSISTÊNCIA - RANCHO DO CLA</h3>
+                    <p id="pdf-titulo-refeicao" style="font-size: 11px; font-weight: 800; margin: 2px 0 0 0; background-color: #f3f4f6; display: inline-block; padding: 2px 8px; border-radius: 3px; border: 1px solid #d1d5db; text-align: center;"></p>
+                </div>
+                <div style="width: 45px; text-align: center;">
+                    <img src="image.png" alt="Acanto" style="max-height: 40px; margin: 0 auto; object-fit: contain;">
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; font-size: 9px; color: #374151; margin-bottom: 6px; border-bottom: 1px solid #e5e7eb; padding-bottom: 3px;">
+                <span><strong>EMISSÃO:</strong> <span id="pdf-data-hora"></span></span>
+                <span><strong>SISTEMA DE SUBSISTÊNCIA CLA</strong></span>
+            </div>
+
+            <table class="tabela-pdf">
+                <thead>
+                    <tr>
+                        <th style="width: 40%;">POSTO / SETOR</th>
+                        <th id="th-pdf-qtd-coluna" style="width: 10%; text-align: center;">QTD</th>
+                        <th id="th-pdf-ceia" style="width: 10%; text-align: center; display: none;">CEIA</th>
+                        <th style="width: 15%; text-align: center;">RAMAL</th>
+                        <th style="width: 25%;">OBSERVAÇÃO</th>
+                    </tr>
+                </thead>
+                <tbody id="pdf-corpo-tabela"></tbody>
+            </table>
+
+            <div style="margin-top: 8px; border-top: 2px solid #000; padding-top: 5px; display: flex; justify-content: space-between; font-size: 11px; font-weight: bold;">
+                <span id="pdf-texto-total-geral">TOTAL GERAL: <span id="pdf-total-marmitas" style="font-size: 13px;">0</span></span>
+                <span id="pdf-container-total-ceia" style="display: none;">TOTAL DE CEIAS: <span id="pdf-total-ceias" style="font-size: 13px;">0</span></span>
+            </div>
+
+            <div style="margin-top: 35px; display: flex; justify-content: space-between; text-align: center; font-size: 9px;">
+                <div style="width: 45%; border-top: 1px solid #000; padding-top: 3px;">
+                    <p style="font-weight: bold; font-size: 10px; margin: 0;" id="pdf-assinatura-operador"></p>
+                    <p style="color: #4b5563; margin: 1px 0 0 0;">Responsável pelo Preenchimento (Fiscal)</p>
+                </div>
+                <div style="width: 45%; border-top: 1px solid #000; padding-top: 3px;">
+                    <p style="font-weight: bold; font-size: 10px; margin: 0;" id="pdf-assinatura-comissario"></p>
+                    <p style="color: #4b5563; margin: 1px 0 0 0;">Comissário / Motorista Responsável</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SCRIPT DE CONTROLE DO SISTEMA -->
+    <script>
+        const usuariosPadrao = [
+            { id: 0, login: "Administrador", saram: "Marmitex", perfil: "ADM" },
+            { id: 1, login: "1S MELO", saram: "4181930", perfil: "FISCAL" },
+            { id: 2, login: "1S COLARES", saram: "3952584", perfil: "FISCAL" },
+            { id: 3, login: "2S JOELSON", saram: "3700569", perfil: "FISCAL" },
+            { id: 4, login: "2S CELSO", saram: "4387767", perfil: "FISCAL" },
+            { id: 5, login: "2S MARQUES", saram: "6098207", perfil: "FISCAL" },
+            { id: 6, login: "2S BECKMAN", saram: "6471420", perfil: "FISCAL" },
+            { id: 7, login: "3S WOLFF", saram: "7422610", perfil: "FISCAL" },
+            { id: 8, login: "3S BASTOS", saram: "3384713", perfil: "FISCAL" },
+            { id: 9, login: "CB H. TEIXEIRA", saram: "7240490", perfil: "FISCAL" },
+            { id: 10, login: "CB WASHINGTON", saram: "7262906", perfil: "FISCAL" },
+            { id: 11, login: "CB HENRIQUE", saram: "7239866", perfil: "FISCAL" },
+            { id: 12, login: "CB DE JESUS", saram: "7686706", perfil: "FISCAL" },
+            { id: 13, login: "CB FERNANDO", saram: "6800262", perfil: "FISCAL" },
+            { id: 14, login: "CB W CORREA", saram: "6799850", perfil: "FISCAL" },
+            { id: 15, login: "CB M SANTOS", saram: "7686714", perfil: "FISCAL" },
+            { id: 16, login: "CB MIQUEIAS", saram: "7329806", perfil: "FISCAL" },
+            { id: 17, login: "CB BRUNO MATOS", saram: "7860510", perfil: "FISCAL" },
+            { id: 18, login: "CB BRAGA", saram: "7425937", perfil: "FISCAL" },
+            { id: 19, login: "CB GABRIELLE", saram: "7860544", perfil: "FISCAL" },
+            { id: 20, login: "CB J RODRIGUES", saram: "7860420", perfil: "FISCAL" },
+            { id: 21, login: "TF OLIMPIO", saram: "7257686", perfil: "FISCAL" },
+            { id: 22, login: "TF JOSEPH", saram: "7592604", perfil: "FISCAL" }
+        ];
+
+        let usuariosCadastrados = usuariosPadrao;
+        let usuarioLogado = null;
+        let tipoAtual = 'CAFÉ';
+        let marmitasReserva = { 'CAFÉ': 0, 'ALMOÇO': 0, 'JANTAR': 0 };
+
+        let comissarios = [
+            "CB HENRIQUE", "CB W CORREA", "CB M SANTOS", 
+            "CB MIQUEIAS", "CB DUARTE", "CB V RIBEIRO", "CB B SANTOS",
+            "CB THIAGO", "CB MOURA", "CB CARDOSO"
+        ];
+
+        let dadosCafe = {
+            coletivo: [
+                { id: 101, nome: 'GUARDA SPL', obs: 'DEIXAR GARRAFA DE CAFÉ', ramal: '9470', qtd: 4 },
+                { id: 102, nome: 'GUARDA SCC', obs: 'DEIXAR GARRAFA DE CAFÉ', ramal: '9266', qtd: 0 },
+                { id: 103, nome: 'GUARDA AACL', obs: 'DEIXAR GARRAFA DE CAFÉ', ramal: '9889', qtd: 8 },
+                { id: 104, nome: 'PAIOL', obs: 'DEIXAR GARRAFA DE CAFÉ', ramal: '', qtd: 4 },
+                { id: 105, nome: 'PCI', obs: '', ramal: '9925', qtd: 11 },
+                { id: 106, nome: 'POSTO MÉDICO', obs: '', ramal: '9902', qtd: 4 },
+                { id: 107, nome: 'FORÇA REAÇÃO', obs: 'DEIXAR GARRAFA DE CAFÉ', ramal: '9880', qtd: 4 },
+                { id: 108, nome: 'RECRUTAS', obs: 'DEIXAR GARRAFA DE CAFÉ', ramal: '', qtd: 60 }
+            ],
+            individual: [
+                { id: 201, nome: 'TAFC', obs: 'DEIXAR GARRAFA DE CAFÉ', ramal: '', qtd: 0 },
+                { id: 202, nome: 'Permanencia da Formação', obs: '', ramal: '', qtd: 1 },
+                { id: 203, nome: 'HANGAR', obs: '', ramal: '9901', qtd: 1 },
+                { id: 204, nome: 'Mat. Bélico (armeiro)', obs: '', ramal: '9903', qtd: 1 },
+                { id: 205, nome: 'ECE', obs: '', ramal: '9214', qtd: 1 },
+                { id: 206, nome: 'CASA 8 VILA DELTA', obs: '', ramal: '', qtd: 0 },
+                { id: 207, nome: 'BANDA', obs: '', ramal: '9900', qtd: 1 },
+                { id: 208, nome: 'CSA (CLUBE)', obs: '', ramal: '9941', qtd: 1 },
+                { id: 209, nome: 'HOTEL – MÉDIO', obs: '', ramal: '', qtd: 1 },
+                { id: 210, nome: 'HOTEL – SUPERIOR', obs: '', ramal: '9745', qtd: 1 }
+            ]
+        };
+
+        let dadosAlmoco = [
+            { id: 301, nome: 'GUARDA DO SPL', marmita: 8, ramal: '9470 / 9623', obs: '' },
+            { id: 302, nome: 'METEORO', marmita: 0, ramal: '9424', obs: '' },
+            { id: 303, nome: 'GUARDA SCC', marmita: 9, ramal: '9266', obs: '' },
+            { id: 304, nome: 'GUARDA DA AACL', marmita: 16, ramal: '9889', obs: '' },
+            { id: 305, nome: 'PCI', marmita: 11, ramal: '9925', obs: '' },
+            { id: 306, nome: 'PERMANENCIA DA FORMAÇÃO (GSD)', marmita: 3, ramal: '9928', obs: '' },
+            { id: 307, nome: 'HANGAR', marmita: 5, ramal: '9901/9894', obs: '' },
+            { id: 308, nome: 'MATERIAL BÉLICO', marmita: 1, ramal: '9903', obs: '' },
+            { id: 309, nome: 'POSTO MÉDICO', marmita: 5, ramal: '9905/9024', obs: '' },
+            { id: 310, nome: 'ECE', marmita: 35, ramal: '9156/9787', obs: '' },
+            { id: 311, nome: 'BANDA', marmita: 1, ramal: '9692/9316', obs: '' },
+            { id: 312, nome: 'CESGAL ( PERMANÊNCIA)', marmita: 6, ramal: '9941', obs: '' },
+            { id: 313, nome: 'LAVANDERIA', marmita: 0, ramal: '', obs: '' },
+            { id: 314, nome: 'PAIOL', marmita: 8, ramal: '(98) 99251-3710', obs: '' },
+            { id: 315, nome: 'HOTEL – MÉDIO', marmita: 2, ramal: '9796', obs: '' },
+            { id: 316, nome: 'HOTEL – SUPERIOR', marmita: 2, ramal: '9745', obs: '' },
+            { id: 317, nome: 'RECRUTAS', marmita: 0, ramal: '', obs: '' },
+            { id: 318, nome: 'PA', marmita: 8, ramal: '9153', obs: '' },
+            { id: 319, nome: 'SMOB', marmita: 3, ramal: '(98) 991260931', obs: '' },
+            { id: 320, nome: 'FORÇA DE REAÇÃO', marmita: 4, ramal: '9880', obs: '' },
+            { id: 321, nome: 'VILA', marmita: 100, ramal: '', obs: 'casa 19' },
+            { id: 322, nome: 'PROFESP', marmita: 0, ramal: '', obs: '+ 50 toda terça e quinta até dezembro!' }
+        ];
+
+        // LISTA OFICIAL DO JANTAR E CEIA COM TODOS OS 25 POSTOS DA PLANILHA
+        let dadosJantarPadrao = [
+            { id: 401, nome: 'GUARDA DO SPL', marmita: 4, ceia: 4, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '9470' },
+            { id: 402, nome: 'GUARDA DA AACL', marmita: 8, ceia: 8, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '9889' },
+            { id: 403, nome: 'PCI', marmita: 11, ceia: 11, obs: '', ramal: '' },
+            { id: 404, nome: 'PAIOL', marmita: 4, ceia: 4, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '' },
+            { id: 405, nome: 'PERMANENCIA DA FORMAÇÃO', marmita: 5, ceia: 1, obs: '', ramal: '9928' },
+            { id: 406, nome: 'TRIPULAÇÃO 1º/8º', marmita: 0, ceia: 0, obs: '', ramal: '9901' },
+            { id: 407, nome: 'HANGAR', marmita: 1, ceia: 1, obs: '', ramal: '9901' },
+            { id: 408, nome: 'Mat. Bélico', marmita: 1, ceia: 1, obs: '', ramal: '9903' },
+            { id: 409, nome: 'POSTO MÉDICO', marmita: 4, ceia: 4, obs: '', ramal: '9902 / 9024' },
+            { id: 410, nome: 'ECE', marmita: 1, ceia: 1, obs: '', ramal: '' },
+            { id: 411, nome: 'BANDA', marmita: 1, ceia: 1, obs: '', ramal: '' },
+            { id: 412, nome: 'CSA(CLUBE)', marmita: 1, ceia: 1, obs: '', ramal: '9214' },
+            { id: 413, nome: 'HOTEL – MÉDIO', marmita: 1, ceia: 1, obs: '', ramal: '' },
+            { id: 414, nome: 'HOTEL - SUPERIOR', marmita: 1, ceia: 1, obs: '', ramal: '' },
+            { id: 415, nome: 'RECRUTAS', marmita: 30, ceia: 30, obs: '', ramal: '' },
+            { id: 416, nome: 'PA', marmita: 0, ceia: 0, obs: '', ramal: '9153' },
+            { id: 417, nome: 'FORÇA DE REAÇÃO', marmita: 0, ceia: 4, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '' },
+            { id: 418, nome: 'Aux. DO ELETRICISTA', marmita: 0, ceia: 1, obs: '', ramal: '' },
+            { id: 419, nome: 'METEORO', marmita: 0, ceia: 1, obs: '', ramal: '9423' },
+            { id: 420, nome: 'Permanência-PRÉDIO DO CT', marmita: 0, ceia: 1, obs: '', ramal: '9372' },
+            { id: 421, nome: 'MONITORAMENTO', marmita: 0, ceia: 3, obs: '', ramal: '' },
+            { id: 422, nome: 'GUARDA SCC', marmita: 0, ceia: 9, obs: 'RECOLHER GARRAFA DE CAFÉ', ramal: '' },
+            { id: 423, nome: 'GSD', marmita: 0, ceia: 0, obs: '', ramal: '' },
+            { id: 424, nome: 'TRIPULAÇÃO', marmita: 0, ceia: 0, obs: '', ramal: '' },
+            { id: 425, nome: 'VILA DELTA', marmita: 0, ceia: 0, obs: '', ramal: '' }
+        ];
+
+        let dadosJantar = JSON.parse(localStorage.getItem('dados_jantar_cla_v2026')) || dadosJantarPadrao;
+
+        function salvarEstadoLocal() {
+            localStorage.setItem('dados_cafe_cla', JSON.stringify(dadosCafe));
+            localStorage.setItem('dados_almoco_cla', JSON.stringify(dadosAlmoco));
+            localStorage.setItem('dados_jantar_cla_v2026', JSON.stringify(dadosJantar));
+        }
+
+        function abrirMenuLateral() {
+            document.getElementById('menu-lateral-esquerda').classList.remove('-translate-x-full');
+            document.getElementById('menu-overlay').classList.remove('hidden');
+        }
+
+        function fecharMenuLateral() {
+            document.getElementById('menu-lateral-esquerda').classList.add('-translate-x-full');
+            document.getElementById('menu-overlay').classList.add('hidden');
+        }
+
+        function alternarMenuLateral() {
+            const menu = document.getElementById('menu-lateral-esquerda');
+            if (menu.classList.contains('-translate-x-full')) {
+                abrirMenuLateral();
+            } else {
+                fecharMenuLateral();
+            }
+        }
+
+        function carregarHistoricoGlobal() {
+            try {
+                let hist = JSON.parse(localStorage.getItem('historico_marmitas_cla') || '[]');
+                const agora = new Date().getTime();
+                const tresDiasMs = 3 * 24 * 60 * 60 * 1000;
+                hist = hist.filter(item => (agora - item.timestamp) < tresDiasMs);
+                localStorage.setItem('historico_marmitas_cla', JSON.stringify(hist));
+                return hist;
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function salvarHistoricoGlobal(novoItem) {
+            let hist = carregarHistoricoGlobal();
+            hist.unshift(novoItem);
+            localStorage.setItem('historico_marmitas_cla', JSON.stringify(hist));
+            renderizarHistorico();
+        }
+
+        function mudarAba(aba) {
+            if (aba === 'adm' && (!usuarioLogado || usuarioLogado.perfil !== 'ADM')) {
+                alert('Acesso restrito. Faça login como Administrador para acessar o Painel ADM.');
+                abrirModalLogin();
+                return;
+            }
+
+            const abas = ['operacao', 'historico', 'adm'];
+            abas.forEach(a => {
+                const el = document.getElementById(`aba-${a}`);
+                const nav = document.getElementById(`nav-${a}`);
+                if (el) el.classList.add('hidden');
+                if (nav) {
+                    nav.classList.remove('btn-sidebar-ativo');
+                    nav.className = "btn-sidebar w-full py-2.5 px-3 rounded-xl text-slate-300 hover:text-white cursor-pointer text-left text-xs font-bold";
+                }
+            });
+
+            const abaAtiva = document.getElementById(`aba-${aba}`);
+            const navAtivo = document.getElementById(`nav-${aba}`);
+            if (abaAtiva) abaAtiva.classList.remove('hidden');
+            if (navAtivo) {
+                navAtivo.className = "btn-sidebar btn-sidebar-ativo w-full py-2.5 px-3 rounded-xl cursor-pointer text-left text-xs font-bold";
+            }
+
+            const seletorRef = document.getElementById('seletor-refeicao-container');
+            if (seletorRef) {
+                if (aba === 'operacao') seletorRef.classList.remove('hidden');
+                else seletorRef.classList.add('hidden');
+            }
+
+            if (aba === 'historico') renderizarHistorico();
+            fecharMenuLateral();
+        }
+
+        function mudarRefeicao(tipo) {
+            tipoAtual = tipo;
+            const btnCafe = document.getElementById('btn-cafe');
+            const btnAlmoco = document.getElementById('btn-almoco');
+            const btnJantar = document.getElementById('btn-jantar');
+
+            const estiloAtivo = "flex-1 py-2.5 text-xs font-bold rounded-xl bg-blue-700 text-white shadow-lg shadow-blue-900/50 transition-all cursor-pointer";
+            const estiloInativo = "flex-1 py-2.5 text-xs font-bold rounded-xl bg-white/90 text-gray-700 border border-gray-200 shadow-md transition-all cursor-pointer";
+
+            if (btnCafe) btnCafe.className = tipo === 'CAFÉ' ? estiloAtivo : estiloInativo;
+            if (btnAlmoco) btnAlmoco.className = tipo === 'ALMOÇO' ? estiloAtivo : estiloInativo;
+            if (btnJantar) btnJantar.className = tipo === 'JANTAR' ? estiloAtivo : estiloInativo;
+            
+            renderizar();
+        }
+
+        function alterarQtd(tipoLista, id, campo, valor) {
+            if (tipoLista === 'cafe_coletivo') {
+                dadosCafe.coletivo = dadosCafe.coletivo.map(item => item.id === id ? { ...item, qtd: Math.max(0, item.qtd + valor) } : item);
+            } else if (tipoLista === 'cafe_individual') {
+                dadosCafe.individual = dadosCafe.individual.map(item => item.id === id ? { ...item, qtd: Math.max(0, item.qtd + valor) } : item);
+            } else if (tipoLista === 'almoco') {
+                dadosAlmoco = dadosAlmoco.map(item => item.id === id ? { ...item, marmita: Math.max(0, item.marmita + valor) } : item);
+            } else if (tipoLista === 'jantar') {
+                dadosJantar = dadosJantar.map(item => item.id === id ? { ...item, [campo]: Math.max(0, item[campo] + valor) } : item);
+            }
+            salvarEstadoLocal();
+            renderizar();
+        }
+
+        function definirQtdDireta(tipoLista, id, campo, valorInput) {
+            const novoValor = Math.max(0, parseInt(valorInput) || 0);
+            if (tipoLista === 'cafe_coletivo') {
+                dadosCafe.coletivo = dadosCafe.coletivo.map(item => item.id === id ? { ...item, qtd: novoValor } : item);
+            } else if (tipoLista === 'cafe_individual') {
+                dadosCafe.individual = dadosCafe.individual.map(item => item.id === id ? { ...item, qtd: novoValor } : item);
+            } else if (tipoLista === 'almoco') {
+                dadosAlmoco = dadosAlmoco.map(item => item.id === id ? { ...item, marmita: novoValor } : item);
+            } else if (tipoLista === 'jantar') {
+                dadosJantar = dadosJantar.map(item => item.id === id ? { ...item, [campo]: novoValor } : item);
+            }
+            salvarEstadoLocal();
+            renderizar();
+        }
+
+        function atualizarReserva(val) {
+            marmitasReserva[tipoAtual] = Math.max(0, parseInt(val) || 0);
+            renderizar();
+        }
+
+        function adicionarPosto() {
+            const input = document.getElementById('novo-posto-input');
+            const nome = input.value.trim();
+            if (!nome) return;
+
+            const cat = document.getElementById('categoria-novo-posto').value;
+            if (tipoAtual === 'CAFÉ') {
+                dadosCafe[cat].push({ id: Date.now(), nome: nome.toUpperCase(), obs: '', ramal: '', qtd: 0 });
+            } else if (tipoAtual === 'ALMOÇO') {
+                dadosAlmoco.push({ id: Date.now(), nome: nome.toUpperCase(), marmita: 0, ramal: '', obs: '' });
+            } else if (tipoAtual === 'JANTAR') {
+                dadosJantar.push({ id: Date.now(), nome: nome.toUpperCase(), marmita: 0, ceia: 0, obs: '', ramal: '' });
+            }
+
+            input.value = '';
+            salvarEstadoLocal();
+            renderizar();
+        }
+
+        function renderizarComissarios() {
+            const select = document.getElementById('select-comissario');
+            if (!select) return;
+            select.innerHTML = '<option value="">Selecione o comissário...</option>';
+            comissarios.forEach(c => {
+                select.innerHTML += `<option value="${c}">${c}</option>`;
+            });
+        }
+
+        function renderizar() {
+            const container = document.getElementById('conteudo-postos');
+            const painelTotais = document.getElementById('painel-totais');
+            if (!container) return;
+
+            let html = '';
+            let totalGeral = 0;
+            let totalCeias = 0;
+
+            if (tipoAtual === 'CAFÉ') {
+                html += `<div class="card-metalico p-3 rounded-2xl shadow-md mb-3">
+                    <label class="block text-xs font-bold text-blue-400 mb-1">Reserva para o Café (Pães Extras)</label>
+                    <input type="number" min="0" value="${marmitasReserva['CAFÉ']}" oninput="atualizarReserva(this.value)" class="w-full p-2 text-xs bg-slate-950 text-white border border-slate-700 rounded-xl focus:outline-none">
+                </div>`;
+
+                let subTotalColetivo = 0;
+                html += `<h3 class="text-xs font-bold text-amber-400 uppercase mb-2">Postos Coletivos</h3>`;
+                dadosCafe.coletivo.forEach(item => {
+                    subTotalColetivo += item.qtd;
+                    const qtdFormatada = String(item.qtd).padStart(2, '0');
+                    html += `<div class="card-metalico p-3 rounded-xl mb-2 flex items-center justify-between gap-2">
+                        <div class="flex-1 min-w-0">
+                            <span class="text-xs font-bold text-white block truncate">${item.nome}</span>
+                            <span class="text-[10px] text-gray-400 block truncate">${item.obs || 'Sem obs'} ${item.ramal ? '• Ramal: ' + item.ramal : ''}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
+                            <button type="button" onclick="alterarQtd('cafe_coletivo', ${item.id}, 'qtd', -1)" class="w-7 h-7 bg-red-600/80 text-white rounded-lg font-bold text-xs flex items-center justify-center cursor-pointer">-</button>
+                            <input type="text" inputmode="numeric" value="${qtdFormatada}" onchange="definirQtdDireta('cafe_coletivo', ${item.id}, 'qtd', this.value)" class="w-12 text-center bg-slate-950 border border-slate-700 text-white text-xs py-1 rounded-lg">
+                            <button type="button" onclick="alterarQtd('cafe_coletivo', ${item.id}, 'qtd', 1)" class="w-7 h-7 bg-emerald-600/80 text-white rounded-lg font-bold text-xs flex items-center justify-center cursor-pointer">+</button>
+                        </div>
+                    </div>`;
+                });
+                totalGeral += subTotalColetivo;
+
+                let subTotalIndividual = 0;
+                html += `<h3 class="text-xs font-bold text-amber-400 uppercase mt-4 mb-2">Postos Individuais</h3>`;
+                dadosCafe.individual.forEach(item => {
+                    subTotalIndividual += item.qtd;
+                    const qtdFormatada = String(item.qtd).padStart(2, '0');
+                    html += `<div class="card-metalico p-3 rounded-xl mb-2 flex items-center justify-between gap-2">
+                        <div class="flex-1 min-w-0">
+                            <span class="text-xs font-bold text-white block truncate">${item.nome}</span>
+                            <span class="text-[10px] text-gray-400 block truncate">${item.obs || 'Sem obs'} ${item.ramal ? '• Ramal: ' + item.ramal : ''}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
+                            <button type="button" onclick="alterarQtd('cafe_individual', ${item.id}, 'qtd', -1)" class="w-7 h-7 bg-red-600/80 text-white rounded-lg font-bold text-xs flex items-center justify-center cursor-pointer">-</button>
+                            <input type="text" inputmode="numeric" value="${qtdFormatada}" onchange="definirQtdDireta('cafe_individual', ${item.id}, 'qtd', this.value)" class="w-12 text-center bg-slate-950 border border-slate-700 text-white text-xs py-1 rounded-lg">
+                            <button type="button" onclick="alterarQtd('cafe_individual', ${item.id}, 'qtd', 1)" class="w-7 h-7 bg-emerald-600/80 text-white rounded-lg font-bold text-xs flex items-center justify-center cursor-pointer">+</button>
+                        </div>
+                    </div>`;
+                });
+                totalGeral += subTotalIndividual + marmitasReserva['CAFÉ'];
+
+            } else if (tipoAtual === 'ALMOÇO') {
+                html += `<div class="card-metalico p-3 rounded-2xl shadow-md mb-3">
+                    <label class="block text-xs font-bold text-blue-400 mb-1">Reserva para o Almoço (Marmitas Extras)</label>
+                    <input type="number" min="0" value="${marmitasReserva['ALMOÇO']}" oninput="atualizarReserva(this.value)" class="w-full p-2 text-xs bg-slate-950 text-white border border-slate-700 rounded-xl focus:outline-none">
+                </div>`;
+
+                dadosAlmoco.forEach(item => {
+                    totalGeral += item.marmita;
+                    const qtdFormatada = String(item.marmita).padStart(2, '0');
+                    html += `<div class="card-metalico p-3 rounded-xl mb-2 flex items-center justify-between gap-2">
+                        <div class="flex-1 min-w-0">
+                            <span class="text-xs font-bold text-white block truncate">${item.nome}</span>
+                            <span class="text-[10px] text-gray-400 block truncate">${item.obs || 'Sem obs'} ${item.ramal ? '• Ramal: ' + item.ramal : ''}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
+                            <button type="button" onclick="alterarQtd('almoco', ${item.id}, 'marmita', -1)" class="w-7 h-7 bg-red-600/80 text-white rounded-lg font-bold text-xs flex items-center justify-center cursor-pointer">-</button>
+                            <input type="text" inputmode="numeric" value="${qtdFormatada}" onchange="definirQtdDireta('almoco', ${item.id}, 'marmita', this.value)" class="w-12 text-center bg-slate-950 border border-slate-700 text-white text-xs py-1 rounded-lg">
+                            <button type="button" onclick="alterarQtd('almoco', ${item.id}, 'marmita', 1)" class="w-7 h-7 bg-emerald-600/80 text-white rounded-lg font-bold text-xs flex items-center justify-center cursor-pointer">+</button>
+                        </div>
+                    </div>`;
+                });
+                totalGeral += marmitasReserva['ALMOÇO'];
+
+            } else if (tipoAtual === 'JANTAR') {
+                html += `<div class="card-metalico p-3 rounded-2xl shadow-md mb-3">
+                    <label class="block text-xs font-bold text-blue-400 mb-1">Reserva para o Jantar / Ceia (Extras)</label>
+                    <input type="number" min="0" value="${marmitasReserva['JANTAR']}" oninput="atualizarReserva(this.value)" class="w-full p-2 text-xs bg-slate-950 text-white border border-slate-700 rounded-xl focus:outline-none">
+                </div>`;
+
+                dadosJantar.forEach(item => {
+                    totalGeral += item.marmita;
+                    totalCeias += item.ceia;
+                    const marmitaFmt = String(item.marmita).padStart(2, '0');
+                    const ceiaFmt = String(item.ceia).padStart(2, '0');
+                    html += `<div class="card-metalico p-3 rounded-xl mb-2 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <div class="flex-1 min-w-0">
+                                <span class="text-xs font-bold text-white block truncate">${item.nome}</span>
+                                <span class="text-[10px] text-gray-400 block truncate">${item.obs || 'Sem obs'} ${item.ramal ? '• Ramal: ' + item.ramal : ''}</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800">
+                            <div class="flex items-center justify-between bg-slate-950 p-1.5 rounded-lg border border-slate-800">
+                                <span class="text-[10px] font-bold text-gray-300">Marmita:</span>
+                                <div class="flex items-center gap-1">
+                                    <button type="button" onclick="alterarQtd('jantar', ${item.id}, 'marmita', -1)" class="w-6 h-6 bg-red-600 text-white rounded font-bold text-xs">-</button>
+                                    <input type="text" inputmode="numeric" value="${marmitaFmt}" onchange="definirQtdDireta('jantar', ${item.id}, 'marmita', this.value)" class="w-10 text-center bg-slate-900 border border-slate-700 text-white text-xs py-0.5 rounded">
+                                    <button type="button" onclick="alterarQtd('jantar', ${item.id}, 'marmita', 1)" class="w-6 h-6 bg-emerald-600 text-white rounded font-bold text-xs">+</button>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between bg-slate-950 p-1.5 rounded-lg border border-slate-800">
+                                <span class="text-[10px] font-bold text-gray-300">Ceia:</span>
+                                <div class="flex items-center gap-1">
+                                    <button type="button" onclick="alterarQtd('jantar', ${item.id}, 'ceia', -1)" class="w-6 h-6 bg-red-600 text-white rounded font-bold text-xs">-</button>
+                                    <input type="text" inputmode="numeric" value="${ceiaFmt}" onchange="definirQtdDireta('jantar', ${item.id}, 'ceia', this.value)" class="w-10 text-center bg-slate-900 border border-slate-700 text-white text-xs py-0.5 rounded">
+                                    <button type="button" onclick="alterarQtd('jantar', ${item.id}, 'ceia', 1)" class="w-6 h-6 bg-emerald-600 text-white rounded font-bold text-xs">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+                totalGeral += marmitasReserva['JANTAR'];
+            }
+
+            container.innerHTML = html;
+
+            if (painelTotais) {
+                if (tipoAtual === 'JANTAR') {
+                    painelTotais.innerHTML = `<div class="flex justify-between"><span>TOTAL DE MARMITAS:</span> <span class="font-bold text-base">${totalGeral}</span></div>
+                                              <div class="flex justify-between"><span>TOTAL DE CEIAS:</span> <span class="font-bold text-base">${totalCeias}</span></div>`;
+                } else {
+                    const rotuloTotal = tipoAtual === 'CAFÉ' ? 'TOTAL DE PÃES:' : 'TOTAL DE MARMITAS:';
+                    painelTotais.innerHTML = `<div class="flex justify-between items-center"><span>${rotuloTotal}</span> <span class="font-bold text-lg">${totalGeral}</span></div>`;
+                }
+            }
+        }
+
+        function abrirModalLogin() {
+            fecharMenuLateral();
+            const modal = document.getElementById('modal-login');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            carregarUsuariosSelect();
+        }
+
+        function fecharModalLogin() {
+            const modal = document.getElementById('modal-login');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        function carregarUsuariosSelect() {
+            const select = document.getElementById('select-login-usuario');
+            if (!select) return;
+            select.innerHTML = '<option value="">Selecione seu usuário...</option>';
+            usuariosCadastrados.forEach(u => {
+                select.innerHTML += `<option value="${u.id}">${u.login} (${u.perfil})</option>`;
+            });
+        }
+
+        function aoMudarLoginSelect(idStr) {
+            const labelSenha = document.getElementById('label-senha-saram');
+            if (!idStr) {
+                if (labelSenha) labelSenha.innerText = "Senha / SARAM";
+                return;
+            }
+            const user = usuariosCadastrados.find(u => u.id == idStr);
+            if (user && user.perfil === 'ADM') {
+                if (labelSenha) labelSenha.innerText = "Senha de Administrador";
+            } else {
+                if (labelSenha) labelSenha.innerText = "SARAM";
+            }
+        }
+
+        function autenticarEEntrar() {
+            const idStr = document.getElementById('select-login-usuario').value;
+            const senhaDigitada = document.getElementById('input-senha-login').value.trim();
+
+            if (!idStr) {
+                alert('Selecione um usuário da lista.');
+                return;
+            }
+            if (!senhaDigitada) {
+                alert('Digite a senha ou SARAM.');
+                return;
+            }
+
+            const user = usuariosCadastrados.find(u => u.id == idStr);
+            if (!user) {
+                alert('Usuário não encontrado.');
+                return;
+            }
+
+            if (user.saram !== senhaDigitada) {
+                alert('Senha ou SARAM incorreto!');
+                return;
+            }
+
+            usuarioLogado = user;
+            fecharModalLogin();
+
+            const campoAssinatura = document.getElementById('campo-assinatura-logada');
+            if (campoAssinatura) {
+                campoAssinatura.innerHTML = `<span class="text-emerald-400 font-black">${user.login}</span>`;
+            }
+
+            const statusLoginTexto = document.getElementById('status-login-texto');
+            if (statusLoginTexto) {
+                statusLoginTexto.innerText = user.login;
+            }
+
+            document.getElementById('input-senha-login').value = '';
+            alert(`Login efetuado com sucesso!\nBem-vindo(a), ${user.login}.`);
+            mudarAba('operacao');
+        }
+
+        function cadastrarFiscalADM() {
+            const nome = document.getElementById('adm-nome-fiscal').value.trim().toUpperCase();
+            const saram = document.getElementById('adm-saram-fiscal').value.trim();
+
+            if (!nome || !saram) {
+                alert('Preencha o nome do fiscal e o SARAM.');
+                return;
+            }
+
+            const novoId = usuariosCadastrados.length > 0 ? Math.max(...usuariosCadastrados.map(u => u.id)) + 1 : 1;
+            usuariosCadastrados.push({ id: novoId, login: nome, saram: saram, perfil: 'FISCAL' });
+
+            document.getElementById('adm-nome-fiscal').value = '';
+            document.getElementById('adm-saram-fiscal').value = '';
+            alert(`Fiscal ${nome} cadastrado com sucesso!`);
+        }
+
+        function cadastrarPostoADM() {
+            const nome = document.getElementById('adm-nome-posto').value.trim().toUpperCase();
+            const ramal = document.getElementById('adm-ramal-posto').value.trim();
+
+            if (!nome) {
+                alert('Preencha o nome do posto.');
+                return;
+            }
+
+            dadosAlmoco.push({ id: Date.now(), nome: nome, marmita: 0, ramal: ramal, obs: '' });
+            document.getElementById('adm-nome-posto').value = '';
+            document.getElementById('adm-ramal-posto').value = '';
+            salvarEstadoLocal();
+            alert(`Posto ${nome} cadastrado com sucesso na aba Almoço!`);
+        }
+
+        function cadastrarComissarioADM() {
+            const nome = document.getElementById('adm-nome-comissario').value.trim().toUpperCase();
+            if (!nome) {
+                alert('Preencha o nome do comissário.');
+                return;
+            }
+
+            comissarios.push(nome);
+            renderizarComissarios();
+            document.getElementById('adm-nome-comissario').value = '';
+            alert(`Comissário ${nome} cadastrado com sucesso!`);
+        }
+
+        function renderizarHistorico() {
+            const lista = document.getElementById('lista-historico');
+            if (!lista) return;
+
+            const hist = carregarHistoricoGlobal();
+            if (hist.length === 0) {
+                lista.innerHTML = `<div class="card-metalico p-4 rounded-xl text-center text-xs text-gray-400">Nenhum registro no histórico dos últimos 3 dias.</div>`;
+                return;
+            }
+
+            let html = '';
+            hist.forEach((h, index) => {
+                html += `<div class="card-metalico p-3 rounded-xl space-y-2 text-xs">
+                    <div class="flex justify-between font-bold text-amber-400">
+                        <span>Refeição: ${h.tipo}</span>
+                        <span class="text-gray-400 text-[10px]">${h.dataHora}</span>
+                    </div>
+                    <div class="text-slate-300"><strong>Fiscal:</strong> ${h.fiscal} | <strong>Comissário:</strong> ${h.comissario}</div>
+                    <div class="text-slate-300"><strong>Total Geral:</strong> ${h.totalGeral} ${h.tipo === 'JANTAR' ? '| Ceias: ' + h.totalCeias : ''}</div>
+                    <button type="button" onclick="reexibirRelatorioHistorico(${index})" class="w-full mt-1 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded-lg font-bold text-xs shadow cursor-pointer">
+                        Carregar Relação Salva
+                    </button>
+                </div>`;
+            });
+            lista.innerHTML = html;
+        }
+
+        function reexibirRelatorioHistorico(index) {
+            const hist = carregarHistoricoGlobal();
+            const h = hist[index];
+            if (!h) return;
+
+            tipoAtual = h.tipo;
+            mudarRefeicao(tipoAtual);
+            
+            document.getElementById('pdf-data-hora').innerText = h.dataHora;
+            document.getElementById('pdf-titulo-refeicao').innerText = `RELAÇÃO DE FORNECIMENTO DE ${h.tipo} (HISTÓRICO)`;
+            document.getElementById('pdf-assinatura-operador').innerText = h.fiscal;
+            document.getElementById('pdf-assinatura-comissario').innerText = h.comissario;
+
+            const corpoTabela = document.getElementById('pdf-corpo-tabela');
+            const thQtd = document.getElementById('th-pdf-qtd-coluna');
+            const thCeia = document.getElementById('th-pdf-ceia');
+            const containerCeia = document.getElementById('pdf-container-total-ceia');
+            const spanTotalMarmitas = document.getElementById('pdf-total-marmitas');
+            const spanTotalCeias = document.getElementById('pdf-total-ceias');
+
+            if (h.tipo === 'CAFÉ') {
+                thQtd.innerText = 'QTD PÃES';
+                thCeia.style.display = 'none';
+                containerCeia.style.display = 'none';
+            } else if (h.tipo === 'ALMOÇO') {
+                thQtd.innerText = 'QTD';
+                thCeia.style.display = 'none';
+                containerCeia.style.display = 'none';
+            } else if (h.tipo === 'JANTAR') {
+                thQtd.innerText = 'MARMITA';
+                thCeia.style.display = '';
+                containerCeia.style.display = '';
+            }
+
+            corpoTabela.innerHTML = h.htmlTabelaItens;
+            spanTotalMarmitas.innerText = h.totalGeral;
+            spanTotalCeias.innerText = h.totalCeias || 0;
+
+            alert('Relação do histórico carregada com sucesso! Agora você pode clicar em Baixar PDF ou Imprimir.');
+            mudarAba('operacao');
+        }
+
+        function gerarRelacao() {
+            if (!usuarioLogado) {
+                alert('Você precisa fazer LOGIN antes de gerar a relação.');
+                abrirModalLogin();
+                return;
+            }
+
+            const comissarioSel = document.getElementById('select-comissario').value;
+            if (!comissarioSel) {
+                alert('Por favor, selecione o Comissário / Motorista Responsável.');
+                return;
+            }
+
+            const agora = new Date();
+            const dataHoraFormatada = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR');
+
+            document.getElementById('pdf-data-hora').innerText = dataHoraFormatada;
+            document.getElementById('pdf-titulo-refeicao').innerText = `RELAÇÃO DE FORNECIMENTO DE ${tipoAtual}`;
+            document.getElementById('pdf-assinatura-operador').innerText = usuarioLogado.login;
+            document.getElementById('pdf-assinatura-comissario').innerText = comissarioSel;
+
+            const corpoTabela = document.getElementById('pdf-corpo-tabela');
+            const thQtd = document.getElementById('th-pdf-qtd-coluna');
+            const thCeia = document.getElementById('th-pdf-ceia');
+            const containerCeia = document.getElementById('pdf-container-total-ceia');
+            const spanTotalMarmitas = document.getElementById('pdf-total-marmitas');
+            const spanTotalCeias = document.getElementById('pdf-total-ceias');
+
+            let htmlTabela = '';
+            let somaMarmitas = 0;
+            let somaCeias = 0;
+
+            if (tipoAtual === 'CAFÉ') {
+                thQtd.innerText = 'QTD PÃES';
+                thCeia.style.display = 'none';
+                containerCeia.style.display = 'none';
+
+                let totalCafeColetivo = 0;
+                dadosCafe.coletivo.forEach(i => {
+                    totalCafeColetivo += i.qtd;
+                    const fmtQtd = String(i.qtd).padStart(2, '0');
+                    htmlTabela += `<tr><td>${i.nome}</td><td style="text-align:center;">${fmtQtd}</td><td>${i.ramal || '-'}</td><td>${i.obs || '-'}</td></tr>`;
+                });
+
+                let totalCafeIndividual = 0;
+                dadosCafe.individual.forEach(i => {
+                    totalCafeIndividual += i.qtd;
+                    const fmtQtd = String(i.qtd).padStart(2, '0');
+                    htmlTabela += `<tr><td>${i.nome}</td><td style="text-align:center;">${fmtQtd}</td><td>${i.ramal || '-'}</td><td>${i.obs || '-'}</td></tr>`;
+                });
+
+                if (marmitasReserva['CAFÉ'] > 0) {
+                    const fmtRes = String(marmitasReserva['CAFÉ']).padStart(2, '0');
+                    htmlTabela += `<tr><td><strong>RESERVA (PÃES EXTRAS)</strong></td><td style="text-align:center;"><strong>${fmtRes}</strong></td><td>-</td><td>Reserva técnica</td></tr>`;
+                }
+
+                somaMarmitas = totalCafeColetivo + totalCafeIndividual + marmitasReserva['CAFÉ'];
+                spanTotalMarmitas.innerText = String(somaMarmitas).padStart(2, '0');
+
+            } else if (tipoAtual === 'ALMOÇO') {
+                thQtd.innerText = 'QTD';
+                thCeia.style.display = 'none';
+                containerCeia.style.display = 'none';
+
+                dadosAlmoco.forEach(i => {
+                    somaMarmitas += i.marmita;
+                    const fmtMtx = String(i.marmita).padStart(2, '0');
+                    htmlTabela += `<tr><td>${i.nome}</td><td style="text-align:center;">${fmtMtx}</td><td>${i.ramal || '-'}</td><td>${i.obs || '-'}</td></tr>`;
+                });
+
+                if (marmitasReserva['ALMOÇO'] > 0) {
+                    const fmtRes = String(marmitasReserva['ALMOÇO']).padStart(2, '0');
+                    htmlTabela += `<tr><td><strong>RESERVA (MARMITAS EXTRAS)</strong></td><td style="text-align:center;"><strong>${fmtRes}</strong></td><td>-</td><td>Reserva técnica</td></tr>`;
+                    somaMarmitas += marmitasReserva['ALMOÇO'];
+                }
+
+                spanTotalMarmitas.innerText = String(somaMarmitas).padStart(2, '0');
+
+            } else if (tipoAtual === 'JANTAR') {
+                thQtd.innerText = 'MARMITA';
+                thCeia.style.display = '';
+                containerCeia.style.display = '';
+
+                dadosJantar.forEach(i => {
+                    somaMarmitas += i.marmita;
+                    somaCeias += i.ceia;
+                    const fmtMtx = String(i.marmita).padStart(2, '0');
+                    const fmtCeia = String(i.ceia).padStart(2, '0');
+                    htmlTabela += `<tr><td>${i.nome}</td><td style="text-align:center;">${fmtMtx}</td><td style="text-align:center;">${fmtCeia}</td><td>${i.ramal || '-'}</td><td>${i.obs || '-'}</td></tr>`;
+                });
+
+                if (marmitasReserva['JANTAR'] > 0) {
+                    const fmtRes = String(marmitasReserva['JANTAR']).padStart(2, '0');
+                    htmlTabela += `<tr><td><strong>RESERVA (EXTRAS)</strong></td><td style="text-align:center;"><strong>${fmtRes}</strong></td><td style="text-align:center;"><strong>00</strong></td><td>-</td><td>Reserva técnica</td></tr>`;
+                    somaMarmitas += marmitasReserva['JANTAR'];
+                }
+
+                spanTotalMarmitas.innerText = String(somaMarmitas).padStart(2, '0');
+                spanTotalCeias.innerText = String(somaCeias).padStart(2, '0');
+            }
+
+            corpoTabela.innerHTML = htmlTabela;
+
+            salvarHistoricoGlobal({
+                tipo: tipoAtual,
+                dataHora: dataHoraFormatada,
+                fiscal: usuarioLogado.login,
+                comissario: comissarioSel,
+                totalGeral: somaMarmitas,
+                totalCeias: somaCeias,
+                htmlTabelaItens: htmlTabela,
+                timestamp: agora.getTime()
+            });
+
+            alert('Relação gerada e salva com sucesso! Agora você pode clicar em Baixar PDF ou Imprimir.');
+        }
+
+        function baixarPDF() {
+            const corpoTabela = document.getElementById('pdf-corpo-tabela');
+            if (!corpoTabela || corpoTabela.innerHTML.trim() === '') {
+                alert('Primeiro clique no botão "Gerar Relação de Fornecimento" antes de baixar o PDF.');
+                return;
+            }
+
+            const elementoPDF = document.getElementById('area-impressao-pdf');
+            void elementoPDF.offsetHeight;
+
+            setTimeout(() => {
+                const opt = {
+                    margin:       5,
+                    filename:     `Relacao_${tipoAtual}_CLA.pdf`,
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2, useCORS: true, scrollX: 0, scrollY: 0, windowWidth: 1000 },
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                html2pdf().from(elementoPDF).set(opt).save();
+            }, 200);
+        }
+
+        function imprimirRelacao() {
+            const corpoTabela = document.getElementById('pdf-corpo-tabela');
+            if (!corpoTabela || corpoTabela.innerHTML.trim() === '') {
+                alert('Primeiro clique no botão "Gerar Relação de Fornecimento" antes de imprimir.');
+                return;
+            }
+            window.print();
+        }
+
+        window.onload = function() {
+            // LIMPEZA FORÇADA DE MEMÓRIA LOCAL ANTIGA
+            localStorage.removeItem('dados_jantar_cla');
+            localStorage.removeItem('dados_jantar_cla_v2');
+            localStorage.removeItem('dados_jantar_cla_v3');
+            localStorage.removeItem('historico_marmitas_cla');
+            
+            // GARANTE QUE A LISTA COMPLETA DOS 25 POSTOS SEJA CARREGADA
+            dadosJantar = dadosJantarPadrao;
+            salvarEstadoLocal();
+
+            renderizarComissarios();
+            renderizar();
+            renderizarHistorico();
+            mudarAba('operacao');
+        };
+    </script>
+</body>
+</html>
