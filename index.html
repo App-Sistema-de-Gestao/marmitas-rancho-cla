@@ -825,7 +825,7 @@
                                 <span class="text-[10px] font-bold text-gray-300">Ceia:</span>
                                 <div class="flex items-center gap-1">
                                     <button type="button" onclick="alterarQtd('jantar', ${item.id}, 'ceia', -1)" class="w-6 h-6 bg-red-600 text-white rounded font-bold text-xs">-</button>
-                                    <input type="text" inputmode="numeric" value="${ceiaFmt}" onchange="definirQtdDireta('jantar', ${item.id}, 'ceia', 1)" class="w-10 text-center bg-slate-900 border border-slate-700 text-white text-xs py-0.5 rounded">
+                                    <input type="text" inputmode="numeric" value="${ceiaFmt}" onchange="definirQtdDireta('jantar', ${item.id}, 'ceia', this.value)" class="w-10 text-center bg-slate-900 border border-slate-700 text-white text-xs py-0.5 rounded">
                                     <button type="button" onclick="alterarQtd('jantar', ${item.id}, 'ceia', 1)" class="w-6 h-6 bg-emerald-600 text-white rounded font-bold text-xs">+</button>
                                 </div>
                             </div>
@@ -964,6 +964,8 @@
                 return;
             }
 
+            const totalGeralTxt = document.getElementById('painel-totais') ? document.getElementById('painel-totais').innerText : '-';
+
             // Grava no Supabase em segundo plano
             if (supabaseClient) {
                 supabaseClient
@@ -973,12 +975,16 @@
                             tipo: tipoAtual, 
                             data_hora: new Date().toLocaleString('pt-BR'),
                             fiscal: usuarioLogado ? usuarioLogado.login : 'Não Logado',
-                            total_geral: document.getElementById('painel-totais') ? document.getElementById('painel-totais').innerText : '-'
+                            comissario: comissarioSelect.value,
+                            total_geral: totalGeralTxt
                         }
                     ])
-                    .then(({ data, error }) => {
+                    .then(({ error }) => {
                         if (error) console.error("Erro Supabase:", error);
-                        else console.log("Salvo na nuvem com sucesso!");
+                        else {
+                            console.log("Salvo na nuvem com sucesso!");
+                            renderizarHistorico();
+                        }
                     });
             }
 
@@ -1076,14 +1082,20 @@
             const lista = document.getElementById('lista-historico');
             if (!lista) return;
 
-            // Renderiza o que tiver localmente
-            const hist = carregarHistoricoGlobal();
-            if (!hist || hist.length === 0) {
-                lista.innerHTML = `<div class="card-metalico p-4 rounded-xl text-center text-xs text-gray-400">Nenhum registo local. Buscando na nuvem...</div>`;
-            } else {
+            let histLocal = carregarHistoricoGlobal();
+
+            function desenharLista(itens) {
+                if (!itens || itens.length === 0) {
+                    lista.innerHTML = `<div class="card-metalico p-4 rounded-xl text-center text-xs text-gray-400">Nenhum registro encontrado.</div>`;
+                    return;
+                }
+
                 let html = '';
-                hist.forEach((h, index) => {
-                    html += `<div class="card-metalico p-3 rounded-xl space-y-2 text-xs">
+                itens.forEach(h => {
+                    const ehNuvem = h.origem === 'nuvem';
+                    const bordaCor = ehNuvem ? 'border-l-4 border-emerald-500' : 'border-l-4 border-blue-500';
+                    
+                    html += `<div class="card-metalico p-3 rounded-xl space-y-2 text-xs ${bordaCor}">
                         <div class="flex justify-between font-bold text-amber-400">
                             <span>Refeição: ${h.tipo}</span>
                             <span class="text-gray-400 text-[10px]">${h.dataHora}</span>
@@ -1095,7 +1107,8 @@
                 lista.innerHTML = html;
             }
 
-            // Atualiza com dados do Supabase se disponível
+            desenharLista(histLocal);
+
             if (supabaseClient) {
                 supabaseClient
                     .from('historico_marmitas')
@@ -1103,20 +1116,24 @@
                     .order('id', { ascending: false })
                     .then(({ data, error }) => {
                         if (!error && data && data.length > 0) {
-                            let htmlNuvem = '';
-                            data.forEach(item => {
-                                htmlNuvem += `<div class="card-metalico p-3 rounded-xl space-y-2 text-xs border-l-4 border-emerald-500">
-                                    <div class="flex justify-between font-bold text-amber-400">
-                                        <span>Refeição: ${item.tipo || 'Geral'}</span>
-                                        <span class="text-gray-400 text-[10px]">${item.data_hora || ''}</span>
-                                    </div>
-                                    <div class="text-slate-300"><strong>Fiscal:</strong> ${item.fiscal || 'Sistema'}</div>
-                                    <div class="text-slate-300"><strong>Total:</strong> ${item.total_geral || '-'}</div>
-                                </div>`;
-                            });
-                            lista.innerHTML = htmlNuvem;
+                            const histNuvem = data.map(item => ({
+                                tipo: item.tipo || 'Geral',
+                                dataHora: item.data_hora || '',
+                                fiscal: item.fiscal || 'Sistema',
+                                comissario: item.comissario || '-',
+                                totalGeral: item.total_geral || '-',
+                                origem: 'nuvem'
+                            }));
+
+                            const todosRegistros = [...histLocal, ...histNuvem];
+                            const registrosUnicos = todosRegistros.filter((v, i, a) => 
+                                a.findIndex(t => (t.dataHora === v.dataHora && t.tipo === v.tipo)) === i
+                            );
+
+                            desenharLista(registrosUnicos);
                         }
-                    });
+                    })
+                    .catch(err => console.error("Erro ao buscar histórico da nuvem:", err));
             }
         }
 
