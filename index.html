@@ -43,6 +43,7 @@
             box-sizing: border-box;
             margin: 0 auto;
             position: relative;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
         }
 
         .tabela-pdf {
@@ -58,11 +59,13 @@
             text-align: left;
             font-weight: bold;
             text-transform: uppercase;
+            color: #000000;
         }
         .tabela-pdf td {
             border: 1px solid #000000;
             padding: 3px 5px;
             vertical-align: middle;
+            color: #000000;
         }
 
         /* Efeito Verde Neon Universal */
@@ -89,31 +92,32 @@
             box-shadow: 0 0 15px rgba(52, 211, 153, 0.6) !important;
         }
 
-        /* Estrutura Oculta para PDF */
-        #wrapper-pdf {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 190mm;
-            opacity: 0.01;
-            pointer-events: none;
-            z-index: -9999;
-        }
-
         @media print {
             body * {
                 visibility: hidden;
             }
-            #wrapper-pdf, #wrapper-pdf * {
+            #area-impressao-pdf, #area-impressao-pdf * {
                 visibility: visible;
             }
-            #wrapper-pdf {
+            #modal-preview-pdf {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                background: white !important;
+                padding: 0 !important;
+                overflow: visible !important;
+            }
+            #area-impressao-pdf {
                 position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
-                opacity: 1;
-                z-index: 99999;
+                box-shadow: none !important;
+            }
+            .no-print {
+                display: none !important;
             }
         }
     </style>
@@ -252,21 +256,11 @@
                 </div>
             </div>
 
-            <!-- BOTOES DIVIDIDOS -->
+            <!-- BOTÃO ÚNICO DE VISUALIZAR RELAÇÃO EM A4 -->
             <div class="space-y-2 pt-2">
-                <button type="button" onclick="gerarRelacao()" class="w-full bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/50 py-3 rounded-xl font-bold shadow-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
-                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                    Gerar Relação de Fornecimento
-                </button>
-
-                <button type="button" onclick="baixarPDF()" class="w-full bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-900/50 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
-                    <svg class="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                    Baixar Relação em PDF
-                </button>
-
-                <button type="button" onclick="imprimirRelacao()" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/50 py-3 rounded-xl font-bold shadow-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer">
-                    <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                    Imprimir Relação Oficial
+                <button type="button" onclick="abrirPreviewRelacao()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 rounded-xl font-black shadow-lg shadow-emerald-900/40 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider">
+                    <svg class="w-5 h-5 text-emerald-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    👁️ Visualizar Relação (A4)
                 </button>
 
                 <!-- BOTÃO DE RESET EM CASO DE MEMÓRIA CACHED -->
@@ -326,6 +320,100 @@
 
     </div>
 
+    <!-- MODAL DE PRÉ-VISUALIZAÇÃO A4 COM BOTÕES DE AÇÃO ABAIXO -->
+    <div id="modal-preview-pdf" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden z-50 flex-col items-center overflow-y-auto p-2 sm:p-4">
+        
+        <!-- CABEÇALHO DO MODAL (NO-PRINT) -->
+        <div class="no-print w-full max-w-4xl flex items-center justify-between bg-slate-900 border border-slate-800 p-3 rounded-2xl mb-3 shadow-xl sticky top-2 z-50">
+            <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                <h3 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">Pré-visualização Oficial (Papel A4)</h3>
+            </div>
+            <button type="button" onclick="fecharPreviewRelacao()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl text-xs font-bold border border-slate-700 transition-all cursor-pointer">
+                ✕ Fechar
+            </button>
+        </div>
+
+        <!-- RECIPIENTE DA FICHA A4 FORMATADA -->
+        <div class="w-full overflow-x-auto flex justify-center pb-4">
+            <div id="area-impressao-pdf" class="ficha-a4">
+                
+                <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 8px;">
+                    <div style="width: 45px; text-align: center;">
+                        <img src="brasao-cla.png" alt="CLA" style="max-height: 45px; margin: 0 auto; object-fit: contain;">
+                    </div>
+                    <div style="text-align: center; flex: 1;">
+                        <h2 style="font-size: 12px; font-weight: 900; margin: 0; text-transform: uppercase; color: #000;">CENTRO DE LANÇAMENTO DE ALCÂNTARA</h2>
+                        <h3 style="font-size: 10px; font-weight: 700; margin: 2px 0; text-transform: uppercase; color: #000;">SETOR DE SUBSISTÊNCIA - RANCHO DO CLA</h3>
+                        <p id="pdf-titulo-refeicao" style="font-size: 11px; font-weight: 800; margin: 2px 0 0 0; background-color: #f3f4f6; color: #000; display: inline-block; padding: 2px 8px; border-radius: 3px; border: 1px solid #d1d5db; text-align: center;"></p>
+                    </div>
+                    <div style="width: 45px; text-align: center;">
+                        <img src="image.png" alt="Acanto" style="max-height: 40px; margin: 0 auto; object-fit: contain;">
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; font-size: 9px; color: #000; margin-bottom: 6px; border-bottom: 1px solid #e5e7eb; padding-bottom: 3px;">
+                    <span><strong>EMISSÃO:</strong> <span id="pdf-data-hora"></span></span>
+                    <span><strong>SISTEMA DE SUBSISTÊNCIA CLA</strong></span>
+                </div>
+
+                <table class="tabela-pdf">
+                    <thead>
+                        <tr>
+                            <th style="width: 40%;">POSTO / SETOR</th>
+                            <th id="th-pdf-qtd-coluna" style="width: 12%; text-align: center;">QTD</th>
+                            <th id="th-pdf-ceia" style="width: 12%; text-align: center; display: none;">CEIA</th>
+                            <th style="width: 16%; text-align: center;">RAMAL</th>
+                            <th style="width: 20%;">OBSERVAÇÃO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pdf-corpo-tabela"></tbody>
+                </table>
+
+                <div style="margin-top: 10px; border-top: 2px solid #000; padding-top: 6px; display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: #000;">
+                    <span id="pdf-texto-total-geral">TOTAL GERAL: <span id="pdf-total-marmitas" style="font-size: 13px;">0</span></span>
+                    <span id="pdf-container-total-ceia" style="display: none;">TOTAL DE CEIAS: <span id="pdf-total-ceias" style="font-size: 13px;">0</span></span>
+                </div>
+
+                <div style="margin-top: 40px; display: flex; justify-content: space-between; text-align: center; font-size: 9px; color: #000;">
+                    <div style="width: 45%; border-top: 1px solid #000; padding-top: 4px;">
+                        <p style="font-weight: bold; font-size: 10px; margin: 0;" id="pdf-assinatura-operador"></p>
+                        <p style="color: #000; margin: 1px 0 0 0;">Responsável pelo Preenchimento (Fiscal)</p>
+                    </div>
+                    <div style="width: 45%; border-top: 1px solid #000; padding-top: 4px;">
+                        <p style="font-weight: bold; font-size: 10px; margin: 0;" id="pdf-assinatura-comissario"></p>
+                        <p style="color: #000; margin: 1px 0 0 0;">Comissário / Motorista Responsável</p>
+                    </div>
+                </div>
+
+                <div style="position: absolute; bottom: 8mm; left: 0; right: 0; text-align: center; font-size: 8px; color: #4b5563; border-top: 1px solid #e5e7eb; padding-top: 4px;">
+                    © 2026 NVC Systems • Todos os direitos reservados • Sistema de Subsistência CLA
+                </div>
+
+            </div>
+        </div>
+
+        <!-- PAINEL DE AÇÃO INFERIOR COM APENAS OS 2 BOTÕES PEDIDOS (NO-PRINT) -->
+        <div class="no-print w-full max-w-md my-4 p-3 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl flex flex-col gap-2.5">
+            <div class="grid grid-cols-2 gap-2">
+                <button type="button" onclick="salvarPDFDireto()" class="bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl font-bold text-xs shadow-lg shadow-blue-900/50 flex items-center justify-center gap-2 cursor-pointer transition-all">
+                    <svg class="w-4 h-4 text-blue-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+                    💾 Salvar (PDF)
+                </button>
+
+                <button type="button" onclick="imprimirRelacaoDireta()" class="bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-bold text-xs shadow-lg shadow-emerald-900/50 flex items-center justify-center gap-2 cursor-pointer transition-all">
+                    <svg class="w-4 h-4 text-emerald-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    🖨️ Imprimir
+                </button>
+            </div>
+            
+            <button type="button" onclick="fecharPreviewRelacao()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 py-2 rounded-xl text-xs font-semibold cursor-pointer">
+                Voltar e Editar Quantidades
+            </button>
+        </div>
+
+    </div>
+
     <!-- MODAL DE LOGIN PERFEITAMENTE CENTRALIZADO -->
     <div id="modal-login" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
         <div class="bg-white text-slate-900 max-w-xs w-full p-5 rounded-2xl shadow-2xl space-y-3 my-auto">
@@ -350,65 +438,6 @@
                 <button type="button" onclick="fecharModalLogin()" class="flex-1 py-2 bg-gray-200 text-gray-700 font-semibold rounded-xl text-xs cursor-pointer">Cancelar</button>
                 <button type="button" onclick="autenticarEEntrar()" class="flex-1 py-2 bg-blue-700 text-white font-bold rounded-xl text-xs shadow hover:bg-blue-800 cursor-pointer">Confirmar Login</button>
             </div>
-        </div>
-    </div>
-
-    <!-- ESTRUTURA PARA O GERADOR DE PDF (PADRÃO A4 RETRATO CENTRALIZADO) -->
-    <div id="wrapper-pdf">
-        <div id="area-impressao-pdf" class="ficha-a4">
-            
-            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 8px;">
-                <div style="width: 45px; text-align: center;">
-                    <img src="brasao-cla.png" alt="CLA" style="max-height: 45px; margin: 0 auto; object-fit: contain;">
-                </div>
-                <div style="text-align: center; flex: 1;">
-                    <h2 style="font-size: 12px; font-weight: 900; margin: 0; text-transform: uppercase; color: #000;">CENTRO DE LANÇAMENTO DE ALCÂNTARA</h2>
-                    <h3 style="font-size: 10px; font-weight: 700; margin: 2px 0; text-transform: uppercase; color: #000;">SETOR DE SUBSISTÊNCIA - RANCHO DO CLA</h3>
-                    <p id="pdf-titulo-refeicao" style="font-size: 11px; font-weight: 800; margin: 2px 0 0 0; background-color: #f3f4f6; color: #000; display: inline-block; padding: 2px 8px; border-radius: 3px; border: 1px solid #d1d5db; text-align: center;"></p>
-                </div>
-                <div style="width: 45px; text-align: center;">
-                    <img src="image.png" alt="Acanto" style="max-height: 40px; margin: 0 auto; object-fit: contain;">
-                </div>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; font-size: 9px; color: #000; margin-bottom: 6px; border-bottom: 1px solid #e5e7eb; padding-bottom: 3px;">
-                <span><strong>EMISSÃO:</strong> <span id="pdf-data-hora"></span></span>
-                <span><strong>SISTEMA DE SUBSISTÊNCIA CLA</strong></span>
-            </div>
-
-            <table class="tabela-pdf">
-                <thead>
-                    <tr>
-                        <th style="width: 40%;">POSTO / SETOR</th>
-                        <th id="th-pdf-qtd-coluna" style="width: 12%; text-align: center;">QTD</th>
-                        <th id="th-pdf-ceia" style="width: 12%; text-align: center; display: none;">CEIA</th>
-                        <th style="width: 16%; text-align: center;">RAMAL</th>
-                        <th style="width: 20%;">OBSERVAÇÃO</th>
-                    </tr>
-                </thead>
-                <tbody id="pdf-corpo-tabela"></tbody>
-            </table>
-
-            <div style="margin-top: 10px; border-top: 2px solid #000; padding-top: 6px; display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: #000;">
-                <span id="pdf-texto-total-geral">TOTAL GERAL: <span id="pdf-total-marmitas" style="font-size: 13px;">0</span></span>
-                <span id="pdf-container-total-ceia" style="display: none;">TOTAL DE CEIAS: <span id="pdf-total-ceias" style="font-size: 13px;">0</span></span>
-            </div>
-
-            <div style="margin-top: 40px; display: flex; justify-content: space-between; text-align: center; font-size: 9px; color: #000;">
-                <div style="width: 45%; border-top: 1px solid #000; padding-top: 4px;">
-                    <p style="font-weight: bold; font-size: 10px; margin: 0;" id="pdf-assinatura-operador"></p>
-                    <p style="color: #000; margin: 1px 0 0 0;">Responsável pelo Preenchimento (Fiscal)</p>
-                </div>
-                <div style="width: 45%; border-top: 1px solid #000; padding-top: 4px;">
-                    <p style="font-weight: bold; font-size: 10px; margin: 0;" id="pdf-assinatura-comissario"></p>
-                    <p style="color: #000; margin: 1px 0 0 0;">Comissário / Motorista Responsável</p>
-                </div>
-            </div>
-
-            <div style="position: absolute; bottom: 8mm; left: 0; right: 0; text-align: center; font-size: 8px; color: #4b5563; border-top: 1px solid #e5e7eb; padding-top: 4px;">
-                © 2026 NVC Systems • Todos os direitos reservados • Sistema de Subsistência CLA
-            </div>
-
         </div>
     </div>
 
@@ -804,7 +833,7 @@
                                 <span class="text-[10px] font-bold text-gray-300">Ceia:</span>
                                 <div class="flex items-center gap-1">
                                     <button type="button" onclick="alterarQtd('jantar', ${item.id}, 'ceia', -1)" class="w-6 h-6 bg-red-600 text-white rounded font-bold text-xs">-</button>
-                                    <input type="text" inputmode="numeric" value="${ceiaFmt}" onchange="definirQtdDireta('jantar', ${item.id}, 'ceia', this.value)" class="w-10 text-center bg-slate-900 border border-slate-700 text-white text-xs py-0.5 rounded">
+                                    <input type="text" inputmode="numeric" value="${ceiaFmt}" onchange="definirQtdDireta('jantar', ${item.id}, 'ceia', 1)" class="w-10 text-center bg-slate-900 border border-slate-700 text-white text-xs py-0.5 rounded">
                                     <button type="button" onclick="alterarQtd('jantar', ${item.id}, 'ceia', 1)" class="w-6 h-6 bg-emerald-600 text-white rounded font-bold text-xs">+</button>
                                 </div>
                             </div>
@@ -972,7 +1001,7 @@
                     <div class="text-slate-300"><strong>Fiscal:</strong> ${h.fiscal} | <strong>Comissário:</strong> ${h.comissario}</div>
                     <div class="text-slate-300"><strong>Total Geral:</strong> ${h.totalGeral} ${h.tipo === 'JANTAR' ? '| Ceias: ' + h.totalCeias : ''}</div>
                     <button type="button" onclick="reexibirRelatorioHistorico(${index})" class="w-full mt-1 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded-lg font-bold text-xs shadow cursor-pointer">
-                        Carregar Relação Salva
+                        Carregar e Visualizar Relação
                     </button>
                 </div>`;
             });
@@ -1017,11 +1046,12 @@
             spanTotalMarmitas.innerText = h.totalGeral;
             spanTotalCeias.innerText = h.totalCeias || 0;
 
-            alert('Relação do histórico carregada com sucesso! Agora você pode clicar em Baixar PDF ou Imprimir.');
-            mudarAba('operacao');
+            document.getElementById('modal-preview-pdf').classList.remove('hidden');
+            document.getElementById('modal-preview-pdf').classList.add('flex');
+            window.scrollTo(0, 0);
         }
 
-        function gerarRelacao() {
+        function abrirPreviewRelacao() {
             if (!usuarioLogado) {
                 alert('Você precisa fazer LOGIN antes de gerar a relação.');
                 abrirModalLogin();
@@ -1172,16 +1202,17 @@
                 timestamp: agora.getTime()
             });
 
-            alert('Relação gerada e salva com sucesso! Agora você pode clicar em Baixar PDF ou Imprimir.');
+            document.getElementById('modal-preview-pdf').classList.remove('hidden');
+            document.getElementById('modal-preview-pdf').classList.add('flex');
+            window.scrollTo(0, 0);
         }
 
-        function baixarPDF() {
-            const corpoTabela = document.getElementById('pdf-corpo-tabela');
-            if (!corpoTabela || corpoTabela.innerHTML.trim() === '') {
-                alert('Primeiro clique no botão "Gerar Relação de Fornecimento" antes de baixar o PDF.');
-                return;
-            }
+        function fecharPreviewRelacao() {
+            document.getElementById('modal-preview-pdf').classList.remove('flex');
+            document.getElementById('modal-preview-pdf').classList.add('hidden');
+        }
 
+        function salvarPDFDireto() {
             const elementoPDF = document.getElementById('area-impressao-pdf');
             void elementoPDF.offsetHeight;
 
@@ -1198,12 +1229,7 @@
             }, 200);
         }
 
-        function imprimirRelacao() {
-            const corpoTabela = document.getElementById('pdf-corpo-tabela');
-            if (!corpoTabela || corpoTabela.innerHTML.trim() === '') {
-                alert('Primeiro clique no botão "Gerar Relação de Fornecimento" antes de imprimir.');
-                return;
-            }
+        function imprimirRelacaoDireta() {
             window.print();
         }
 
