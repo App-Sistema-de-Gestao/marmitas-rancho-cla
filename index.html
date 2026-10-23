@@ -321,7 +321,7 @@
 
     </div>
 
-    <!-- MODAL DE PRÉ-VISUALIZAÇÃO A4 COM BOTÕES DE AÇÃO ABAIXO -->
+    <!-- MODAL DE PRÉ-VISUALIZAÇÃO A4 COM O BOTÃO DE IMPRESSÃO ABAIXO -->
     <div id="modal-preview-pdf" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden z-50 flex-col items-center overflow-y-auto p-2 sm:p-4">
         
         <!-- CABEÇALHO DO MODAL (NO-PRINT) -->
@@ -394,19 +394,12 @@
             </div>
         </div>
 
-        <!-- PAINEL DE AÇÃO INFERIOR COM OS 2 BOTÕES (NO-PRINT) -->
+        <!-- PAINEL DE AÇÃO INFERIOR COM SOMENTE O BOTÃO DE IMPRIMIR (NO-PRINT) -->
         <div class="no-print w-full max-w-md my-4 p-3 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl flex flex-col gap-2.5">
-            <div class="grid grid-cols-2 gap-2">
-                <button type="button" onclick="salvarPDFDireto()" class="bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl font-bold text-xs shadow-lg shadow-blue-900/50 flex items-center justify-center gap-2 cursor-pointer transition-all">
-                    <svg class="w-4 h-4 text-blue-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
-                    💾 Salvar (PDF)
-                </button>
-
-                <button type="button" onclick="imprimirRelacaoDireta()" class="bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-bold text-xs shadow-lg shadow-emerald-900/50 flex items-center justify-center gap-2 cursor-pointer transition-all">
-                    <svg class="w-4 h-4 text-emerald-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                    🖨️ Imprimir
-                </button>
-            </div>
+            <button type="button" onclick="imprimirRelacaoDireta()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 rounded-xl font-bold text-xs shadow-lg shadow-emerald-900/50 flex items-center justify-center gap-2 cursor-pointer transition-all uppercase tracking-wider">
+                <svg class="w-4 h-4 text-emerald-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                🖨️ Imprimir / Salvar Oficial
+            </button>
             
             <button type="button" onclick="fecharPreviewRelacao()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 py-2 rounded-xl text-xs font-semibold cursor-pointer">
                 Voltar e Editar Quantidades
@@ -1211,11 +1204,6 @@
         function fecharPreviewRelacao() {
             document.getElementById('modal-preview-pdf').classList.remove('flex');
             document.getElementById('modal-preview-pdf').classList.add('hidden');
-        }
-
-        function salvarPDFDireto() {
-            // Utiliza a exata mesma engine limpa da impressão (Salvar como PDF no painel do navegador)
-            window.print();
         }
 
         function imprimirRelacaoDireta() {
