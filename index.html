@@ -42,6 +42,7 @@
             padding: 10mm 12mm;
             box-sizing: border-box;
             margin: 0 auto;
+            position: relative;
         }
 
         .tabela-pdf {
@@ -352,7 +353,7 @@
         </div>
     </div>
 
-    <!-- ESTRUTURA PARA O GERADOR DE PDF -->
+    <!-- ESTRUTURA PARA O GERADOR DE PDF (PADRÃO A4 RETRATO CENTRALIZADO) -->
     <div id="wrapper-pdf">
         <div id="area-impressao-pdf" class="ficha-a4">
             
@@ -361,16 +362,16 @@
                     <img src="brasao-cla.png" alt="CLA" style="max-height: 45px; margin: 0 auto; object-fit: contain;">
                 </div>
                 <div style="text-align: center; flex: 1;">
-                    <h2 style="font-size: 12px; font-weight: 900; margin: 0; text-transform: uppercase;">CENTRO DE LANÇAMENTO DE ALCÂNTARA</h2>
-                    <h3 style="font-size: 10px; font-weight: 700; margin: 2px 0; text-transform: uppercase;">SETOR DE SUBSISTÊNCIA - RANCHO DO CLA</h3>
-                    <p id="pdf-titulo-refeicao" style="font-size: 11px; font-weight: 800; margin: 2px 0 0 0; background-color: #f3f4f6; display: inline-block; padding: 2px 8px; border-radius: 3px; border: 1px solid #d1d5db; text-align: center;"></p>
+                    <h2 style="font-size: 12px; font-weight: 900; margin: 0; text-transform: uppercase; color: #000;">CENTRO DE LANÇAMENTO DE ALCÂNTARA</h2>
+                    <h3 style="font-size: 10px; font-weight: 700; margin: 2px 0; text-transform: uppercase; color: #000;">SETOR DE SUBSISTÊNCIA - RANCHO DO CLA</h3>
+                    <p id="pdf-titulo-refeicao" style="font-size: 11px; font-weight: 800; margin: 2px 0 0 0; background-color: #f3f4f6; color: #000; display: inline-block; padding: 2px 8px; border-radius: 3px; border: 1px solid #d1d5db; text-align: center;"></p>
                 </div>
                 <div style="width: 45px; text-align: center;">
                     <img src="image.png" alt="Acanto" style="max-height: 40px; margin: 0 auto; object-fit: contain;">
                 </div>
             </div>
 
-            <div style="display: flex; justify-content: space-between; font-size: 9px; color: #374151; margin-bottom: 6px; border-bottom: 1px solid #e5e7eb; padding-bottom: 3px;">
+            <div style="display: flex; justify-content: space-between; font-size: 9px; color: #000; margin-bottom: 6px; border-bottom: 1px solid #e5e7eb; padding-bottom: 3px;">
                 <span><strong>EMISSÃO:</strong> <span id="pdf-data-hora"></span></span>
                 <span><strong>SISTEMA DE SUBSISTÊNCIA CLA</strong></span>
             </div>
@@ -379,33 +380,33 @@
                 <thead>
                     <tr>
                         <th style="width: 40%;">POSTO / SETOR</th>
-                        <th id="th-pdf-qtd-coluna" style="width: 10%; text-align: center;">QTD</th>
-                        <th id="th-pdf-ceia" style="width: 10%; text-align: center; display: none;">CEIA</th>
-                        <th style="width: 15%; text-align: center;">RAMAL</th>
-                        <th style="width: 25%;">OBSERVAÇÃO</th>
+                        <th id="th-pdf-qtd-coluna" style="width: 12%; text-align: center;">QTD</th>
+                        <th id="th-pdf-ceia" style="width: 12%; text-align: center; display: none;">CEIA</th>
+                        <th style="width: 16%; text-align: center;">RAMAL</th>
+                        <th style="width: 20%;">OBSERVAÇÃO</th>
                     </tr>
                 </thead>
                 <tbody id="pdf-corpo-tabela"></tbody>
             </table>
 
-            <div style="margin-top: 8px; border-top: 2px solid #000; padding-top: 5px; display: flex; justify-content: space-between; font-size: 11px; font-weight: bold;">
+            <div style="margin-top: 10px; border-top: 2px solid #000; padding-top: 6px; display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; color: #000;">
                 <span id="pdf-texto-total-geral">TOTAL GERAL: <span id="pdf-total-marmitas" style="font-size: 13px;">0</span></span>
                 <span id="pdf-container-total-ceia" style="display: none;">TOTAL DE CEIAS: <span id="pdf-total-ceias" style="font-size: 13px;">0</span></span>
             </div>
 
-            <div style="margin-top: 35px; display: flex; justify-content: space-between; text-align: center; font-size: 9px;">
-                <div style="width: 45%; border-top: 1px solid #000; padding-top: 3px;">
+            <div style="margin-top: 40px; display: flex; justify-content: space-between; text-align: center; font-size: 9px; color: #000;">
+                <div style="width: 45%; border-top: 1px solid #000; padding-top: 4px;">
                     <p style="font-weight: bold; font-size: 10px; margin: 0;" id="pdf-assinatura-operador"></p>
-                    <p style="color: #4b5563; margin: 1px 0 0 0;">Responsável pelo Preenchimento (Fiscal)</p>
+                    <p style="color: #000; margin: 1px 0 0 0;">Responsável pelo Preenchimento (Fiscal)</p>
                 </div>
-                <div style="width: 45%; border-top: 1px solid #000; padding-top: 3px;">
+                <div style="width: 45%; border-top: 1px solid #000; padding-top: 4px;">
                     <p style="font-weight: bold; font-size: 10px; margin: 0;" id="pdf-assinatura-comissario"></p>
-                    <p style="color: #4b5563; margin: 1px 0 0 0;">Comissário / Motorista Responsável</p>
+                    <p style="color: #000; margin: 1px 0 0 0;">Comissário / Motorista Responsável</p>
                 </div>
             </div>
 
-            <div style="margin-top: 20px; text-align: center; font-size: 8px; color: #6b7280; border-top: 1px stroke #e5e7eb; padding-top: 4px;">
-                © 2026 NVC Systems • Todos os direitos reservados
+            <div style="position: absolute; bottom: 8mm; left: 0; right: 0; text-align: center; font-size: 8px; color: #4b5563; border-top: 1px solid #e5e7eb; padding-top: 4px;">
+                © 2026 NVC Systems • Todos os direitos reservados • Sistema de Subsistência CLA
             </div>
 
         </div>
@@ -1061,19 +1062,34 @@
                 dadosCafe.coletivo.forEach(i => {
                     totalCafeColetivo += i.qtd;
                     const fmtQtd = String(i.qtd).padStart(2, '0');
-                    htmlTabela += `<tr><td>${i.nome}</td><td style="text-align:center;">${fmtQtd}</td><td>${i.ramal || '-'}</td><td>${i.obs || '-'}</td></tr>`;
+                    htmlTabela += `<tr>
+                        <td style="border: 1px solid #000; padding: 3px 5px;">${i.nome}</td>
+                        <td style="border: 1px solid #000; padding: 3px 5px; text-align:center;">${fmtQtd}</td>
+                        <td style="border: 1px solid #000; padding: 3px 5px; text-align:center;">${i.ramal || '-'}</td>
+                        <td style="border: 1px solid #000; padding: 3px 5px;">${i.obs || '-'}</td>
+                    </tr>`;
                 });
 
                 let totalCafeIndividual = 0;
                 dadosCafe.individual.forEach(i => {
                     totalCafeIndividual += i.qtd;
                     const fmtQtd = String(i.qtd).padStart(2, '0');
-                    htmlTabela += `<tr><td>${i.nome}</td><td style="text-align:center;">${fmtQtd}</td><td>${i.ramal || '-'}</td><td>${i.obs || '-'}</td></tr>`;
+                    htmlTabela += `<tr>
+                        <td style="border: 1px solid #000; padding: 3px 5px;">${i.nome}</td>
+                        <td style="border: 1px solid #000; padding: 3px 5px; text-align:center;">${fmtQtd}</td>
+                        <td style="border: 1px solid #000; padding: 3px 5px; text-align:center;">${i.ramal || '-'}</td>
+                        <td style="border: 1px solid #000; padding: 3px 5px;">${i.obs || '-'}</td>
+                    </tr>`;
                 });
 
                 if (marmitasReserva['CAFÉ'] > 0) {
                     const fmtRes = String(marmitasReserva['CAFÉ']).padStart(2, '0');
-                    htmlTabela += `<tr><td><strong>RESERVA (PÃES EXTRAS)</strong></td><td style="text-align:center;"><strong>${fmtRes}</strong></td><td>-</td><td>Reserva técnica</td></tr>`;
+                    htmlTabela += `<tr>
+                        <td style="border: 1px solid #000; padding: 3px 5px;"><strong>RESERVA (PÃES EXTRAS)</strong></td>
+                        <td style="border: 1px solid #000; padding: 3px 5px; text-align:center;"><strong>${fmtRes}</strong></td>
+                        <td style="border: 1px solid #000; padding: 3px 5px; text-align:center;">-</td>
+                        <td style="border: 1px solid #000; padding: 3px 5px;">Reserva técnica</td>
+                    </tr>`;
                 }
 
                 somaMarmitas = totalCafeColetivo + totalCafeIndividual + marmitasReserva['CAFÉ'];
@@ -1087,12 +1103,22 @@
                 dadosAlmoco.forEach(i => {
                     somaMarmitas += i.marmita;
                     const fmtMtx = String(i.marmita).padStart(2, '0');
-                    htmlTabela += `<tr><td>${i.nome}</td><td style="text-align:center;">${fmtMtx}</td><td>${i.ramal || '-'}</td><td>${i.obs || '-'}</td></tr>`;
+                    htmlTabela += `<tr>
+                        <td style="border: 1px solid #000; padding: 3px 5px;">${i.nome}</td>
+                        <td style="border: 1px solid #000; padding: 3px 5px; text-align:center;">${fmtMtx}</td>
+                        <td style="border: 1px solid #000; padding: 3px 5px; text-align:center;">${i.ramal || '-'}</td>
+                        <td style="border: 1px solid #000; padding: 3px 5px;">${i.obs || '-'}</td>
+                    </tr>`;
                 });
 
                 if (marmitasReserva['ALMOÇO'] > 0) {
                     const fmtRes = String(marmitasReserva['ALMOÇO']).padStart(2, '0');
-                    htmlTabela += `<tr><td><strong>RESERVA (MARMITAS EXTRAS)</strong></td><td style="text-align:center;"><strong>${fmtRes}</strong></td><td>-</td><td>Reserva técnica</td></tr>`;
+                    htmlTabela += `<tr>
+                        <td style="border: 1px solid #000; padding: 3px 5px;"><strong>RESERVA (MARMITAS EXTRAS)</strong></td>
+                        <td style="border: 1px solid #000; padding: 3px 5px; text-align:center;"><strong>${fmtRes}</strong></td>
+                        <td style="border: 1px solid #000; padding: 3px 5px; text-align:center;">-</td>
+                        <td style="border: 1px solid #000; padding: 3px 5px;">Reserva técnica</td>
+                    </tr>`;
                     somaMarmitas += marmitasReserva['ALMOÇO'];
                 }
 
@@ -1108,12 +1134,24 @@
                     somaCeias += i.ceia;
                     const fmtMtx = String(i.marmita).padStart(2, '0');
                     const fmtCeia = String(i.ceia).padStart(2, '0');
-                    htmlTabela += `<tr><td>${i.nome}</td><td style="text-align:center;">${fmtMtx}</td><td style="text-align:center;">${fmtCeia}</td><td>${i.ramal || '-'}</td><td>${i.obs || '-'}</td></tr>`;
+                    htmlTabela += `<tr>
+                        <td style="border: 1px solid #000; padding: 3px 5px;">${i.nome}</td>
+                        <td style="border: 1px solid #000; padding: 3px 5px; text-align:center;">${fmtMtx}</td>
+                        <td style="border: 1px solid #000; padding: 3px 5px; text-align:center;">${fmtCeia}</td>
+                        <td style="border: 1px solid #000; padding: 3px 5px; text-align:center;">${i.ramal || '-'}</td>
+                        <td style="border: 1px solid #000; padding: 3px 5px;">${i.obs || '-'}</td>
+                    </tr>`;
                 });
 
                 if (marmitasReserva['JANTAR'] > 0) {
                     const fmtRes = String(marmitasReserva['JANTAR']).padStart(2, '0');
-                    htmlTabela += `<tr><td><strong>RESERVA (EXTRAS)</strong></td><td style="text-align:center;"><strong>${fmtRes}</strong></td><td style="text-align:center;"><strong>00</strong></td><td>-</td><td>Reserva técnica</td></tr>`;
+                    htmlTabela += `<tr>
+                        <td style="border: 1px solid #000; padding: 3px 5px;"><strong>RESERVA (EXTRAS)</strong></td>
+                        <td style="border: 1px solid #000; padding: 3px 5px; text-align:center;"><strong>${fmtRes}</strong></td>
+                        <td style="border: 1px solid #000; padding: 3px 5px; text-align:center;"><strong>00</strong></td>
+                        <td style="border: 1px solid #000; padding: 3px 5px; text-align:center;">-</td>
+                        <td style="border: 1px solid #000; padding: 3px 5px;">Reserva técnica</td>
+                    </tr>`;
                     somaMarmitas += marmitasReserva['JANTAR'];
                 }
 
