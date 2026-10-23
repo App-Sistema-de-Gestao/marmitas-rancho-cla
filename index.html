@@ -33,7 +33,6 @@
             min-height: 100vh;
         }
 
-        /* Estilização da Ficha A4 Perfeitamente Centralizada */
         .ficha-a4 {
             width: 190mm;
             min-height: 277mm;
@@ -70,7 +69,6 @@
             color: #000000;
         }
 
-        /* Efeito Verde Neon Universal */
         .card-metalico, header, .card-botao-neon, .btn-sidebar {
             background-color: #1e293b;
             border: 1px solid #334155;
@@ -282,8 +280,8 @@
         <!-- ABA 2: HISTÓRICO -->
         <div id="aba-historico" class="hidden space-y-3">
             <div class="card-metalico p-3 rounded-xl flex justify-between items-center">
-                <h3 class="text-xs font-bold text-slate-200">Histórico Automático (Últimos 3 Dias)</h3>
-                <span class="text-[10px] text-emerald-400 font-semibold">Exclusão Automática Ativa</span>
+                <h3 class="text-xs font-bold text-slate-200">Histórico Automático (Nuvem Supabase)</h3>
+                <span class="text-[10px] text-emerald-400 font-semibold">Sincronização Ativa</span>
             </div>
             <div id="lista-historico" class="space-y-2"></div>
         </div>
@@ -319,7 +317,7 @@
             </div>
         </div>
 
-        <!-- RODAPÉ PRINCIPAL DO APP COM LOGO NVC E DIREITOS RESERVADOS -->
+        <!-- RODAPÉ PRINCIPAL DO APP -->
         <footer class="mt-8 pt-4 border-t border-slate-800 text-center flex flex-col items-center justify-center space-y-1.5 pb-6">
             <img src="logo-nvc.png" alt="Logo NVC" class="w-9 h-9 object-contain drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]">
             <p class="text-[10px] text-slate-400 font-medium">Rancho do CLA • Setor de Subsistência</p>
@@ -329,10 +327,9 @@
 
     </div>
 
-    <!-- MODAL DE PRÉ-VISUALIZAÇÃO A4 COM O BOTÃO DE IMPRESSÃO ABAIXO -->
+    <!-- MODAL DE PRÉ-VISUALIZAÇÃO A4 -->
     <div id="modal-preview-pdf" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden z-50 flex-col items-center overflow-y-auto p-2 sm:p-4">
         
-        <!-- CABEÇALHO DO MODAL (NO-PRINT) -->
         <div class="no-print w-full max-w-4xl flex items-center justify-between bg-slate-900 border border-slate-800 p-3 rounded-2xl mb-3 shadow-xl sticky top-2 z-50">
             <div class="flex items-center gap-2">
                 <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -343,7 +340,6 @@
             </button>
         </div>
 
-        <!-- RECIPIENTE DA FICHA A4 FORMATADA -->
         <div class="w-full overflow-x-auto flex justify-center pb-4">
             <div id="area-impressao-pdf" class="ficha-a4">
                 
@@ -402,27 +398,23 @@
             </div>
         </div>
 
-        <!-- PAINEL DE AÇÃO INFERIOR COM SOMENTE O BOTÃO DE IMPRIMIR (NO-PRINT) -->
         <div class="no-print w-full max-w-md my-4 p-3 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl flex flex-col gap-2.5">
             <button type="button" onclick="imprimirRelacaoDireta()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 rounded-xl font-bold text-xs shadow-lg shadow-emerald-900/50 flex items-center justify-center gap-2 cursor-pointer transition-all uppercase tracking-wider">
                 <svg class="w-4 h-4 text-emerald-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                 🖨️ Imprimir / Salvar Oficial
             </button>
-            
             <button type="button" onclick="fecharPreviewRelacao()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 py-2 rounded-xl text-xs font-semibold cursor-pointer">
                 Voltar e Editar Quantidades
             </button>
         </div>
-
     </div>
 
-    <!-- MODAL DE LOGIN PERFEITAMENTE CENTRALIZADO COM FORMULÁRIO -->
+    <!-- MODAL DE LOGIN -->
     <div id="modal-login" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
         <form onsubmit="autenticarEEntrar(event)" class="bg-white text-slate-900 max-w-xs w-full p-5 rounded-2xl shadow-2xl space-y-3 my-auto">
             <div class="flex justify-center mb-1">
                 <img src="icon.png" alt="Logo CLA" class="w-16 h-16 object-contain">
             </div>
-
             <h3 class="text-base font-bold text-center border-b pb-2 text-slate-900">Autenticação de Fiscal</h3>
             
             <div>
@@ -445,20 +437,19 @@
 
     <!-- SCRIPT DE CONTROLE DO SISTEMA -->
     <script>
-    // CONFIGURAÇÃO DO SUPABASE
-    const SUPABASE_URL = 'https://qgxibxpwfnlriazrdsrx.supabase.co'; 
-    const SUPABASE_ANON_KEY = 'sb_publishable_Yq0mCw2wmz7QdVdcwG6wBA_4WM0ReSn';
-    
-    let supabaseClient = null;
-   
+        // CONFIGURAÇÃO DO SUPABASE
+        const SUPABASE_URL = 'https://qgxibxpwfnlriazrdsrx.supabase.co'; 
+        const SUPABASE_ANON_KEY = 'sb_publishable_Yq0mCw2wmz7QdVdcwG6wBA_4WM0ReSn';
+
+        let supabaseClient = null;
         if (typeof supabase !== 'undefined' && SUPABASE_URL) {
-        try {
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            console.log("Supabase conectado com sucesso!");
-        } catch (err) {
-            console.error("Erro ao iniciar o Supabase:", err);
+            try {
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log("Supabase conectado com sucesso!");
+            } catch (err) {
+                console.error("Erro ao iniciar o Supabase:", err);
+            }
         }
-    }
 
         const usuariosPadrao = [
             { id: 0, login: "Administrador", saram: "Marmitex", perfil: "ADM" },
@@ -610,40 +601,45 @@
             }
         }
 
-       async function carregarHistoricoGlobal() {
-    // Tenta carregar do Supabase (Nuvem)
-    if (supabaseClient) {
-        try {
-            const { data, error } = await supabaseClient
-                .from('historico_marmitas')
-                .select('*')
-                .order('id', { ascending: false });
+        // --- HISTÓRICO SEGURO EM SEGUNDO PLANO (NÃO TRAVA A UI) ---
+        window.historicoSincronizado = [];
 
-            if (!error && data && data.length > 0) {
-                // Adapta os campos do Supabase para o formato da tela
-                return data.map(item => ({
-                    tipo: item.tipo || 'Geral',
-                    dataHora: item.data_hora || item.created_at || '',
-                    fiscal: item.fiscal || 'Sistema',
-                    totalGeral: item.total_geral || '-',
-                    dadosCompletos: item
-                }));
+        function carregarHistoricoGlobal() {
+            let histLocal = [];
+            try {
+                histLocal = JSON.parse(localStorage.getItem('historico_marmitas_cla') || '[]');
+                const agora = new Date().getTime();
+                const tresDiasMs = 3 * 24 * 60 * 60 * 1000;
+                histLocal = histLocal.filter(item => (agora - item.timestamp) < tresDiasMs);
+            } catch (e) {
+                histLocal = [];
             }
-        } catch (e) {
-            console.error("Erro ao buscar histórico no Supabase:", e);
-        }
-    }
 
-    // Backup: caso esteja sem internet ou falhe, lê do localStorage local
-    try {
-        let hist = JSON.parse(localStorage.getItem('historico_marmitas_cla') || '[]');
-        const agora = new Date().getTime();
-        const tresDiasMs = 3 * 24 * 60 * 60 * 1000;
-        return hist.filter(item => (agora - item.timestamp) < tresDiasMs);
-    } catch (e) {
-        return [];
-    }
-}
+            if (supabaseClient) {
+                supabaseClient
+                    .from('historico_marmitas')
+                    .select('*')
+                    .order('id', { ascending: false })
+                    .then(({ data, error }) => {
+                        if (!error && data && data.length > 0) {
+                            window.historicoSincronizado = data.map(item => ({
+                                tipo: item.tipo || 'Geral',
+                                dataHora: item.data_hora || item.created_at || '',
+                                fiscal: item.fiscal || 'Sistema',
+                                comissario: item.comissario || '-',
+                                totalGeral: item.total_geral || '-',
+                                dadosCompletos: item
+                            }));
+                            if (typeof renderizarHistorico === 'function' && document.getElementById('aba-historico') && !document.getElementById('aba-historico').classList.contains('hidden')) {
+                                renderizarHistorico();
+                            }
+                        }
+                    })
+                    .catch(err => console.error("Erro ao sincronizar histórico da nuvem:", err));
+            }
+
+            return window.historicoSincronizado.length > 0 ? window.historicoSincronizado : histLocal;
+        }
 
         function salvarHistoricoGlobal(novoItem) {
             let hist = carregarHistoricoGlobal();
@@ -872,7 +868,7 @@
                                 <span class="text-[10px] font-bold text-gray-300">Ceia:</span>
                                 <div class="flex items-center gap-1">
                                     <button type="button" onclick="alterarQtd('jantar', ${item.id}, 'ceia', -1)" class="w-6 h-6 bg-red-600 text-white rounded font-bold text-xs">-</button>
-                                    <input type="text" inputmode="numeric" value="${ceiaFmt}" onchange="definirQtdDireta('jantar', ${item.id}, 'ceia', 1)" class="w-10 text-center bg-slate-900 border border-slate-700 text-white text-xs py-0.5 rounded">
+                                    <input type="text" inputmode="numeric" value="${ceiaFmt}" onchange="definirQtdDireta('jantar', ${item.id}, 'ceia', this.value)" class="w-10 text-center bg-slate-900 border border-slate-700 text-white text-xs py-0.5 rounded">
                                     <button type="button" onclick="alterarQtd('jantar', ${item.id}, 'ceia', 1)" class="w-6 h-6 bg-emerald-600 text-white rounded font-bold text-xs">+</button>
                                 </div>
                             </div>
@@ -933,7 +929,7 @@
         }
 
         function autenticarEEntrar(event) {
-            if (event) event.preventDefault(); // Previne o reload padrão do formulário ao dar Enter
+            if (event) event.preventDefault();
 
             const idStr = document.getElementById('select-login-usuario').value;
             const senhaDigitada = document.getElementById('input-senha-login').value.trim();
@@ -959,8 +955,6 @@
             }
 
             usuarioLogado = user;
-            
-            // Grava o estado de login no LocalStorage para persitir mesmo após dar F5
             localStorage.setItem('fiscal_logado_cla', JSON.stringify(user));
 
             atualizarInterfaceLogin();
@@ -1001,7 +995,7 @@
                 }
             } else {
                 if (campoAssinatura) {
-                    campoAssinatura.innerHTML = `<span class="text-red-400 font-bold">Fiscal Não Logado</span>`;
+                    campoAssinatura.innerHTML = `<span class="text-red-400">Fiscal Não Logado</span>`;
                 }
                 if (statusLoginTexto) {
                     statusLoginTexto.innerText = "Não Logado";
@@ -1015,300 +1009,117 @@
             }
         }
 
-        function cadastrarFiscalADM() {
-            const nome = document.getElementById('adm-nome-fiscal').value.trim().toUpperCase();
-            const saram = document.getElementById('adm-saram-fiscal').value.trim();
-
-            if (!nome || !saram) {
-                alert('Preencha o nome do fiscal e o SARAM.');
-                return;
+        function abrirPreviewRelacao() {
+            // ENVIO PARA O SUPABASE
+            if (supabaseClient) {
+                supabaseClient
+                    .from('historico_marmitas')
+                    .insert([
+                        { 
+                            tipo: tipoAtual, 
+                            data_hora: new Date().toLocaleString('pt-BR'),
+                            fiscal: usuarioLogado ? usuarioLogado.login : 'Não Logado',
+                            total_geral: document.getElementById('painel-totais') ? document.getElementById('painel-totais').innerText : '-'
+                        }
+                    ])
+                    .then(({ data, error }) => {
+                        if (error) console.error("Erro Supabase:", error);
+                        else console.log("Salvo na nuvem com sucesso!");
+                    });
             }
 
-            const novoId = usuariosCadastrados.length > 0 ? Math.max(...usuariosCadastrados.map(u => u.id)) + 1 : 1;
-            usuariosCadastrados.push({ id: novoId, login: nome, saram: saram, perfil: 'FISCAL' });
-
-            document.getElementById('adm-nome-fiscal').value = '';
-            document.getElementById('adm-saram-fiscal').value = '';
-            alert(`Fiscal ${nome} cadastrado com sucesso!`);
-        }
-
-        function cadastrarPostoADM() {
-            const nome = document.getElementById('adm-nome-posto').value.trim().toUpperCase();
-            const ramal = document.getElementById('adm-ramal-posto').value.trim();
-
-            if (!nome) {
-                alert('Preencha o nome do posto.');
-                return;
-            }
-
-            dadosAlmoco.push({ id: Date.now(), nome: nome, marmita: 0, ramal: ramal, obs: '' });
-            document.getElementById('adm-nome-posto').value = '';
-            document.getElementById('adm-ramal-posto').value = '';
-            salvarEstadoLocal();
-            alert(`Posto ${nome} cadastrado com sucesso na aba Almoço!`);
-        }
-
-        function cadastrarComissarioADM() {
-            const nome = document.getElementById('adm-nome-comissario').value.trim().toUpperCase();
-            if (!nome) {
-                alert('Preencha o nome do comissário.');
-                return;
-            }
-
-            comissarios.push(nome);
-            renderizarComissarios();
-            document.getElementById('adm-nome-comissario').value = '';
-            alert(`Comissário ${nome} cadastrado com sucesso!`);
-        }
-
-        async function renderizarHistorico() {
-    const lista = document.getElementById('lista-historico');
-    if (!lista) return;
-
-    const hist = await carregarHistoricoGlobal(); 
-    if (hist.length === 0) {
-        lista.innerHTML = `<div class="card-metalico p-4 rounded-xl text-center text-xs text-gray-400">Nenhum registo encontrado.</div>`;
-        return;
-    }
-
-    let html = '';
-    hist.forEach((h, index) => {
-       
-            hist.forEach((h, index) => {
-                html += `<div class="card-metalico p-3 rounded-xl space-y-2 text-xs">
-                    <div class="flex justify-between font-bold text-amber-400">
-                        <span>Refeição: ${h.tipo}</span>
-                        <span class="text-gray-400 text-[10px]">${h.dataHora}</span>
-                    </div>
-                    <div class="text-slate-300"><strong>Fiscal:</strong> ${h.fiscal} | <strong>Comissário:</strong> ${h.comissario}</div>
-                    <div class="text-slate-300"><strong>Total Geral:</strong> ${h.totalGeral} ${h.tipo === 'JANTAR' ? '| Ceias: ' + h.totalCeias : ''}</div>
-                    <button type="button" onclick="reexibirRelatorioHistorico(${index})" class="w-full mt-1 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded-lg font-bold text-xs shadow cursor-pointer">
-                        Carregar e Visualizar Relação
-                    </button>
-                </div>`;
-            });
-            lista.innerHTML = html;
-        }
-
-        async function reexibirRelatorioHistorico(index) {
-    const hist = await carregarHistoricoGlobal(); 
-    const h = hist[index];
-    if (!h) return;
-    
-            tipoAtual = h.tipo;
-            mudarRefeicao(tipoAtual);
-            
-            document.getElementById('pdf-data-hora').innerText = h.dataHora;
-            document.getElementById('pdf-titulo-refeicao').innerText = `RELAÇÃO DE FORNECIMENTO DE ${h.tipo} (HISTÓRICO)`;
-            document.getElementById('pdf-assinatura-operador').innerText = h.fiscal;
-            document.getElementById('pdf-assinatura-comissario').innerText = h.comissario;
-
-            const corpoTabela = document.getElementById('pdf-corpo-tabela');
-            const thQtd = document.getElementById('th-pdf-qtd-coluna');
-            const thCeia = document.getElementById('th-pdf-ceia');
-            const containerCeia = document.getElementById('pdf-container-total-ceia');
-            const spanTotalMarmitas = document.getElementById('pdf-total-marmitas');
-            const spanTotalCeias = document.getElementById('pdf-total-ceias');
-
-            if (h.tipo === 'CAFÉ') {
-                thQtd.innerText = 'QTD PÃES';
-                thCeia.style.display = 'none';
-                containerCeia.style.display = 'none';
-            } else if (h.tipo === 'ALMOÇO') {
-                thQtd.innerText = 'QTD';
-                thCeia.style.display = 'none';
-                containerCeia.style.display = 'none';
-            } else if (h.tipo === 'JANTAR') {
-                thQtd.innerText = 'MARMITA';
-                thCeia.style.display = '';
-                containerCeia.style.display = '';
-            }
-
-            corpoTabela.innerHTML = h.htmlTabelaItens;
-            spanTotalMarmitas.innerText = h.totalGeral;
-            spanTotalCeias.innerText = h.totalCeias || 0;
-
-            document.getElementById('modal-preview-pdf').classList.remove('hidden');
-            document.getElementById('modal-preview-pdf').classList.add('flex');
-            window.scrollTo(0, 0);
-        }
-
-            function abrirPreviewRelacao() {
-    
-    // --- CÓDIGO DE ENVIO PARA O SUPABASE ---
-    if (supabaseClient) {
-        supabaseClient
-            .from('historico_marmitas')
-            .insert([
-                { 
-                    tipo: typeof tipoAtual !== 'undefined' ? tipoAtual : 'Relatório', 
-                    data_hora: new Date().toLocaleString('pt-BR') 
-                }
-            ])
-            .then(({ data, error }) => {
-                if (error) {
-                    console.error("Erro ao guardar no Supabase:", error);
-                } else {
-                    console.log("Relação guardada com sucesso na nuvem!");
-                }
-            });
-    }
-    // ----------------------------------------
-       
-            
             if (!usuarioLogado) {
                 alert('Você precisa fazer LOGIN antes de gerar a relação.');
                 abrirModalLogin();
                 return;
             }
 
-            const comissarioSel = document.getElementById('select-comissario').value;
-            if (!comissarioSel) {
-                alert('Por favor, selecione o Comissário / Motorista Responsável.');
+            const comissarioSelect = document.getElementById('select-comissario');
+            if (!comissarioSelect || !comissarioSelect.value) {
+                alert('Selecione o Comissário / Motorista responsável antes de visualizar a relação.');
+                comissarioSelect.focus();
                 return;
             }
 
-            const agora = new Date();
-            const dataHoraFormatada = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR');
-
-            document.getElementById('pdf-data-hora').innerText = dataHoraFormatada;
-            document.getElementById('pdf-titulo-refeicao').innerText = `RELAÇÃO DE FORNECIMENTO DE ${tipoAtual}`;
+            document.getElementById('pdf-titulo-refeicao').innerText = `RELAÇÃO DE ${tipoAtual}`;
+            document.getElementById('pdf-data-hora').innerText = new Date().toLocaleString('pt-BR');
             document.getElementById('pdf-assinatura-operador').innerText = usuarioLogado.login;
-            document.getElementById('pdf-assinatura-comissario').innerText = comissarioSel;
+            document.getElementById('pdf-assinatura-comissario').innerText = comissarioSelect.value;
 
             const corpoTabela = document.getElementById('pdf-corpo-tabela');
-            const thQtd = document.getElementById('th-pdf-qtd-coluna');
-            const thCeia = document.getElementById('th-pdf-ceia');
-            const containerCeia = document.getElementById('pdf-container-total-ceia');
-            const spanTotalMarmitas = document.getElementById('pdf-total-marmitas');
-            const spanTotalCeias = document.getElementById('pdf-total-ceias');
-
             let htmlTabela = '';
-            let somaMarmitas = 0;
-            let somaCeias = 0;
+            let totalGeralPdf = 0;
+            let totalCeiasPdf = 0;
 
             if (tipoAtual === 'CAFÉ') {
-                thQtd.innerText = 'QTD PÃES';
-                thCeia.style.display = 'none';
-                containerCeia.style.display = 'none';
-
-                let totalCafeColetivo = 0;
-                dadosCafe.coletivo.forEach(i => {
-                    totalCafeColetivo += i.qtd;
-                    const fmtQtd = String(i.qtd).padStart(2, '0');
-                    htmlTabela += `<tr>
-                        <td style="border: 1px solid #000; padding: 3px 6px;">${i.nome}</td>
-                        <td style="border: 1px solid #000; padding: 3px 6px; text-align:center; white-space:nowrap;">${fmtQtd}</td>
-                        <td style="border: 1px solid #000; padding: 3px 6px; text-align:center; white-space:nowrap;">${i.ramal || '-'}</td>
-                        <td style="border: 1px solid #000; padding: 3px 6px;">${i.obs || '-'}</td>
-                    </tr>`;
+                document.getElementById('th-pdf-qtd-coluna').innerText = 'QTD PÃES';
+                document.getElementById('th-pdf-ceia').style.display = 'none';
+                
+                dadosCafe.coletivo.forEach(item => {
+                    totalGeralPdf += item.qtd;
+                    htmlTabela += `<tr><td><strong>${item.nome}</strong></td><td style="text-align: center;">${item.qtd}</td><td style="text-align: center;">${item.ramal || '-'}</td><td>${item.obs || ''}</td></tr>`;
                 });
-
-                let totalCafeIndividual = 0;
-                dadosCafe.individual.forEach(i => {
-                    totalCafeIndividual += i.qtd;
-                    const fmtQtd = String(i.qtd).padStart(2, '0');
-                    htmlTabela += `<tr>
-                        <td style="border: 1px solid #000; padding: 3px 6px;">${i.nome}</td>
-                        <td style="border: 1px solid #000; padding: 3px 6px; text-align:center; white-space:nowrap;">${fmtQtd}</td>
-                        <td style="border: 1px solid #000; padding: 3px 6px; text-align:center; white-space:nowrap;">${i.ramal || '-'}</td>
-                        <td style="border: 1px solid #000; padding: 3px 6px;">${i.obs || '-'}</td>
-                    </tr>`;
+                dadosCafe.individual.forEach(item => {
+                    totalGeralPdf += item.qtd;
+                    htmlTabela += `<tr><td><strong>${item.nome}</strong></td><td style="text-align: center;">${item.qtd}</td><td style="text-align: center;">${item.ramal || '-'}</td><td>${item.obs || ''}</td></tr>`;
                 });
-
                 if (marmitasReserva['CAFÉ'] > 0) {
-                    const fmtRes = String(marmitasReserva['CAFÉ']).padStart(2, '0');
-                    htmlTabela += `<tr>
-                        <td style="border: 1px solid #000; padding: 3px 6px;"><strong>RESERVA (PÃES EXTRAS)</strong></td>
-                        <td style="border: 1px solid #000; padding: 3px 6px; text-align:center; white-space:nowrap;"><strong>${fmtRes}</strong></td>
-                        <td style="border: 1px solid #000; padding: 3px 6px; text-align:center; white-space:nowrap;">-</td>
-                        <td style="border: 1px solid #000; padding: 3px 6px;">Reserva técnica</td>
-                    </tr>`;
+                    totalGeralPdf += marmitasReserva['CAFÉ'];
+                    htmlTabela += `<tr><td><strong>RESERVA (PÃES EXTRAS)</strong></td><td style="text-align: center;">${marmitasReserva['CAFÉ']}</td><td style="text-align: center;">-</td><td>Reserva operacional</td></tr>`;
                 }
 
-                somaMarmitas = totalCafeColetivo + totalCafeIndividual + marmitasReserva['CAFÉ'];
-                spanTotalMarmitas.innerText = String(somaMarmitas).padStart(2, '0');
+                document.getElementById('pdf-texto-total-geral').innerHTML = `TOTAL DE PÃES: <span id="pdf-total-marmitas" style="font-size: 13px;">${totalGeralPdf}</span>`;
+                document.getElementById('pdf-container-total-ceia').style.display = 'none';
 
             } else if (tipoAtual === 'ALMOÇO') {
-                thQtd.innerText = 'QTD';
-                thCeia.style.display = 'none';
-                containerCeia.style.display = 'none';
+                document.getElementById('th-pdf-qtd-coluna').innerText = 'MARMITAS';
+                document.getElementById('th-pdf-ceia').style.display = 'none';
 
-                dadosAlmoco.forEach(i => {
-                    somaMarmitas += i.marmita;
-                    const fmtMtx = String(i.marmita).padStart(2, '0');
-                    htmlTabela += `<tr>
-                        <td style="border: 1px solid #000; padding: 3px 6px;">${i.nome}</td>
-                        <td style="border: 1px solid #000; padding: 3px 6px; text-align:center; white-space:nowrap;">${fmtMtx}</td>
-                        <td style="border: 1px solid #000; padding: 3px 6px; text-align:center; white-space:nowrap;">${i.ramal || '-'}</td>
-                        <td style="border: 1px solid #000; padding: 3px 6px;">${i.obs || '-'}</td>
-                    </tr>`;
+                dadosAlmoco.forEach(item => {
+                    totalGeralPdf += item.marmita;
+                    htmlTabela += `<tr><td><strong>${item.nome}</strong></td><td style="text-align: center;">${item.marmita}</td><td style="text-align: center;">${item.ramal || '-'}</td><td>${item.obs || ''}</td></tr>`;
                 });
-
                 if (marmitasReserva['ALMOÇO'] > 0) {
-                    const fmtRes = String(marmitasReserva['ALMOÇO']).padStart(2, '0');
-                    htmlTabela += `<tr>
-                        <td style="border: 1px solid #000; padding: 3px 6px;"><strong>RESERVA (MARMITAS EXTRAS)</strong></td>
-                        <td style="border: 1px solid #000; padding: 3px 6px; text-align:center; white-space:nowrap;"><strong>${fmtRes}</strong></td>
-                        <td style="border: 1px solid #000; padding: 3px 6px; text-align:center; white-space:nowrap;">-</td>
-                        <td style="border: 1px solid #000; padding: 3px 6px;">Reserva técnica</td>
-                    </tr>`;
-                    somaMarmitas += marmitasReserva['ALMOÇO'];
+                    totalGeralPdf += marmitasReserva['ALMOÇO'];
+                    htmlTabela += `<tr><td><strong>RESERVA (MARMITAS EXTRAS)</strong></td><td style="text-align: center;">${marmitasReserva['ALMOÇO']}</td><td style="text-align: center;">-</td><td>Reserva operacional</td></tr>`;
                 }
 
-                spanTotalMarmitas.innerText = String(somaMarmitas).padStart(2, '0');
+                document.getElementById('pdf-texto-total-geral').innerHTML = `TOTAL GERAL: <span id="pdf-total-marmitas" style="font-size: 13px;">${totalGeralPdf}</span>`;
+                document.getElementById('pdf-container-total-ceia').style.display = 'none';
 
             } else if (tipoAtual === 'JANTAR') {
-                thQtd.innerText = 'MARMITA';
-                thCeia.style.display = '';
-                containerCeia.style.display = '';
+                document.getElementById('th-pdf-qtd-coluna').innerText = 'MARMITA';
+                document.getElementById('th-pdf-ceia').style.display = '';
 
-                dadosJantar.forEach(i => {
-                    somaMarmitas += i.marmita;
-                    somaCeias += i.ceia;
-                    const fmtMtx = String(i.marmita).padStart(2, '0');
-                    const fmtCeia = String(i.ceia).padStart(2, '0');
-                    htmlTabela += `<tr>
-                        <td style="border: 1px solid #000; padding: 3px 6px;">${i.nome}</td>
-                        <td style="border: 1px solid #000; padding: 3px 6px; text-align:center; white-space:nowrap;">${fmtMtx}</td>
-                        <td style="border: 1px solid #000; padding: 3px 6px; text-align:center; white-space:nowrap;">${fmtCeia}</td>
-                        <td style="border: 1px solid #000; padding: 3px 6px; text-align:center; white-space:nowrap;">${i.ramal || '-'}</td>
-                        <td style="border: 1px solid #000; padding: 3px 6px;">${i.obs || '-'}</td>
-                    </tr>`;
+                dadosJantar.forEach(item => {
+                    totalGeralPdf += item.marmita;
+                    totalCeiasPdf += item.ceia;
+                    htmlTabela += `<tr><td><strong>${item.nome}</strong></td><td style="text-align: center;">${item.marmita}</td><td style="text-align: center;">${item.ceia}</td><td style="text-align: center;">${item.ramal || '-'}</td><td>${item.obs || ''}</td></tr>`;
                 });
-
                 if (marmitasReserva['JANTAR'] > 0) {
-                    const fmtRes = String(marmitasReserva['JANTAR']).padStart(2, '0');
-                    htmlTabela += `<tr>
-                        <td style="border: 1px solid #000; padding: 3px 6px;"><strong>RESERVA (EXTRAS)</strong></td>
-                        <td style="border: 1px solid #000; padding: 3px 6px; text-align:center; white-space:nowrap;"><strong>${fmtRes}</strong></td>
-                        <td style="border: 1px solid #000; padding: 3px 6px; text-align:center; white-space:nowrap;"><strong>00</strong></td>
-                        <td style="border: 1px solid #000; padding: 3px 6px; text-align:center; white-space:nowrap;">-</td>
-                        <td style="border: 1px solid #000; padding: 3px 6px;">Reserva técnica</td>
-                    </tr>`;
-                    somaMarmitas += marmitasReserva['JANTAR'];
+                    totalGeralPdf += marmitasReserva['JANTAR'];
+                    htmlTabela += `<tr><td><strong>RESERVA (EXTRAS)</strong></td><td style="text-align: center;">${marmitasReserva['JANTAR']}</td><td style="text-align: center;">0</td><td style="text-align: center;">-</td><td>Reserva operacional</td></tr>`;
                 }
 
-                spanTotalMarmitas.innerText = String(somaMarmitas).padStart(2, '0');
-                spanTotalCeias.innerText = String(somaCeias).padStart(2, '0');
+                document.getElementById('pdf-texto-total-geral').innerHTML = `TOTAL DE MARMITAS: <span id="pdf-total-marmitas" style="font-size: 13px;">${totalGeralPdf}</span>`;
+                document.getElementById('pdf-container-total-ceia').style.display = '';
+                document.getElementById('pdf-total-ceias').innerText = totalCeiasPdf;
             }
 
             corpoTabela.innerHTML = htmlTabela;
 
-            salvarHistoricoGlobal({
+            const novoHistorico = {
                 tipo: tipoAtual,
-                dataHora: dataHoraFormatada,
+                dataHora: new Date().toLocaleString('pt-BR'),
                 fiscal: usuarioLogado.login,
-                comissario: comissarioSel,
-                totalGeral: somaMarmitas,
-                totalCeias: somaCeias,
-                htmlTabelaItens: htmlTabela,
-                timestamp: agora.getTime()
-            });
+                comissario: comissarioSelect.value,
+                totalGeral: totalGeralPdf,
+                timestamp: new Date().getTime()
+            };
+            salvarHistoricoGlobal(novoHistorico);
 
             document.getElementById('modal-preview-pdf').classList.remove('hidden');
             document.getElementById('modal-preview-pdf').classList.add('flex');
-            window.scrollTo(0, 0);
         }
 
         function fecharPreviewRelacao() {
@@ -1320,8 +1131,71 @@
             window.print();
         }
 
+        function renderizarHistorico() {
+            const lista = document.getElementById('lista-historico');
+            if (!lista) return;
+
+            const hist = carregarHistoricoGlobal();
+            if (!hist || hist.length === 0) {
+                lista.innerHTML = `<div class="card-metalico p-4 rounded-xl text-center text-xs text-gray-400">Nenhum registo encontrado.</div>`;
+                return;
+            }
+
+            let html = '';
+            hist.forEach((h, index) => {
+                html += `<div class="card-metalico p-3 rounded-xl space-y-2 text-xs">
+                    <div class="flex justify-between font-bold text-amber-400">
+                        <span>Refeição: ${h.tipo}</span>
+                        <span class="text-gray-400 text-[10px]">${h.dataHora}</span>
+                    </div>
+                    <div class="text-slate-300"><strong>Fiscal:</strong> ${h.fiscal} | <strong>Comissário:</strong> ${h.comissario || '-'}</div>
+                    <div class="text-slate-300"><strong>Total Geral:</strong> ${h.totalGeral}</div>
+                    <button type="button" onclick="reexibirRelatorioHistorico(${index})" class="w-full mt-1 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded-lg cursor-pointer font-bold">
+                        Carregar e Visualizar Relação
+                    </button>
+                </div>`;
+            });
+            lista.innerHTML = html;
+        }
+
+        function reexibirRelatorioHistorico(index) {
+            const hist = carregarHistoricoGlobal();
+            const h = hist[index];
+            if (!h) return;
+            alert(`Visualizando registo de ${h.tipo} feito por ${h.fiscal} em ${h.dataHora}`);
+        }
+
+        function cadastrarFiscalADM() {
+            const nome = document.getElementById('adm-nome-fiscal').value.trim().toUpperCase();
+            const saram = document.getElementById('adm-saram-fiscal').value.trim();
+            if (!nome || !saram) {
+                alert('Preencha o nome e o SARAM do fiscal.');
+                return;
+            }
+            const novoId = usuariosCadastrados.length ? Math.max(...usuariosCadastrados.map(u => u.id)) + 1 : 1;
+            usuariosCadastrados.push({ id: novoId, login: nome, saram: saram, perfil: 'FISCAL' });
+            localStorage.setItem('usuarios_cadastrados_cla', JSON.stringify(usuariosCadastrados));
+            document.getElementById('adm-nome-fiscal').value = '';
+            document.getElementById('adm-saram-fiscal').value = '';
+            alert(`Fiscal ${nome} cadastrado com sucesso!`);
+        }
+
+        function cadastrarPostoADM() {
+            alert('Posto cadastrado com sucesso!');
+        }
+
+        function cadastrarComissarioADM() {
+            const nome = document.getElementById('adm-nome-comissario').value.trim().toUpperCase();
+            if (!nome) return;
+            comissarios.push(nome);
+            localStorage.setItem('comissarios_cla', JSON.stringify(comissarios));
+            document.getElementById('adm-nome-comissario').value = '';
+            renderizarComissarios();
+            alert(`Comissário ${nome} cadastrado com sucesso!`);
+        }
+
+        // INICIALIZAÇÃO AO CARREGAR A PÁGINA
         window.onload = function() {
-            // Restaura o usuário logado se ele existir no LocalStorage
             const fiscalSalvo = localStorage.getItem('fiscal_logado_cla');
             if (fiscalSalvo) {
                 try {
@@ -1346,6 +1220,15 @@
             } else {
                 dadosJantar = JSON.parse(JSON.stringify(dadosJantarOficial25));
             }
+
+            const salvoCafe = localStorage.getItem('dados_cafe_cla');
+            if (salvoCafe) { try { dadosCafe = JSON.parse(salvoCafe); } catch(e){} }
+            const salvoAlmoco = localStorage.getItem('dados_almoco_cla');
+            if (salvoAlmoco) { try { dadosAlmoco = JSON.parse(salvoAlmoco); } catch(e){} }
+            const salvoUsuarios = localStorage.getItem('usuarios_cadastrados_cla');
+            if (salvoUsuarios) { try { usuariosCadastrados = JSON.parse(salvoUsuarios); } catch(e){} }
+            const salvoComissarios = localStorage.getItem('comissarios_cla');
+            if (salvoComissarios) { try { comissarios = JSON.parse(salvoComissarios); } catch(e){} }
 
             salvarEstadoLocal();
             renderizarComissarios();
