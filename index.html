@@ -439,6 +439,8 @@
         const SUPABASE_URL = 'https://qgxibxpwfnlriazrdsrx.supabase.co'; 
         const SUPABASE_ANON_KEY = 'sb_publishable_Yq0mCw2wmz7QdVdcwG6wBA_4WM0ReSn';
 
+        const TITULO_PADRAO_SISTEMA = "SISTEMA DE GESTÃO DE MARMITAS - RANCHO DO CLA";
+
         let supabaseClient = null;
         if (typeof supabase !== 'undefined' && SUPABASE_URL) {
             try {
@@ -979,13 +981,15 @@
                 reserva: {...marmitasReserva}
             };
 
+            const dataHoraAtual = new Date().toLocaleString('pt-BR');
+
             if (supabaseClient) {
                 supabaseClient
                     .from('historico_marmitas')
                     .insert([
                         { 
                             tipo: tipoAtual, 
-                            data_hora: new Date().toLocaleString('pt-BR'),
+                            data_hora: dataHoraAtual,
                             fiscal: usuarioLogado ? usuarioLogado.login : 'Não Logado',
                             comissario: comissarioSelect.value,
                             total_geral: valTotalMarmitas,
@@ -1000,12 +1004,19 @@
                     });
             }
 
-            renderizarModalRelacao(tipoAtual, usuarioLogado.login, comissarioSelect.value, snapshotDados);
+            renderizarModalRelacao(tipoAtual, usuarioLogado.login, comissarioSelect.value, snapshotDados, dataHoraAtual);
         }
 
-        function renderizarModalRelacao(tipo, fiscalNome, comissarioNome, dadosSnapshot) {
+        function renderizarModalRelacao(tipo, fiscalNome, comissarioNome, dadosSnapshot, dataHoraCustomizada) {
+            const dataHoraString = dataHoraCustomizada || new Date().toLocaleString('pt-BR');
+            
+            // Ajusta dinamicamente o título do documento para o nome do arquivo PDF ao salvar
+            const tipoSemAcento = tipo.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const dataHoraFormatadaParaArquivo = dataHoraString.replace(/\//g, '-').replace(/,/g, '').replace(/\s+/g, '_').replace(/:/g, '-');
+            document.title = `Relacao_de_${tipoSemAcento}_${dataHoraFormatadaParaArquivo}`;
+
             document.getElementById('pdf-titulo-refeicao').innerText = `RELAÇÃO DE ${tipo}`;
-            document.getElementById('pdf-data-hora').innerText = new Date().toLocaleString('pt-BR');
+            document.getElementById('pdf-data-hora').innerText = dataHoraString;
             document.getElementById('pdf-assinatura-operador').innerText = fiscalNome;
             document.getElementById('pdf-assinatura-comissario').innerText = comissarioNome;
 
@@ -1076,6 +1087,8 @@
         }
 
         function fecharPreviewRelacao() {
+            // Restaura o título padrão da aba ao fechar o modal
+            document.title = TITULO_PADRAO_SISTEMA;
             document.getElementById('modal-preview-pdf').classList.remove('flex');
             document.getElementById('modal-preview-pdf').classList.add('hidden');
         }
@@ -1144,7 +1157,7 @@
                 return;
             }
 
-            renderizarModalRelacao(item.tipo, item.fiscal || 'Fiscal', item.comissario || 'Comissário', dadosSnapshot);
+            renderizarModalRelacao(item.tipo, item.fiscal || 'Fiscal', item.comissario || 'Comissário', dadosSnapshot, item.data_hora);
         }
 
         function cadastrarFiscalADM() {
@@ -1198,7 +1211,7 @@
             const salvoUsuarios = localStorage.getItem('usuarios_cadastrados_cla');
             if (salvoUsuarios) { try { usuariosCadastrados = JSON.parse(salvoUsuarios); } catch(e){} }
             const salvoComissarios = localStorage.getItem('comissarios_cla');
-            if (salvoComissarios) { try { comissarios = JSON.parse(comissarios); } catch(e){} }
+            if (salvoComissarios) { try { comissarios = JSON.parse(salvoComissarios); } catch(e){} }
 
             renderizarComissarios();
             renderizar();
