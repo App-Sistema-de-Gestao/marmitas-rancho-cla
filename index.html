@@ -442,6 +442,15 @@
 
     <!-- SCRIPT DE CONTROLE DO SISTEMA -->
     <script>
+    // CONFIGURAÇÃO DO SUPABASE
+    const SUPABASE_URL = 'https://qgxibxpwfnlriazrdsrx.supabase.co/rest/v1/'; 
+    const SUPABASE_ANON_KEY = 'sb_publishable_Yq0mCw2wmz7QdVdcwG6wBA_4WM0ReSn';
+    
+    let supabaseClient = null;
+    if (window.supabase && SUPABASE_URL !== '') {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+
         const usuariosPadrao = [
             { id: 0, login: "Administrador", saram: "Marmitex", perfil: "ADM" },
             { id: 1, login: "1S MELO", saram: "4181930", perfil: "FISCAL" },
