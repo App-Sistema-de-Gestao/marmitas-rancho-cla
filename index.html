@@ -1109,7 +1109,29 @@
             window.scrollTo(0, 0);
         }
 
-        function abrirPreviewRelacao() {
+            function abrirPreviewRelacao() {
+    
+    // --- CÓDIGO DE ENVIO PARA O SUPABASE ---
+    if (supabaseClient) {
+        supabaseClient
+            .from('historico_marmitas')
+            .insert([
+                { 
+                    tipo: typeof tipoAtual !== 'undefined' ? tipoAtual : 'Relatório', 
+                    data_hora: new Date().toLocaleString('pt-BR') 
+                }
+            ])
+            .then(({ data, error }) => {
+                if (error) {
+                    console.error("Erro ao guardar no Supabase:", error);
+                } else {
+                    console.log("Relação guardada com sucesso na nuvem!");
+                }
+            });
+    }
+    // ----------------------------------------
+       
+            
             if (!usuarioLogado) {
                 alert('Você precisa fazer LOGIN antes de gerar a relação.');
                 abrirModalLogin();
