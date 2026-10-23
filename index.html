@@ -125,7 +125,7 @@
 </head>
 <body class="font-sans pb-28 text-slate-100 relative w-full overflow-x-hidden">
 
-    <!-- OVERLAY ESCURO AO ABRIR O MENU LATERAL ESQUERDO -->
+    <!-- OVERLAY ESCURO AO ABRIR O MENU LATERAL -->
     <div id="menu-overlay" onclick="fecharMenuLateral()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden transition-opacity"></div>
 
     <!-- PAINEL DO MENU LATERAL RETRÁTIL (ESQUERDA) -->
@@ -274,7 +274,7 @@
         <!-- ABA 2: HISTÓRICO -->
         <div id="aba-historico" class="hidden space-y-3">
             <div class="card-metalico p-3 rounded-xl flex justify-between items-center">
-                <h3 class="text-xs font-bold text-slate-200">Histórico Automático (Nuvem Supabase)</h3>
+                <h3 class="text-xs font-bold text-slate-200">Histórico Compartilhado (Nuvem Supabase)</h3>
                 <span class="text-[10px] text-emerald-400 font-semibold">Sincronização Ativa</span>
             </div>
             <div id="lista-historico" class="space-y-2"></div>
@@ -398,7 +398,7 @@
                 🖨️ Imprimir / Salvar Oficial
             </button>
             <button type="button" onclick="fecharPreviewRelacao()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 py-2 rounded-xl text-xs font-semibold cursor-pointer">
-                Voltar e Editar Quantidades
+                Voltar
             </button>
         </div>
     </div>
@@ -588,24 +588,6 @@
             const menu = document.getElementById('menu-lateral-esquerda');
             if (menu.classList.contains('-translate-x-full')) abrirMenuLateral();
             else fecharMenuLateral();
-        }
-
-        function carregarHistoricoGlobal() {
-            try {
-                let hist = JSON.parse(localStorage.getItem('historico_marmitas_cla') || '[]');
-                const agora = new Date().getTime();
-                const tresDiasMs = 3 * 24 * 60 * 60 * 1000;
-                return hist.filter(item => (agora - item.timestamp) < tresDiasMs);
-            } catch (e) {
-                return [];
-            }
-        }
-
-        function salvarHistoricoGlobal(novoItem) {
-            let hist = carregarHistoricoGlobal();
-            hist.unshift(novoItem);
-            localStorage.setItem('historico_marmitas_cla', JSON.stringify(hist));
-            renderizarHistorico();
         }
 
         function mudarAba(aba) {
@@ -950,6 +932,9 @@
             }
         }
 
+        // VARIÁVEL GLOBAL PARA GUARDAR O HISTÓRICO CARREGADO DA NUVEM
+        window.listaHistoricoCache = [];
+
         function abrirPreviewRelacao() {
             if (!usuarioLogado) {
                 alert('Você precisa fazer LOGIN antes de gerar a relação.');
@@ -964,9 +949,33 @@
                 return;
             }
 
-            const totalGeralTxt = document.getElementById('painel-totais') ? document.getElementById('painel-totais').innerText : '-';
+            // Calcula os totais numéricos reais para salvar nas colunas int8 do Supabase
+            let valTotalMarmitas = 0;
+            let valTotalCeias = 0;
 
-            // Grava no Supabase em segundo plano
+            if (tipoAtual === 'CAFÉ') {
+                dadosCafe.coletivo.forEach(i => valTotalMarmitas += i.qtd);
+                dadosCafe.individual.forEach(i => valTotalMarmitas += i.qtd);
+                valTotalMarmitas += marmitasReserva['CAFÉ'];
+            } else if (tipoAtual === 'ALMOÇO') {
+                dadosAlmoco.forEach(i => valTotalMarmitas += i.marmita);
+                valTotalMarmitas += marmitasReserva['ALMOÇO'];
+            } else if (tipoAtual === 'JANTAR') {
+                dadosJantar.forEach(i => {
+                    valTotalMarmitas += i.marmita;
+                    valTotalCeias += i.ceia;
+                });
+                valTotalMarmitas += marmitasReserva['JANTAR'];
+            }
+
+            const snapshotDados = {
+                cafe: JSON.parse(JSON.stringify(dadosCafe)),
+                almoco: JSON.parse(JSON.stringify(dadosAlmoco)),
+                jantar: JSON.parse(JSON.stringify(dadosJantar)),
+                reserva: {...marmitasReserva}
+            };
+
+            // Grava no Supabase mapeando perfeitamente para as colunas existentes na sua tabela
             if (supabaseClient) {
                 supabaseClient
                     .from('historico_marmitas')
@@ -976,76 +985,80 @@
                             data_hora: new Date().toLocaleString('pt-BR'),
                             fiscal: usuarioLogado ? usuarioLogado.login : 'Não Logado',
                             comissario: comissarioSelect.value,
-                            total_geral: totalGeralTxt
+                            total_geral: valTotalMarmitas,
+                            total_ceias: valTotalCeias,
+                            html_tabela_itens: JSON.stringify(snapshotDados),
+                            timestamp: new Date().getTime()
                         }
                     ])
                     .then(({ error }) => {
                         if (error) console.error("Erro Supabase:", error);
-                        else {
-                            console.log("Salvo na nuvem com sucesso!");
-                            renderizarHistorico();
-                        }
+                        else renderizarHistorico();
                     });
             }
 
-            document.getElementById('pdf-titulo-refeicao').innerText = `RELAÇÃO DE ${tipoAtual}`;
+            renderizarModalRelacao(tipoAtual, usuarioLogado.login, comissarioSelect.value, snapshotDados);
+        }
+
+        function renderizarModalRelacao(tipo, fiscalNome, comissarioNome, dadosSnapshot) {
+            document.getElementById('pdf-titulo-refeicao').innerText = `RELAÇÃO DE ${tipo}`;
             document.getElementById('pdf-data-hora').innerText = new Date().toLocaleString('pt-BR');
-            document.getElementById('pdf-assinatura-operador').innerText = usuarioLogado.login;
-            document.getElementById('pdf-assinatura-comissario').innerText = comissarioSelect.value;
+            document.getElementById('pdf-assinatura-operador').innerText = fiscalNome;
+            document.getElementById('pdf-assinatura-comissario').innerText = comissarioNome;
 
             const corpoTabela = document.getElementById('pdf-corpo-tabela');
             let htmlTabela = '';
             let totalGeralPdf = 0;
             let totalCeiasPdf = 0;
 
-            if (tipoAtual === 'CAFÉ') {
+            if (tipo === 'CAFÉ') {
                 document.getElementById('th-pdf-qtd-coluna').innerText = 'QTD PÃES';
                 document.getElementById('th-pdf-ceia').style.display = 'none';
                 
-                dadosCafe.coletivo.forEach(item => {
+                dadosSnapshot.cafe.coletivo.forEach(item => {
                     totalGeralPdf += item.qtd;
                     htmlTabela += `<tr><td><strong>${item.nome}</strong></td><td style="text-align: center;">${item.qtd}</td><td style="text-align: center;">${item.ramal || '-'}</td><td>${item.obs || ''}</td></tr>`;
                 });
-                dadosCafe.individual.forEach(item => {
+                dadosSnapshot.cafe.individual.forEach(item => {
                     totalGeralPdf += item.qtd;
                     htmlTabela += `<tr><td><strong>${item.nome}</strong></td><td style="text-align: center;">${item.qtd}</td><td style="text-align: center;">${item.ramal || '-'}</td><td>${item.obs || ''}</td></tr>`;
                 });
-                if (marmitasReserva['CAFÉ'] > 0) {
-                    totalGeralPdf += marmitasReserva['CAFÉ'];
-                    htmlTabela += `<tr><td><strong>RESERVA (PÃES EXTRAS)</strong></td><td style="text-align: center;">${marmitasReserva['CAFÉ']}</td><td style="text-align: center;">-</td><td>Reserva operacional</td></tr>`;
+                if (dadosSnapshot.reserva['CAFÉ'] > 0) {
+                    totalGeralPdf += dadosSnapshot.reserva['CAFÉ'];
+                    htmlTabela += `<tr><td><strong>RESERVA (PÃES EXTRAS)</strong></td><td style="text-align: center;">${dadosSnapshot.reserva['CAFÉ']}</td><td style="text-align: center;">-</td><td>Reserva operacional</td></tr>`;
                 }
 
                 document.getElementById('pdf-texto-total-geral').innerHTML = `TOTAL DE PÃES: <span id="pdf-total-marmitas" style="font-size: 13px;">${totalGeralPdf}</span>`;
                 document.getElementById('pdf-container-total-ceia').style.display = 'none';
 
-            } else if (tipoAtual === 'ALMOÇO') {
+            } else if (tipo === 'ALMOÇO') {
                 document.getElementById('th-pdf-qtd-coluna').innerText = 'MARMITAS';
                 document.getElementById('th-pdf-ceia').style.display = 'none';
 
-                dadosAlmoco.forEach(item => {
+                dadosSnapshot.almoco.forEach(item => {
                     totalGeralPdf += item.marmita;
                     htmlTabela += `<tr><td><strong>${item.nome}</strong></td><td style="text-align: center;">${item.marmita}</td><td style="text-align: center;">${item.ramal || '-'}</td><td>${item.obs || ''}</td></tr>`;
                 });
-                if (marmitasReserva['ALMOÇO'] > 0) {
-                    totalGeralPdf += marmitasReserva['ALMOÇO'];
-                    htmlTabela += `<tr><td><strong>RESERVA (MARMITAS EXTRAS)</strong></td><td style="text-align: center;">${marmitasReserva['ALMOÇO']}</td><td style="text-align: center;">-</td><td>Reserva operacional</td></tr>`;
+                if (dadosSnapshot.reserva['ALMOÇO'] > 0) {
+                    totalGeralPdf += dadosSnapshot.reserva['ALMOÇO'];
+                    htmlTabela += `<tr><td><strong>RESERVA (MARMITAS EXTRAS)</strong></td><td style="text-align: center;">${dadosSnapshot.reserva['ALMOÇO']}</td><td style="text-align: center;">-</td><td>Reserva operacional</td></tr>`;
                 }
 
                 document.getElementById('pdf-texto-total-geral').innerHTML = `TOTAL GERAL: <span id="pdf-total-marmitas" style="font-size: 13px;">${totalGeralPdf}</span>`;
                 document.getElementById('pdf-container-total-ceia').style.display = 'none';
 
-            } else if (tipoAtual === 'JANTAR') {
+            } else if (tipo === 'JANTAR') {
                 document.getElementById('th-pdf-qtd-coluna').innerText = 'MARMITA';
                 document.getElementById('th-pdf-ceia').style.display = '';
 
-                dadosJantar.forEach(item => {
+                dadosSnapshot.jantar.forEach(item => {
                     totalGeralPdf += item.marmita;
                     totalCeiasPdf += item.ceia;
                     htmlTabela += `<tr><td><strong>${item.nome}</strong></td><td style="text-align: center;">${item.marmita}</td><td style="text-align: center;">${item.ceia}</td><td style="text-align: center;">${item.ramal || '-'}</td><td>${item.obs || ''}</td></tr>`;
                 });
-                if (marmitasReserva['JANTAR'] > 0) {
-                    totalGeralPdf += marmitasReserva['JANTAR'];
-                    htmlTabela += `<tr><td><strong>RESERVA (EXTRAS)</strong></td><td style="text-align: center;">${marmitasReserva['JANTAR']}</td><td style="text-align: center;">0</td><td style="text-align: center;">-</td><td>Reserva operacional</td></tr>`;
+                if (dadosSnapshot.reserva['JANTAR'] > 0) {
+                    totalGeralPdf += dadosSnapshot.reserva['JANTAR'];
+                    htmlTabela += `<tr><td><strong>RESERVA (EXTRAS)</strong></td><td style="text-align: center;">${dadosSnapshot.reserva['JANTAR']}</td><td style="text-align: center;">0</td><td style="text-align: center;">-</td><td>Reserva operacional</td></tr>`;
                 }
 
                 document.getElementById('pdf-texto-total-geral').innerHTML = `TOTAL DE MARMITAS: <span id="pdf-total-marmitas" style="font-size: 13px;">${totalGeralPdf}</span>`;
@@ -1054,16 +1067,6 @@
             }
 
             corpoTabela.innerHTML = htmlTabela;
-
-            const novoHistorico = {
-                tipo: tipoAtual,
-                dataHora: new Date().toLocaleString('pt-BR'),
-                fiscal: usuarioLogado.login,
-                comissario: comissarioSelect.value,
-                totalGeral: totalGeralPdf,
-                timestamp: new Date().getTime()
-            };
-            salvarHistoricoGlobal(novoHistorico);
 
             document.getElementById('modal-preview-pdf').classList.remove('hidden');
             document.getElementById('modal-preview-pdf').classList.add('flex');
@@ -1082,32 +1085,7 @@
             const lista = document.getElementById('lista-historico');
             if (!lista) return;
 
-            let histLocal = carregarHistoricoGlobal();
-
-            function desenharLista(itens) {
-                if (!itens || itens.length === 0) {
-                    lista.innerHTML = `<div class="card-metalico p-4 rounded-xl text-center text-xs text-gray-400">Nenhum registro encontrado.</div>`;
-                    return;
-                }
-
-                let html = '';
-                itens.forEach(h => {
-                    const ehNuvem = h.origem === 'nuvem';
-                    const bordaCor = ehNuvem ? 'border-l-4 border-emerald-500' : 'border-l-4 border-blue-500';
-                    
-                    html += `<div class="card-metalico p-3 rounded-xl space-y-2 text-xs ${bordaCor}">
-                        <div class="flex justify-between font-bold text-amber-400">
-                            <span>Refeição: ${h.tipo}</span>
-                            <span class="text-gray-400 text-[10px]">${h.dataHora}</span>
-                        </div>
-                        <div class="text-slate-300"><strong>Fiscal:</strong> ${h.fiscal} | <strong>Comissário:</strong> ${h.comissario || '-'}</div>
-                        <div class="text-slate-300"><strong>Total Geral:</strong> ${h.totalGeral}</div>
-                    </div>`;
-                });
-                lista.innerHTML = html;
-            }
-
-            desenharLista(histLocal);
+            lista.innerHTML = `<div class="card-metalico p-4 rounded-xl text-center text-xs text-gray-400">A carregar histórico da nuvem...</div>`;
 
             if (supabaseClient) {
                 supabaseClient
@@ -1115,26 +1093,55 @@
                     .select('*')
                     .order('id', { ascending: false })
                     .then(({ data, error }) => {
-                        if (!error && data && data.length > 0) {
-                            const histNuvem = data.map(item => ({
-                                tipo: item.tipo || 'Geral',
-                                dataHora: item.data_hora || '',
-                                fiscal: item.fiscal || 'Sistema',
-                                comissario: item.comissario || '-',
-                                totalGeral: item.total_geral || '-',
-                                origem: 'nuvem'
-                            }));
-
-                            const todosRegistros = [...histLocal, ...histNuvem];
-                            const registrosUnicos = todosRegistros.filter((v, i, a) => 
-                                a.findIndex(t => (t.dataHora === v.dataHora && t.tipo === v.tipo)) === i
-                            );
-
-                            desenharLista(registrosUnicos);
+                        if (error) {
+                            lista.innerHTML = `<div class="card-metalico p-4 rounded-xl text-center text-xs text-red-400">Erro ao carregar histórico.</div>`;
+                            return;
                         }
-                    })
-                    .catch(err => console.error("Erro ao buscar histórico da nuvem:", err));
+
+                        if (!data || data.length === 0) {
+                            lista.innerHTML = `<div class="card-metalico p-4 rounded-xl text-center text-xs text-gray-400">Nenhum registo encontrado na nuvem.</div>`;
+                            return;
+                        }
+
+                        window.listaHistoricoCache = data;
+                        let html = '';
+                        data.forEach((item, index) => {
+                            const exibirInfoTotal = item.tipo === 'JANTAR'
+                                ? `Marmitas: ${item.total_geral || 0} | Ceias: ${item.total_ceias || 0}`
+                                : `Total Geral: ${item.total_geral || 0}`;
+
+                            html += `<div class="card-metalico p-3 rounded-xl space-y-2 text-xs border-l-4 border-emerald-500">
+                                <div class="flex justify-between font-bold text-amber-400">
+                                    <span>Refeição: ${item.tipo || 'Geral'}</span>
+                                    <span class="text-gray-400 text-[10px]">${item.data_hora || ''}</span>
+                                </div>
+                                <div class="text-slate-300"><strong>Fiscal:</strong> ${item.fiscal || 'Sistema'} | <strong>Comissário:</strong> ${item.comissario || '-'}</div>
+                                <div class="text-slate-300"><strong>${exibirInfoTotal}</strong></div>
+                                <button type="button" onclick="visualizarRelatorioDoHistorico(${index})" class="w-full mt-2 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg cursor-pointer font-bold flex items-center justify-center gap-1.5 shadow">
+                                    👁️ Visualizar Relação (A4)
+                                </button>
+                            </div>`;
+                        });
+                        lista.innerHTML = html;
+                    });
+            } else {
+                lista.innerHTML = `<div class="card-metalico p-4 rounded-xl text-center text-xs text-red-400">Supabase não conectado.</div>`;
             }
+        }
+
+        function visualizarRelatorioDoHistorico(index) {
+            const item = window.listaHistoricoCache[index];
+            if (!item) return;
+
+            let dadosSnapshot = null;
+            try {
+                dadosSnapshot = JSON.parse(item.html_tabela_itens);
+            } catch (e) {
+                alert('Os dados detalhados desta relação antiga não estão disponíveis neste registo.');
+                return;
+            }
+
+            renderizarModalRelacao(item.tipo, item.fiscal || 'Fiscal', item.comissario || 'Comissário', dadosSnapshot);
         }
 
         function cadastrarFiscalADM() {
