@@ -443,12 +443,18 @@
     <!-- SCRIPT DE CONTROLE DO SISTEMA -->
     <script>
     // CONFIGURAÇÃO DO SUPABASE
-    const SUPABASE_URL = 'https://qgxibxpwfnlriazrdsrx.supabase.co/rest/v1/'; 
+    const SUPABASE_URL = 'https://qgxibxpwfnlriazrdsrx.supabase.co'; 
     const SUPABASE_ANON_KEY = 'sb_publishable_Yq0mCw2wmz7QdVdcwG6wBA_4WM0ReSn';
     
     let supabaseClient = null;
-    if (window.supabase && SUPABASE_URL !== '') {
-        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+   
+        if (typeof supabase !== 'undefined' && SUPABASE_URL) {
+        try {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log("Supabase conectado com sucesso!");
+        } catch (err) {
+            console.error("Erro ao iniciar o Supabase:", err);
+        }
     }
 
         const usuariosPadrao = [
